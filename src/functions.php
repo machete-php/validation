@@ -124,3 +124,43 @@ function escape_pointer($pointer)
     $pointer = str_replace('~', '~0', $pointer);
     return str_replace('/', '~1', $pointer);
 }
+
+/**
+ * Compare two numbers or numeric strings.
+ *
+ * @param  string|int $leftOperand
+ * @param  string $operator         one of : '>', '>=', '=', '<', '<='.
+ * @param  string|int $rightOperand
+ * @return bool
+ */
+function compare($leftOperand, $operator, $rightOperand)
+{
+    if (!function_exists('bccomp')) {
+        switch ($operator) {
+            case '>':
+                return $leftOperand > $rightOperand;
+            case '>=':
+                return $leftOperand >= $rightOperand;
+            case '=':
+                return $leftOperand >= $rightOperand;
+            case '<':
+                return $leftOperand < $rightOperand;
+            case '<=':
+                return $leftOperand <= $rightOperand;
+        }
+    }
+
+    $result = bccomp($leftOperand, $rightOperand, 5);
+    switch ($operator) {
+        case '>':
+            return $result === 1;
+        case '>=':
+            return $result === 0 || $result === 1;
+        case '=':
+            return $result === 0;
+        case '<':
+            return $result === -1;
+        case '<=':
+            return $result === 0 || $result === -1;
+    }
+}

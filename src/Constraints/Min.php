@@ -29,7 +29,7 @@ class Min implements ParentSchemaAwarePropertyConstraint
      */
     public static function validateMin($value, $parameter, $pointer = null)
     {
-        if (!is_numeric($value) || $value >= $parameter) {
+        if (!is_numeric($value) ||  JsonGuard\compare($value, '>=', $parameter)) {
             return null;
         }
 
@@ -51,7 +51,7 @@ class Min implements ParentSchemaAwarePropertyConstraint
      */
     public static function validateExclusiveMin($value, $parameter, $pointer = null)
     {
-        if (!is_numeric($value) || $value > $parameter) {
+        if (!is_numeric($value) || JsonGuard\compare($value, '>', $parameter)) {
             return null;
         }
 
