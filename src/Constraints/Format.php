@@ -8,9 +8,9 @@ use League\JsonGuard\ValidationError;
 
 class Format implements PropertyConstraint
 {
-    const DATE_TIME_PATTERN = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})'
-    . '([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?'
-    . '(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?/';
+    /** @codingStandardsIgnoreStart */
+    const DATE_TIME_PATTERN = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?/';
+    /** @codingStandardsIgnoreEnd */
 
     const HOST_NAME_PATTERN = '/^[_a-z]+\.([_a-z]+\.?)+$/i';
 
