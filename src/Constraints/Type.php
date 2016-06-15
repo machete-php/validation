@@ -35,7 +35,8 @@ class Type implements PropertyConstraint
                     function ($value) {
                         // when json decoding numbers larger than PHP_INT_MAX,
                         // it's possible to receive a valid int as a string.
-                        return is_int($value) || is_string($value) && ctype_digit($value);
+                        return is_int($value) || is_string($value) &&
+                            (ctype_digit($value) || $value[0] === '-' && ctype_digit(substr($value, 1)));
                     },
                     ErrorCode::INVALID_INTEGER,
                     $pointer
