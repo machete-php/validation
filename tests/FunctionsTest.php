@@ -49,4 +49,10 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse(JsonGuard\compare($leftOperand, $operator, $rightOperand));
         }
     }
+
+    public function testCompareThrowsWhenInvalidOperatorIsProvided()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        JsonGuard\compare(12, '*', 12);
+    }
 }

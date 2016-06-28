@@ -126,7 +126,8 @@ function escape_pointer($pointer)
 }
 
 /**
- * Compare two numbers or numeric strings.
+ * Compare two numbers.  If the number is larger than PHP_INT_MAX and
+ * the bcmatch extension is installed, this function will use bccomp.
  *
  * @param  string|int $leftOperand
  * @param  string $operator         one of : '>', '>=', '=', '<', '<='.
@@ -147,6 +148,10 @@ function compare($leftOperand, $operator, $rightOperand)
                 return $leftOperand < $rightOperand;
             case '<=':
                 return $leftOperand <= $rightOperand;
+            default:
+                throw new \InvalidArgumentException(
+                    sprintf('Unknown operator %s', $operator)
+                );
         }
     }
 
@@ -162,5 +167,27 @@ function compare($leftOperand, $operator, $rightOperand)
             return $result === -1;
         case '<=':
             return $result === 0 || $result === -1;
+        default:
+            throw new \InvalidArgumentException(
+                sprintf('Unknown operator %s', $operator)
+            );
     }
+}
+
+/**
+ * Determines if the value is an integer or an integer that was cast to a string
+ * because it is larger than PHP_INT_MAX.
+ *
+ * @param  mixed  $value
+ * @return boolean
+ */
+function is_integer($value)
+{
+    if (!function_exists('bccomp')) {
+        return is_int($value);
+    }
+
+    $isPositiveNumericString = is_string($value) && (ctype_digit($value) && bccomp($value, PHP_INT_MAX, 0) === 1);
+    $isNegativeNumericString = is_string($value) && $value[0] === '-' && ctype_digit(substr($value, 1)) && bccomp($value, PHP_INT_MAX, 0) === -1;
+    return is_int($value) || $isPositiveNumericString || $isNegativeNumericString;
 }

@@ -29,18 +29,7 @@ class Type implements PropertyConstraint
             case 'number':
                 return self::validateType($value, $type, 'is_numeric', ErrorCode::INVALID_NUMERIC, $pointer);
             case 'integer':
-                return self::validateType(
-                    $value,
-                    $type,
-                    function ($value) {
-                        // when json decoding numbers larger than PHP_INT_MAX,
-                        // it's possible to receive a valid int as a string.
-                        return is_int($value) || is_string($value) &&
-                            (ctype_digit($value) || $value[0] === '-' && ctype_digit(substr($value, 1)));
-                    },
-                    ErrorCode::INVALID_INTEGER,
-                    $pointer
-                );
+                return self::validateType($value, $type, 'League\JsonGuard\is_integer', ErrorCode::INVALID_INTEGER, $pointer);
             case 'string':
                 return self::validateType(
                     $value,
