@@ -24,11 +24,11 @@
             "type": "package",
             "package": {
                 "name": "json-schema/JSON-Schema-Test-Suite",
-                "version": "1.1.0",
+                "version": "1.2.0",
                 "source": {
                     "url": "https://github.com/json-schema/JSON-Schema-Test-Suite",
                     "type": "git",
-                    "reference": "1.1.0"
+                    "reference": "1.2.0"
                 }
             }
         }
@@ -37,13 +37,13 @@
         "php": ">=5.5.0"
     },
     "suggest": {
-        "ext-bcmath": "Required to properly check type constraints for numbers larger than PHP_INT_MAX."
+        "ext-bcmath": "Required to properly check constraints for numbers larger than PHP_INT_MAX."
     },
     "require-dev": {
         "phpunit/phpunit" : "4.*",
         "scrutinizer/ocular": "~1.1",
         "squizlabs/php_codesniffer": "~2.3",
-        "json-schema/JSON-Schema-Test-Suite": "1.1.0",
+        "json-schema/JSON-Schema-Test-Suite": "1.2.0",
         "ext-curl": "*"
     },
     "autoload": {

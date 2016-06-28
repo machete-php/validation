@@ -8,10 +8,9 @@ use League\JsonGuard\ValidationError;
 
 class Format implements PropertyConstraint
 {
-    // regex from http://www.pelagodesign.com/blog/2009/05/20/iso-8601-date-validation-that-doesnt-suck/
-    // @codingStandardsIgnoreStart
-    const DATE_TIME_PATTERN = '/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/';
-    // @codingStandardsIgnoreEnd
+    /** @codingStandardsIgnoreStart */
+    const DATE_TIME_PATTERN = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?/';
+    /** @codingStandardsIgnoreEnd */
 
     const HOST_NAME_PATTERN = '/^[_a-z]+\.([_a-z]+\.?)+$/i';
 
@@ -108,6 +107,14 @@ class Format implements PropertyConstraint
     {
         if (filter_var($value, $filter, $options) !== false) {
             return null;
+        }
+
+        // This workaround allows otherwise valid protocol relative urls to pass.
+        // @see https://bugs.php.net/bug.php?id=72301
+        if ($filter === FILTER_VALIDATE_URL && is_string($value) && strpos($value, '//') === 0) {
+            if (filter_var('http:' . $value, $filter, $options) !== false) {
+                return null;
+            }
         }
 
         return new ValidationError(self::invalidFormatMessage($format, $value), $errorCode, $value, $pointer);

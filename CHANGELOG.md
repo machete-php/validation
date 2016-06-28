@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+
+* Min, max, exclusive min, and exclusive max constraints now perform comparisons using bccomp if the bcmatch extension is available.  Using bccomp ensures that numbers larger than PHP_INT_MAX are compared properly.
+* The date-time format constraint only passes if the date is RFC3339 instead of all of ISO 8601.
+
+### Fixed
+
+* The uri format constraint now passes for valid protocol relative URIs.
+* the type integer constraint now checks for negative integers.
+* the type integer constraint does not pass for numeric strings that were not larger than PHP_INT_MAX.
+
 ## 0.3.1 - 2016-06-28
 
 ### Fixed
