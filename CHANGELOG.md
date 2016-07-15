@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+* The date-time format constraint was fixed to only pass if the date is RFC3339 instead of all of ISO 8601.
+* The uri format constraint now passes for valid protocol relative URIs.
 * Fixed a bug where custom format extensions only worked for the first level of data and were not used for nested objects.
 
 ## 0.3.1 - 2016-06-28
