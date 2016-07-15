@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixed
+
+* Fixed a bug where custom format extensions only worked for the first level of data and were not used for nested objects.
+
 ## 0.3.1 - 2016-06-28
 
 ### Fixed

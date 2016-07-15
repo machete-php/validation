@@ -139,6 +139,18 @@ class Validator implements SubSchemaValidatorFactory
 
     /**
      * @internal
+     * @param FormatExtension[] $formatExtensions
+     * @return $this
+     */
+    public function setFormatExtensions(array $formatExtensions)
+    {
+        $this->formatExtensions = $formatExtensions;
+
+        return $this;
+    }
+
+    /**
+     * @internal
      * @param int $depth
      * @return $this
      */
@@ -183,6 +195,7 @@ class Validator implements SubSchemaValidatorFactory
         return (new Validator($data, $schema))
             ->setPointer($pointer)
             ->setMaxDepth($this->maxDepth)
+            ->setFormatExtensions($this->formatExtensions)
             ->setDepth($this->depth + 1);
     }
 

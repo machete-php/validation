@@ -192,6 +192,24 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($v->fails());
         $this->assertSame(99, $v->errors()[0]['code']);
     }
+
+    public function testCustomFormatWorksWhenNested()
+    {
+        $schema = json_decode('{"properties": { "foo": {"type": "string", "format": "hello"} } }');
+
+        $data = json_decode('{ "foo": "hello world" }');
+        $v = new Validator($data, $schema);
+        $v->registerFormatExtension('hello', new HelloFormatStub());
+
+        $this->assertTrue($v->passes());
+
+        $data = json_decode('{ "foo": "good morning" }');
+        $v = new Validator($data, $schema);
+        $v->registerFormatExtension('hello', new HelloFormatStub());
+
+        $this->assertTrue($v->fails());
+        $this->assertSame(99, $v->errors()[0]['code']);
+    }
 }
 
 class HelloFormatStub implements FormatExtension
