@@ -109,6 +109,14 @@ class Format implements PropertyConstraint
             return null;
         }
 
+        // This workaround allows otherwise valid protocol relative urls to pass.
+        // @see https://bugs.php.net/bug.php?id=72301
+        if ($filter === FILTER_VALIDATE_URL && is_string($value) && strpos($value, '//') === 0) {
+            if (filter_var('http:' . $value, $filter, $options) !== false) {
+                return null;
+            }
+        }
+
         return new ValidationError(self::invalidFormatMessage($format, $value), $errorCode, $value, $pointer);
     }
 
