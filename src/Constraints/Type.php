@@ -32,11 +32,7 @@ class Type implements PropertyConstraint
                 return self::validateType(
                     $value,
                     $type,
-                    function ($value) {
-                        // when json decoding numbers larger than PHP_INT_MAX,
-                        // it's possible to receive a valid int as a string.
-                        return is_int($value) || is_string($value) && ctype_digit($value);
-                    },
+                    'League\JsonGuard\is_json_integer',
                     ErrorCode::INVALID_INTEGER,
                     $pointer
                 );

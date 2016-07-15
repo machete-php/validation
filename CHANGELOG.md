@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+* the type : integer constraint now passes for valid negative integers that are larger than PHP_INT_MAX, and does not pass for numeric strings that are not larger than PHP_INT_MAX.
 * The date-time format constraint was fixed to only pass if the date is RFC3339 instead of all of ISO 8601.
 * The uri format constraint now passes for valid protocol relative URIs.
 * Fixed a bug where custom format extensions only worked for the first level of data and were not used for nested objects.

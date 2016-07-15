@@ -124,3 +124,23 @@ function escape_pointer($pointer)
     $pointer = str_replace('~', '~0', $pointer);
     return str_replace('/', '~1', $pointer);
 }
+
+/**
+ * Determines if the value is an integer or an integer that was cast to a string
+ * because it is larger than PHP_INT_MAX.
+ *
+ * @param  mixed  $value
+ * @return boolean
+ */
+function is_json_integer($value)
+{
+    if (!function_exists('bccomp')) {
+        return is_int($value);
+    }
+
+    if (is_string($value) && $value[0] === '-') {
+        $value = substr($value, 1);
+    }
+
+    return is_int($value) || (is_string($value) && ctype_digit($value) && bccomp($value, PHP_INT_MAX, 0) === 1);
+}
