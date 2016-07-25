@@ -158,7 +158,7 @@ class Validator implements SubSchemaValidatorFactory
      */
     public function makeSubSchemaValidator($data, $schema, $pointer)
     {
-        $validator = new Validator($data, $schema);
+        $validator = new Validator($data, $schema, $this->ruleSet);
 
         $validator->pointer          = $pointer;
         $validator->maxDepth         = $this->maxDepth;
