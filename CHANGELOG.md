@@ -21,6 +21,10 @@ A Comparator class was added so that the rest of the code doesn't have to consta
 
 The validator now passes version 1.2.0 of the official test suite.
 
+### Removed
+
+* Setters used when creating sub-schema validators were removed, since they are not necessary.  These were marked @internal so this should not be a breaking change.
+
 ## 0.3.1 - 2016-06-28
 
 ### Fixed

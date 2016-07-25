@@ -63,9 +63,9 @@ class Validator implements SubSchemaValidatorFactory
     private $hasValidated;
 
     /**
-     * @param mixed  $data
-     * @param object $schema
-     * @param RuleSet|null   $ruleSet
+     * @param mixed        $data
+     * @param object       $schema
+     * @param RuleSet|null $ruleSet
      */
     public function __construct($data, $schema, $ruleSet = null)
     {
@@ -117,6 +117,7 @@ class Validator implements SubSchemaValidatorFactory
      * If the data exceeds the stack depth an exception is thrown.
      *
      * @param int $maxDepth
+     *
      * @return $this
      */
     public function setMaxDepth($maxDepth)
@@ -139,30 +140,6 @@ class Validator implements SubSchemaValidatorFactory
 
     /**
      * @internal
-     * @param FormatExtension[] $formatExtensions
-     * @return $this
-     */
-    public function setFormatExtensions(array $formatExtensions)
-    {
-        $this->formatExtensions = $formatExtensions;
-
-        return $this;
-    }
-
-    /**
-     * @internal
-     * @param int $depth
-     * @return $this
-     */
-    public function setDepth($depth)
-    {
-        $this->depth = $depth;
-
-        return $this;
-    }
-
-    /**
-     * @internal
      * @return string
      */
     public function getPointer()
@@ -171,32 +148,24 @@ class Validator implements SubSchemaValidatorFactory
     }
 
     /**
-     * @internal
-     * @param string $pointer
-     * @return $this
-     */
-    public function setPointer($pointer)
-    {
-        $this->pointer = $pointer;
-
-        return $this;
-    }
-
-    /**
      * Create a new sub-validator.
      *
      * @param mixed  $data
      * @param object $schema
      * @param string $pointer
+     *
      * @return Validator
      */
     public function makeSubSchemaValidator($data, $schema, $pointer)
     {
-        return (new Validator($data, $schema))
-            ->setPointer($pointer)
-            ->setMaxDepth($this->maxDepth)
-            ->setFormatExtensions($this->formatExtensions)
-            ->setDepth($this->depth + 1);
+        $validator = new Validator($data, $schema);
+
+        $validator->pointer          = $pointer;
+        $validator->maxDepth         = $this->maxDepth;
+        $validator->formatExtensions = $this->formatExtensions;
+        $validator->depth            = $this->depth + 1;
+
+        return $validator;
     }
 
     /**
@@ -237,7 +206,8 @@ class Validator implements SubSchemaValidatorFactory
      * Validate the data using the given rule and parameter.
      *
      * @param string $rule
-     * @param mixed $parameter
+     * @param mixed  $parameter
+     *
      * @return null|ValidationError|ValidationError[]
      */
     private function validateRule($rule, $parameter)
@@ -282,7 +252,7 @@ class Validator implements SubSchemaValidatorFactory
      * Determine if a rule has a custom format extension registered.
      *
      * @param string $rule
-     * @param mixed $parameter
+     * @param mixed  $parameter
      *
      * @return bool
      */
@@ -319,6 +289,7 @@ class Validator implements SubSchemaValidatorFactory
 
         if (is_array($errors)) {
             $this->errors = array_merge($this->errors, $errors);
+
             return;
         }
 
