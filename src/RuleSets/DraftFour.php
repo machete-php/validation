@@ -36,7 +36,7 @@ use League\JsonGuard\RuleSet;
  */
 class DraftFour implements RuleSet
 {
-    private $rules = [
+    protected $rules = [
         'additionalItems'      => AdditionalItems::class,
         'additionalProperties' => AdditionalProperties::class,
         'allOf'                => AllOf::class,
