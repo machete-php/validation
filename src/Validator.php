@@ -67,7 +67,7 @@ class Validator implements SubSchemaValidatorFactory
      * @param object       $schema
      * @param RuleSet|null $ruleSet
      */
-    public function __construct($data, $schema, $ruleSet = null)
+    public function __construct($data, $schema, RuleSet $ruleSet = null)
     {
         if (!is_object($schema)) {
             throw new \InvalidArgumentException(
