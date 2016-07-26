@@ -5,11 +5,14 @@ namespace League\JsonGuard\Test;
 use League\JsonGuard;
 use League\JsonGuard\Dereferencer;
 use League\JsonGuard\ErrorCode;
+use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\FormatExtension;
 use League\JsonGuard\Loaders\ArrayLoader;
 use League\JsonGuard\Loaders\CurlWebLoader;
 use League\JsonGuard\Validator;
+use League\JsonGuard\RuleSets\DraftFour;
+use League\JsonGuard\Constraints\PropertyConstraint;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -130,7 +133,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(ErrorCode::INVALID_STRING, $errors[1]['code']);
         $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]['pointer']);
     }
-    
+
     public function testErrorMessagePointerIsEscaped()
     {
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-data.json'));
@@ -240,6 +243,71 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($v->fails());
         $this->assertSame(99, $v->errors()[0]['code']);
+    }
+
+    public function testCustomRuleset()
+    {
+        $schema = json_decode('{"properties": { "foo": {"type": "string", "emoji": true} } }');
+        $data = json_decode('{ "foo": ":)" }');
+
+        $ruleSet = new CustomRulesetStub();
+        $v = new Validator($data, $schema, $ruleSet);
+        $this->assertTrue($v->passes());
+
+        $data = json_decode('{ "foo": "yo" }');
+        $v = new Validator($data, $schema, $ruleSet);
+        $this->assertTrue($v->fails());
+    }
+}
+
+class CustomRulesetStub extends DraftFour
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function has($rule)
+    {
+        if ($rule === 'emoji') {
+            return true;
+        }
+        return parent::has($rule);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConstraint($rule)
+    {
+        if ($rule === 'emoji') {
+            return new EmojiConstraint();
+        }
+        return parent::getConstraint($rule);
+    }
+}
+
+class EmojiConstraint implements PropertyConstraint
+{
+    protected static $emojis = [
+        ':)',
+        ':(',
+        ':D',
+        ';)'
+    ];
+
+    /**
+     * @param mixed       $value
+     * @param mixed       $parameter
+     * @param string|null $pointer
+     *
+     * @return \League\JsonGuard\ValidationError|null
+     */
+    public static function validate($value, $parameter, $pointer = null)
+    {
+        if (array_search($value, static::$emojis) !== false) {
+            return null;
+        }
+
+        return new ValidationError('Not an emoji', 999, (string) $value);
     }
 }
 
