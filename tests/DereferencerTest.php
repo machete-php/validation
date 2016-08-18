@@ -29,6 +29,21 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result->definitions->positiveIntegerDefault0, $result->properties->minItems->resolve());
     }
 
+    public function testRemoteWithoutId()
+    {
+        $deref  = new Dereferencer();
+        $result = $deref->dereference('http://localhost:1234/albums.json');
+
+        $this->assertSame('string', $result->items->properties->title->type);
+    }
+
+    public function testRemoteWithoutIdThrowsIfDereferencingAnObject()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $deref  = new Dereferencer();
+        $result = $deref->dereference(json_decode('{"$ref": "album.json"}'));
+    }
+
     public function testRecursiveRootPointer()
     {
         $deref  = new Dereferencer();

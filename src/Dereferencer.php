@@ -36,12 +36,13 @@ class Dereferencer
      */
     public function dereference($schema)
     {
-        // If a string is provided, assume they passed a path.
-        if (is_string($schema)) {
-            $schema = $this->loadExternalRef($schema);
+        $uri = is_string($schema) ? $schema : null;
+
+        if ($uri) {
+            $schema = $this->loadExternalRef($uri);
         }
 
-        return $this->crawl($schema);
+        return $this->crawl($schema, $uri);
     }
 
     /**
@@ -100,18 +101,19 @@ class Dereferencer
     /**
      * Crawl the schema and resolve any references.
      *
-     * @param object $schema
+     * @param object      $schema
+     * @param string|null $currentUri
      *
      * @return object
      */
-    private function crawl($schema)
+    private function crawl($schema, $currentUri = null)
     {
         $references = $this->getReferences($schema);
 
         foreach ($references as $path => $ref) {
             // resolve
             if ($this->isExternalRef($ref)) {
-                $ref      = $this->makeReferenceAbsolute($schema, $path, $ref);
+                $ref      = $this->makeReferenceAbsolute($schema, $path, $ref, $currentUri);
                 $resolved = $this->loadExternalRef($ref);
                 $resolved = $this->crawl($resolved);
             } else {
@@ -297,28 +299,40 @@ class Dereferencer
      * Take a relative reference, and prepend the id of the schema and any
      * sub schemas to get the absolute url.
      *
-     * @param object $schema
-     * @param string $path
-     * @param string $ref
+     * @param object      $schema
+     * @param string      $path
+     * @param string      $ref
+     * @param string|null $currentUri
      *
      * @return string
      */
-    private function makeReferenceAbsolute($schema, $path, $ref)
+    private function makeReferenceAbsolute($schema, $path, $ref, $currentUri = null)
     {
         if (!$this->isRelativeRef($ref)) {
             return $ref;
         }
 
-        $pointer     = new Pointer($schema);
-        $baseUrl     = $pointer->get('/id');
+        // The initial resolution scope of a schema is the URI of the schema itself,
+        // if any, or the empty URI if the schema was not loaded from a URI.
+        $scope = $currentUri ? str_replace(basename($currentUri), '', $currentUri) : '';
+
+        $pointer = new Pointer($schema);
+
+        // When an id is encountered, an implementation MUST resolve this id against the most
+        // immediate parent scope.  The resolved URI will be the new resolution scope
+        // for this subschema and all its children, until another id is encountered.
+        if ($pointer->has('/id')) {
+            $scope = $pointer->get('/id');
+        }
+
         $currentPath = '';
         foreach (array_slice(explode('/', $path), 1) as $segment) {
             $currentPath .= '/' . $segment;
             if ($pointer->has($currentPath . '/id')) {
-                $baseUrl .= $pointer->get($currentPath . '/id');
+                $scope .= $pointer->get($currentPath . '/id');
             }
         }
-        $ref = $baseUrl . $ref;
+        $ref = $scope . $ref;
 
         return $ref;
     }
