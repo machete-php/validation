@@ -207,13 +207,13 @@ class Dereferencer
 
     /**
      * @param string $attribute
-     * @param mixed $attribute_value
+     * @param mixed $attributeValue
      *
      * @return bool
      */
-    private function isRef($attribute, $attribute_value)
+    private function isRef($attribute, $attributeValue)
     {
-        return $attribute === '$ref' && is_string($attribute_value);
+        return $attribute === '$ref' && is_string($attributeValue);
     }
 
     /**
