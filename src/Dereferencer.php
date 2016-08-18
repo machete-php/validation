@@ -165,7 +165,7 @@ class Dereferencer
         $refs = [];
 
         if (!is_array($schema) && !is_object($schema)) {
-            if ($this->isRef($schema)) {
+            if ($this->isRef($path, $schema)) {
                 $refs[$path] = $schema;
             }
 
@@ -173,7 +173,7 @@ class Dereferencer
         }
 
         foreach ($schema as $attribute => $parameter) {
-            if ($this->isRef($attribute)) {
+            if ($this->isRef($attribute, $parameter)) {
                 $refs[$path] = $parameter;
             }
             if (is_object($parameter)) {
@@ -207,12 +207,13 @@ class Dereferencer
 
     /**
      * @param string $attribute
+     * @param mixed $attribute_value
      *
      * @return bool
      */
-    private function isRef($attribute)
+    private function isRef($attribute, $attribute_value)
     {
-        return $attribute === '$ref';
+        return $attribute === '$ref' && is_string($attribute_value);
     }
 
     /**

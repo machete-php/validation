@@ -94,4 +94,15 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $tildeProperty = 'tilde~item';
         $this->assertSame($result->$tildeProperty->key, $result->item->key);
     }
+
+    public function testPropertyNamedRefIsNotAReference()
+    {
+        $deref  = new Dereferencer();
+        $path   = 'file://' . __DIR__ . '/fixtures/property-named-ref.json';
+        $result = $deref->dereference($path);
+
+        $ref = '$ref';
+        $this->assertTrue(is_object($result->properties->$ref));
+        $this->assertSame($result->properties->$ref->description, 'The name of the property is $ref, but it\'s not a reference.');
+    }
 }
