@@ -6,7 +6,7 @@ title: Errors
 
 # Introduction
 
-The validator returns detailed errors for each validation failure.  Calling the `errors` method on the validator will return an array of [ValidationError objects](https://github.com/league/json-guard/blob/master/src/ValidationError.php).  Since the ValidationError objects have a `toArray` method, if you cast them to arrays they would look like this:
+The validator returns detailed errors for each validation failure.  Calling the `errors` method on the validator will return an array of [ValidationError objects](https://github.com/thephpleague/json-guard/blob/master/src/ValidationError.php).  Since the ValidationError objects have a `toArray` method, if you cast them to arrays they would look like this:
 
 ```php
 [
@@ -31,7 +31,7 @@ The validator returns detailed errors for each validation failure.  Calling the 
 
 ### Code
 
-The code is a unique identifier for this error type.  You can view the complete list of error codes [here](https://github.com/league/json-guard/blob/master/src/ErrorCode.php).
+The code is a unique identifier for this error type.  You can view the complete list of error codes [here](https://github.com/thephpleague/json-guard/blob/master/src/ErrorCode.php).
 
 ### Message
 
