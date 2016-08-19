@@ -329,7 +329,14 @@ class Dereferencer
         foreach (array_slice(explode('/', $path), 1) as $segment) {
             $currentPath .= '/' . $segment;
             if ($pointer->has($currentPath . '/id')) {
-                $scope .= $pointer->get($currentPath . '/id');
+                $id = $pointer->get($currentPath . '/id');
+                // If the ID is a relative reference, append it to the current scope.
+                // Otherwise we completely replace the scope.
+                if ($this->isRelativeRef($id)) {
+                    $scope .= $id;
+                } else {
+                    $scope = $id;
+                }
             }
         }
         $ref = $scope . $ref;
