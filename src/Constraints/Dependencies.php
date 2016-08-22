@@ -49,7 +49,8 @@ class Dependencies implements ContainerInstanceConstraint
                     sprintf('Unmet dependency "%s"', $dependency),
                     ErrorCode::UNMET_DEPENDENCY,
                     $data,
-                    $pointer
+                    $pointer,
+                    ['dependency' => $dependency]
                 );
             }
         }

@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 * It is now possible to pass a path with a reference fragment to the dereferencer.
+* Added the dependency constraint to the dependencies error
 
 ## 0.3.2 - 2016-07-26
 
