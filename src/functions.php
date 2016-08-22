@@ -154,6 +154,8 @@ function compare($leftOperand, $rightOperand)
 }
 
 /**
+ * Removes the fragment from a reference.
+ *
  * @param  string $ref
  * @return string
  */
