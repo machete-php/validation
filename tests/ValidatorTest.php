@@ -34,6 +34,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }, glob(schema_test_suite_path() . '/draft4/*.json'));
     }
 
+    public function unofficialTests()
+    {
+        return array_map(function ($file) {
+            return [$file];
+        }, glob(__DIR__ . '/unofficial/*.json'));
+    }
+
     /**
      * @dataProvider allDraft4Tests
      *
@@ -57,6 +64,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testDraft4CoreTestsPassWithoutBcMath($testFile)
     {
         require __DIR__ . '/disable_bccomp.php';
+        $test = json_decode(file_get_contents($testFile));
+
+        $this->runTestCase($test);
+    }
+
+    /**
+     * @dataProvider unofficialTests
+     */
+    public function testUnofficialTests($testFile)
+    {
         $test = json_decode(file_get_contents($testFile));
 
         $this->runTestCase($test);

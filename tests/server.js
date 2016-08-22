@@ -14,9 +14,15 @@ var remotes = {
         },
         "refToInteger": {
             "$ref": "#/integer"
+        },
+        // added to test relative references without id,
+        // when the inital schema is loaded from an object
+        // but the parent of the relative ref was retrieved by URI.
+        "relativeRefToInteger": {
+            "$ref": "integer.json"
         }
     },
-    // added by us
+    // added to test relative references without id
     "album.json": {
         "type": "object",
         "properties": {

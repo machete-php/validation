@@ -42,7 +42,7 @@ class Dereferencer
             $schema = $this->loadExternalRef($uri);
         }
 
-        return $this->crawl($schema, $uri);
+        return $this->crawl($schema, strip_fragment($uri));
     }
 
     /**
@@ -115,17 +115,15 @@ class Dereferencer
             if ($this->isExternalRef($ref)) {
                 $ref      = $this->makeReferenceAbsolute($schema, $path, $ref, $currentUri);
                 $resolved = $this->loadExternalRef($ref);
-                $resolved = $this->crawl($resolved);
+                // When loading an external reference, the current URI is now the
+                // URI of the external reference, minus the fragment.
+                $resolved = $this->crawl($resolved, strip_fragment($ref));
             } else {
                 $resolved = new Reference($schema, $ref);
             }
 
             // handle any fragments
-            $fragment = parse_url($ref, PHP_URL_FRAGMENT);
-            if ($this->isExternalRef($ref) && is_string($fragment)) {
-                $pointer  = new Pointer($resolved);
-                $resolved = $pointer->get($fragment);
-            }
+            $resolved = $this->resolveFragment($ref, $resolved);
 
             // Immediately resolve any root references.
             if ($path === '') {
@@ -143,6 +141,25 @@ class Dereferencer
                     $pointer->set($path, $resolved);
                 }
             }
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Check if the reference contains a fragment and resolve
+     * the pointer.  Otherwise returns the original schema.
+     *
+     * @param  string $ref
+     * @param  object $schema
+     * @return object
+     */
+    private function resolveFragment($ref, $schema)
+    {
+        $fragment = parse_url($ref, PHP_URL_FRAGMENT);
+        if ($this->isExternalRef($ref) && is_string($fragment)) {
+            $pointer  = new Pointer($schema);
+            return $pointer->get($fragment);
         }
 
         return $schema;
@@ -277,7 +294,10 @@ class Dereferencer
     {
         if (!preg_match('#^.+\:\/\/.*#', $path)) {
             throw new \InvalidArgumentException(
-                'Your path is missing a valid prefix.  The schema path should start with a prefix i.e. "file://".'
+                sprintf(
+                    'Your path  "%s" is missing a valid prefix.  The schema path should start with a prefix i.e. "file://".',
+                    $path
+                )
             );
         }
     }

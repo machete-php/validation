@@ -152,3 +152,16 @@ function compare($leftOperand, $rightOperand)
 {
     return Comparator::compare($leftOperand, $rightOperand);
 }
+
+/**
+ * @param  string $ref
+ * @return string
+ */
+function strip_fragment($ref)
+{
+    if ($hashPos = strrpos($ref, '#')) {
+        return substr($ref, 0, $hashPos);
+    }
+
+    return $ref;
+}

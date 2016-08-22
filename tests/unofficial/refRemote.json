@@ -1,0 +1,42 @@
+[
+    {
+        "description": "change resolution scope with absolute id",
+        "schema": {
+            "id": "http://localhost:1234/",
+            "items": {
+                "id": "http://localhost:1234/folder/",
+                "items": {"$ref": "folderInteger.json"}
+            }
+        },
+        "tests": [
+            {
+                "description": "changed scope ref valid",
+                "data": [[1]],
+                "valid": true
+            },
+            {
+                "description": "changed scope ref invalid",
+                "data": [["a"]],
+                "valid": false
+            }
+        ]
+    },
+    {
+        "description": "Initial resolution scope is the URI of the schema",
+        "schema": {
+            "$ref": "http://localhost:1234/subSchemas.json#/relativeRefToInteger"
+        },
+        "tests": [
+            {
+                "description": "relative ref valid",
+                "data": 1,
+                "valid": true
+            },
+            {
+                "description": "relative ref invalid",
+                "data": "a",
+                "valid": false
+            }
+        ]
+    }
+]
