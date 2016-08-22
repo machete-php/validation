@@ -36,15 +36,15 @@ class Dereferencer
      */
     public function dereference($schema)
     {
-        $uri = is_string($schema) ? $schema : null;
-
-        if ($uri) {
+        if (is_string($schema)) {
+            $uri    =  $schema;
             $schema = $this->loadExternalRef($uri);
             $schema = $this->resolveFragment($uri, $schema);
-            $uri    = strip_fragment($uri);
+
+            return $this->crawl($schema, strip_fragment($uri));
         }
 
-        return $this->crawl($schema, $uri);
+        return $this->crawl($schema);
     }
 
     /**
