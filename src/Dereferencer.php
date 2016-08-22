@@ -40,6 +40,7 @@ class Dereferencer
 
         if ($uri) {
             $schema = $this->loadExternalRef($uri);
+            $schema = $this->resolveFragment($uri, $schema);
         }
 
         return $this->crawl($schema, strip_fragment($uri));
