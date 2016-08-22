@@ -41,9 +41,10 @@ class Dereferencer
         if ($uri) {
             $schema = $this->loadExternalRef($uri);
             $schema = $this->resolveFragment($uri, $schema);
+            $uri    = strip_fragment($uri);
         }
 
-        return $this->crawl($schema, strip_fragment($uri));
+        return $this->crawl($schema, $uri);
     }
 
     /**
@@ -114,11 +115,7 @@ class Dereferencer
         foreach ($references as $path => $ref) {
             // resolve
             if ($this->isExternalRef($ref)) {
-                $ref      = $this->makeReferenceAbsolute($schema, $path, $ref, $currentUri);
-                $resolved = $this->loadExternalRef($ref);
-                // When loading an external reference, the current URI is now the
-                // URI of the external reference, minus the fragment.
-                $resolved = $this->crawl($resolved, strip_fragment($ref));
+                $resolved = $this->resolveExternalReference($schema, $path, $ref, $currentUri);
             } else {
                 $resolved = new Reference($schema, $ref);
             }
@@ -126,25 +123,52 @@ class Dereferencer
             // handle any fragments
             $resolved = $this->resolveFragment($ref, $resolved);
 
-            // Immediately resolve any root references.
-            if ($path === '') {
-                while ($resolved instanceof Reference) {
-                    $resolved = $resolved->resolve();
-                }
-            }
-
             // merge
-            if ($path === '') {
-                $this->mergeRootRef($schema, $resolved);
-            } else {
-                $pointer = new Pointer($schema);
-                if ($pointer->has($path)) {
-                    $pointer->set($path, $resolved);
-                }
-            }
+            $this->mergeResolvedReference($schema, $resolved, $path);
         }
 
         return $schema;
+    }
+
+    /**
+     * Resolve the external referefence at the given path.
+     *
+     * @param  object $schema          The JSON Schema
+     * @param  string $path            A JSON pointer to the $ref's location in the schema.
+     * @param  string $ref             The JSON reference
+     * @param  string|null $currentUri The URI of the schema, or null if the schema was loaded from an object.
+     * @return object                  The schema with the reference resolved.
+     */
+    private function resolveExternalReference($schema, $path, $ref, $currentUri)
+    {
+        $ref      = $this->makeReferenceAbsolute($schema, $path, $ref, $currentUri);
+        $resolved = $this->loadExternalRef($ref);
+
+        return $this->crawl($resolved, strip_fragment($ref));
+    }
+
+    /**
+     * Merge the resolved reference with the schema, at the given path.
+     *
+     * @param  object $schema   The schema to merge the resolved reference with
+     * @param  object $resolved The resolved schema
+     * @param  string $path     A JSON pointer to the path where the reference should be merged.
+     * @return void
+     */
+    private function mergeResolvedReference($schema, $resolved, $path)
+    {
+        if ($path === '') {
+            // Immediately resolve any root references.
+            while ($resolved instanceof Reference) {
+                $resolved = $resolved->resolve();
+            }
+            $this->mergeRootRef($schema, $resolved);
+        } else {
+            $pointer = new Pointer($schema);
+            if ($pointer->has($path)) {
+                $pointer->set($path, $resolved);
+            }
+        }
     }
 
     /**
@@ -189,19 +213,21 @@ class Dereferencer
         }
 
         foreach ($schema as $attribute => $parameter) {
-            if ($this->isRef($attribute, $parameter)) {
-                $refs[$path] = $parameter;
-            }
-            if (is_object($parameter)) {
-                $refs = array_merge($refs, $this->getReferences($parameter, $this->pathPush($path, $attribute)));
-            }
-            if (is_array($parameter)) {
-                foreach ($parameter as $k => $v) {
-                    $refs = array_merge(
-                        $refs,
-                        $this->getReferences($v, $this->pathPush($this->pathPush($path, $attribute), $k))
-                    );
-                }
+            switch (true) {
+                case $this->isRef($attribute, $parameter):
+                    $refs[$path] = $parameter;
+                    break;
+                case is_object($parameter):
+                    $refs = array_merge($refs, $this->getReferences($parameter, $this->pathPush($path, $attribute)));
+                    break;
+                case is_array($parameter):
+                    foreach ($parameter as $k => $v) {
+                        $refs = array_merge(
+                            $refs,
+                            $this->getReferences($v, $this->pathPush($this->pathPush($path, $attribute), $k))
+                        );
+                    }
+                    break;
             }
         }
 
@@ -233,23 +259,23 @@ class Dereferencer
     }
 
     /**
-     * @param string $parameter
+     * @param string $value
      *
      * @return bool
      */
-    private function isInternalRef($parameter)
+    private function isInternalRef($value)
     {
-        return is_string($parameter) && substr($parameter, 0, 1) === '#';
+        return is_string($value) && substr($value, 0, 1) === '#';
     }
 
     /**
-     * @param string $parameter
+     * @param string $value
      *
      * @return bool
      */
-    private function isExternalRef($parameter)
+    private function isExternalRef($value)
     {
-        return !$this->isInternalRef($parameter);
+        return !$this->isInternalRef($value);
     }
 
     /**
@@ -296,7 +322,8 @@ class Dereferencer
         if (!preg_match('#^.+\:\/\/.*#', $path)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Your path  "%s" is missing a valid prefix.  The schema path should start with a prefix i.e. "file://".',
+                    'Your path  "%s" is missing a valid prefix.  ' .
+                    'The schema path should start with a prefix i.e. "file://".',
                     $path
                 )
             );
@@ -333,35 +360,70 @@ class Dereferencer
             return $ref;
         }
 
-        // The initial resolution scope of a schema is the URI of the schema itself,
-        // if any, or the empty URI if the schema was not loaded from a URI.
-        $scope = $currentUri ? str_replace(basename($currentUri), '', $currentUri) : '';
+        $scope = $this->getInitialResolutionScope($currentUri);
+        $scope = $this->getResolvedResolutionScope($schema, $path, $scope);
 
+        return $scope . $ref;
+    }
+
+    /**
+     * Given the URI of the schema, get the intial resolution scope.
+     *
+     * If a URI is given, this method returns the URI without the schema filename or any reference fragment.
+     * I.E, Given 'http://localhost:1234/album.json#/artist', this method would return `http://localhost:1234/`.
+     *
+     * @param  string|null $uri
+     * @return string
+     */
+    private function getInitialResolutionScope($uri)
+    {
+        return $uri ? strip_fragment(str_replace(basename($uri), '', $uri)) : '';
+    }
+
+    /**
+     * Given a JSON pointer, walk the path and resolve any found IDs against the parent scope.
+     *
+     * @param  object $schema      The JSON Schema object.
+     * @param  string $path        A JSON Pointer to the path we are resolving the scope for.
+     * @param  string $parentScope The initial resolution scope.  Usually the URI of the schema.
+     * @return string              The resolved scope
+     */
+    private function getResolvedResolutionScope($schema, $path, $parentScope)
+    {
         $pointer = new Pointer($schema);
 
         // When an id is encountered, an implementation MUST resolve this id against the most
         // immediate parent scope.  The resolved URI will be the new resolution scope
         // for this subschema and all its children, until another id is encountered.
-        if ($pointer->has('/id')) {
-            $scope = $pointer->get('/id');
-        }
 
         $currentPath = '';
-        foreach (array_slice(explode('/', $path), 1) as $segment) {
-            $currentPath .= '/' . $segment;
+        foreach (explode('/', $path) as $segment) {
+            if (!empty($segment)) {
+                $currentPath .= '/' . $segment;
+            }
             if ($pointer->has($currentPath . '/id')) {
-                $id = $pointer->get($currentPath . '/id');
-                // If the ID is a relative reference, append it to the current scope.
-                // Otherwise we completely replace the scope.
-                if ($this->isRelativeRef($id)) {
-                    $scope .= $id;
-                } else {
-                    $scope = $id;
-                }
+                $parentScope = $this->resolveIdAgainstParentScope($pointer->get($currentPath . '/id'), $parentScope);
             }
         }
-        $ref = $scope . $ref;
 
-        return $ref;
+        return $parentScope;
+    }
+
+    /**
+     * Resolve an ID against the parent scope, and return the resolved scope.
+     *
+     * @param  string $id          The ID of the Schema.
+     * @param  string $parentScope The parent scope of the ID.
+     * @return string
+     */
+    private function resolveIdAgainstParentScope($id, $parentScope)
+    {
+        if ($this->isRelativeRef($id)) {
+            // A relative reference is appended to the current scope.
+            return $parentScope .= $id;
+        }
+
+        // An absolute reference replaces the scope entirely.
+        return $id;
     }
 }
