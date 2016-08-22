@@ -161,9 +161,7 @@ function compare($leftOperand, $rightOperand)
  */
 function strip_fragment($ref)
 {
-    if ($hashPos = strrpos($ref, '#')) {
-        return substr($ref, 0, $hashPos);
-    }
+    $fragment = parse_url($ref, PHP_URL_FRAGMENT);
 
-    return $ref;
+    return $fragment ? str_replace($fragment, '', $ref) : $ref;
 }
