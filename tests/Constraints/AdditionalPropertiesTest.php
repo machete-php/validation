@@ -19,10 +19,10 @@ class AdditionalPropertiesTest extends \PHPUnit_Framework_TestCase
 {
     public function testExceptionMessageContainsPropertyName()
     {
-        $data = array('prop-name' => 'Property value in test');
+        $data = ['prop-name' => 'Property value in test'];
         $data = json_decode(json_encode($data));
 
-        $schema = array('additionalProperties' => false);
+        $schema = ['additionalProperties' => false];
         $schema = json_decode(json_encode($schema));
 
         $validador = new Validator($data, $schema);
