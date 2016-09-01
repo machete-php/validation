@@ -1,15 +1,4 @@
 <?php
-/**
- * This file is part of the Gruvo software.
- * Este arquivo é parte do software da Gruvo.
- *
- * (c) Paulo Ribeiro <paulo@gruvo.com.br>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-
 namespace League\JsonGuard\Test\Constraints;
 
 
