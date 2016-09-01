@@ -25,11 +25,11 @@ class AdditionalPropertiesTest extends \PHPUnit_Framework_TestCase
         $schema = ['additionalProperties' => false];
         $schema = json_decode(json_encode($schema));
 
-        $validador = new Validator($data, $schema);
+        $validator = new Validator($data, $schema);
 
-        $this->assertTrue($validador->fails());
+        $this->assertTrue($validator->fails());
 
-        $validationErrors = $validador->errors();
+        $validationErrors = $validator->errors();
 
         $this->assertCount(1, $validationErrors);
         $this->assertContains('prop-name', $validationErrors[0]->getMessage());
