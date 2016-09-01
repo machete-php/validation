@@ -31,7 +31,7 @@ class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstrai
 
         if ($parameter === false) {
             return new ValidationError(
-                'Additional properties are not allowed.',
+                'Additional properties are not allowed: \'' . implode('\', \'', $diff) . '\'.',
                 ErrorCode::NOT_ALLOWED_PROPERTY,
                 $data,
                 $pointer
