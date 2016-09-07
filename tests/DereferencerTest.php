@@ -44,11 +44,19 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $result = $deref->dereference(json_decode('{"$ref": "album.json"}'));
     }
 
-    public function testRemoteWithFragment()
+    public function testWebRemoteWithFragment()
     {
         $deref  = new Dereferencer();
         $result = $deref->dereference('http://localhost:1234/subSchemas.json#/relativeRefToInteger');
         $this->assertSame(['type' => 'integer'], (array) $result);
+    }
+
+    public function testFileRemoteWithFragment()
+    {
+        $deref  = new Dereferencer();
+        $path = 'file://' . __DIR__ . '/fixtures/schema.json#/properties';
+        $result = $deref->dereference($path);
+        $this->assertArrayHasKey('name', (array) $result);
     }
 
     public function testRecursiveRootPointer()

@@ -13,6 +13,7 @@ class FileLoader implements Loader
      */
     public function load($path)
     {
+        $path = rtrim(JsonGuard\strip_fragment($path), '#');
         if (!file_exists($path)) {
             throw SchemaLoadingException::notFound($path);
         }

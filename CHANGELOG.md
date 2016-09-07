@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixed
+
+* You can now use pointers when using the file loader, I.E. 'file://my-schema.json#/some/property'.
+
 ## 0.3.3 - 2016-08-22
 
 ### Fixed
