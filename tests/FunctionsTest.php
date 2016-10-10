@@ -31,4 +31,28 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse(\League\JsonGuard\is_json_integer($jsonInteger));
         }
     }
+
+    public function testUris()
+    {
+        return [
+            ['http://x.y.z/rootschema.json#', '', 'http://x.y.z/rootschema.json#'],
+            ['#foo', 'http://x.y.z/rootschema.json#', 'http://x.y.z/rootschema.json#foo'],
+            // Technically the spec adds the superfluous # at the end, but we don't need to enforce that.
+            ['otherschema.json', 'http://x.y.z/rootschema.json#', 'http://x.y.z/otherschema.json'],
+            ['#bar', 'http://x.y.z/otherschema.json#', 'http://x.y.z/otherschema.json#bar'],
+            ['t/inner.json#a', 'http://x.y.z/otherschema.json#', 'http://x.y.z/t/inner.json#a'],
+            ['some://where.else/completely#', 'http://x.y.z/rootschema.json#', 'some://where.else/completely#'],
+            ['folderInteger.json', 'http://localhost:1234/folder/', 'http://localhost:1234/folder/folderInteger.json'],
+            ['some-id.json', '', 'some-id.json'],
+        ];
+    }
+
+    /**
+     * @dataProvider testUris
+     */
+    public function testResolveUri($id, $parentScope, $expectedResult)
+    {
+        $result = \League\JsonGuard\resolve_uri($id, $parentScope);
+        $this->assertSame($expectedResult, $result);
+    }
 }

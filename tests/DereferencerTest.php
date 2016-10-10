@@ -135,4 +135,11 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_object($result->properties->$ref));
         $this->assertSame($result->properties->$ref->description, 'The name of the property is $ref, but it\'s not a reference.');
     }
+
+    public function testProperlyResolvesRelativeScopeAgainstAnAbsoluteId()
+    {
+        $deref = new Dereferencer();
+        $result = $deref->dereference(json_decode('{"id": "http://localhost:1234/test.json", "properties": {"album": {"$ref": "album.json"}}}'));
+        $this->assertSame('object', $result->properties->album->type);
+    }
 }

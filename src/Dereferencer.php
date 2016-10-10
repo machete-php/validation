@@ -37,7 +37,7 @@ class Dereferencer
     public function dereference($schema)
     {
         if (is_string($schema)) {
-            $uri    =  $schema;
+            $uri    = $schema;
             $schema = $this->loadExternalRef($uri);
             $schema = $this->resolveFragment($uri, $schema);
 
@@ -131,12 +131,13 @@ class Dereferencer
     }
 
     /**
-     * Resolve the external referefence at the given path.
+     * Resolve the external reference at the given path.
      *
-     * @param  object $schema          The JSON Schema
-     * @param  string $path            A JSON pointer to the $ref's location in the schema.
-     * @param  string $ref             The JSON reference
+     * @param  object      $schema     The JSON Schema
+     * @param  string      $path       A JSON pointer to the $ref's location in the schema.
+     * @param  string      $ref        The JSON reference
      * @param  string|null $currentUri The URI of the schema, or null if the schema was loaded from an object.
+     *
      * @return object                  The schema with the reference resolved.
      */
     private function resolveExternalReference($schema, $path, $ref, $currentUri)
@@ -153,6 +154,7 @@ class Dereferencer
      * @param  object $schema   The schema to merge the resolved reference with
      * @param  object $resolved The resolved schema
      * @param  string $path     A JSON pointer to the path where the reference should be merged.
+     *
      * @return void
      */
     private function mergeResolvedReference($schema, $resolved, $path)
@@ -177,13 +179,15 @@ class Dereferencer
      *
      * @param  string $ref
      * @param  object $schema
+     *
      * @return object
      */
     private function resolveFragment($ref, $schema)
     {
         $fragment = parse_url($ref, PHP_URL_FRAGMENT);
         if ($this->isExternalRef($ref) && is_string($fragment)) {
-            $pointer  = new Pointer($schema);
+            $pointer = new Pointer($schema);
+
             return $pointer->get($fragment);
         }
 
@@ -249,7 +253,7 @@ class Dereferencer
 
     /**
      * @param string $attribute
-     * @param mixed $attributeValue
+     * @param mixed  $attributeValue
      *
      * @return bool
      */
@@ -331,19 +335,6 @@ class Dereferencer
     }
 
     /**
-     * Determine if a reference is relative.
-     * A reference is relative if it does not being with a prefix.
-     *
-     * @param string $ref
-     *
-     * @return bool
-     */
-    private function isRelativeRef($ref)
-    {
-        return !preg_match('#^.+\:\/\/.*#', $ref);
-    }
-
-    /**
      * Take a relative reference, and prepend the id of the schema and any
      * sub schemas to get the absolute url.
      *
@@ -356,74 +347,35 @@ class Dereferencer
      */
     private function makeReferenceAbsolute($schema, $path, $ref, $currentUri = null)
     {
-        if (!$this->isRelativeRef($ref)) {
+        // If the reference is absolute, we can just return it without walking the schema.
+        if (!is_relative_ref($ref)) {
             return $ref;
         }
 
-        $scope = $this->getInitialResolutionScope($currentUri);
-        $scope = $this->getResolvedResolutionScope($schema, $path, $scope);
+        // Otherwise we need to walk the schema and resolve every ID against the most immediate parent scope.
+        // Once we have determined the resolution scope at the path, we can finally resolve the reference.
 
-        return $scope . $ref;
-    }
+        // 7.1.) The initial resolution scope of a schema is the URI of the schema itself, if any, or the empty URI
+        // if the schema was not loaded from a URI.
 
-    /**
-     * Given the URI of the schema, get the intial resolution scope.
-     *
-     * If a URI is given, this method returns the URI without the schema filename or any reference fragment.
-     * I.E, Given 'http://localhost:1234/album.json#/artist', this method would return `http://localhost:1234/`.
-     *
-     * @param  string|null $uri
-     * @return string
-     */
-    private function getInitialResolutionScope($uri)
-    {
-        return $uri ? strip_fragment(str_replace(basename($uri), '', $uri)) : '';
-    }
+        // 7.2.2.) The "id" keyword (or "id", for short) is used to alter the resolution scope. When an id is
+        // encountered, an implementation MUST resolve this id against the most immediate parent scope. The resolved
+        // URI will be the new resolution scope for this subschema and all its children, until another id is
+        // encountered.
 
-    /**
-     * Given a JSON pointer, walk the path and resolve any found IDs against the parent scope.
-     *
-     * @param  object $schema      The JSON Schema object.
-     * @param  string $path        A JSON Pointer to the path we are resolving the scope for.
-     * @param  string $parentScope The initial resolution scope.  Usually the URI of the schema.
-     * @return string              The resolved scope
-     */
-    private function getResolvedResolutionScope($schema, $path, $parentScope)
-    {
-        $pointer = new Pointer($schema);
-
-        // When an id is encountered, an implementation MUST resolve this id against the most
-        // immediate parent scope.  The resolved URI will be the new resolution scope
-        // for this subschema and all its children, until another id is encountered.
-
+        $pointer     = new Pointer($schema);
         $currentPath = '';
+        $scope = $currentUri ?: '';
         foreach (explode('/', $path) as $segment) {
             if (!empty($segment)) {
                 $currentPath .= '/' . $segment;
             }
             if ($pointer->has($currentPath . '/id')) {
-                $parentScope = $this->resolveIdAgainstParentScope($pointer->get($currentPath . '/id'), $parentScope);
+                $id = $pointer->get($currentPath . '/id');
+                $scope = resolve_uri($id, $scope);
             }
         }
 
-        return $parentScope;
-    }
-
-    /**
-     * Resolve an ID against the parent scope, and return the resolved scope.
-     *
-     * @param  string $id          The ID of the Schema.
-     * @param  string $parentScope The parent scope of the ID.
-     * @return string
-     */
-    private function resolveIdAgainstParentScope($id, $parentScope)
-    {
-        if ($this->isRelativeRef($id)) {
-            // A relative reference is appended to the current scope.
-            return $parentScope .= $id;
-        }
-
-        // An absolute reference replaces the scope entirely.
-        return $id;
+        return resolve_uri($ref, $scope);
     }
 }
