@@ -376,7 +376,9 @@ class Dereferencer
             }
             if ($pointer->has($currentPath . '/id')) {
                 $id = $pointer->get($currentPath . '/id');
-                $scope = resolve_uri($id, $scope);
+                if (is_string($id)) {
+                    $scope = resolve_uri($id, $scope);
+                }
             }
         }
 
