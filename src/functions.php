@@ -185,37 +185,16 @@ function is_relative_ref($ref)
  * Resolve the given id against the parent scope and return the resolved URI.
  *
  * @param string $id          The id to resolve.  This should be a valid relative or absolute URI.
- * @param string $parentScope The parent scope to resolve against.  Should be a valid URI or empty.z
+ * @param string $parentScope The parent scope to resolve against.  Should be a valid URI or empty.
  *
  * @return string
  */
 function resolve_uri($id, $parentScope)
 {
-    // If the id is absolute, it doesn't need to be resolved.
-    if (!is_relative_ref($id)) {
-        return $id;
-    }
-
     // If there is no parent scope, there is nothing to resolve against.
     if ($parentScope === '') {
         return $id;
     }
 
-    $uri   = Uri\parse($parentScope);
-    $parts = Uri\parse($id);
-
-    if (!empty($parts['path'])) {
-        // If the path ends in a slash, it shouldn't be replaced but instead appended to.
-        if ('/' === substr($uri['path'], -1)) {
-            $uri['path'] .= ltrim($parts['path'], '/');
-        } else {
-            $uri['path'] = '/' . ltrim($parts['path'], '/');
-        }
-    }
-
-    if (!empty($parts['fragment'])) {
-        $uri['fragment'] = $parts['fragment'];
-    }
-
-    return Uri\build($uri);
+    return Uri\resolve($parentScope, $id);
 }

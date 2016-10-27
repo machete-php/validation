@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * You can now use pointers when using the file loader, I.E. 'file://my-schema.json#/some/property'.
 * Fixed a bug where non string values passed to `format` would fail when they should pass.
+* Massive improvements to URI resolution.  Now using sabre/uri (BSD-3) to resolve reference URIs.
 
 ## 0.3.3 - 2016-08-22
 
