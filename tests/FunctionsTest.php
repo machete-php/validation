@@ -45,9 +45,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
             ['folderInteger.json', 'http://localhost:1234/folder/', 'http://localhost:1234/folder/folderInteger.json'],
             ['some-id.json', '', 'some-id.json'],
             ['item.json', 'http://some/where/other-item.json', 'http://some/where/item.json'],
-            // @todo: fixed in https://github.com/fruux/sabre-uri/pull/10,
-            // we just need to wait for a PHP 5.5 compatible release to update composer.
-            // ['item.json', 'file:///schemas/other-item.json', 'file:///schemas/item.json'],
+            ['item.json', 'file:///schemas/other-item.json', 'file:///schemas/item.json'],
         ];
     }
 
