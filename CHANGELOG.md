@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 * You can now use pointers when using the file loader, I.E. 'file://my-schema.json#/some/property'.
+* Fixed a bug where non string values passed to `format` would fail when they should pass.
 
 ## 0.3.3 - 2016-08-22
 

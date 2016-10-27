@@ -86,7 +86,7 @@ class Format implements PropertyConstraint
      */
     private static function validateRegex($format, $value, $pattern, $errorCode, $pointer)
     {
-        if (preg_match($pattern, $value) === 1) {
+        if (!is_string($value) || preg_match($pattern, $value) === 1) {
             return null;
         }
 
@@ -105,7 +105,7 @@ class Format implements PropertyConstraint
      */
     private static function validateFilter($format, $value, $filter, $options, $errorCode, $pointer)
     {
-        if (filter_var($value, $filter, $options) !== false) {
+        if (!is_string($value) || filter_var($value, $filter, $options) !== false) {
             return null;
         }
 
