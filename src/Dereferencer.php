@@ -356,20 +356,29 @@ class Dereferencer
             return $ref;
         }
 
-        // Otherwise we need to walk the schema and resolve every ID against the most immediate parent scope.
-        // Once we have determined the resolution scope at the path, we can finally resolve the reference.
+        $scope = $currentUri ?: '';
+        $scope = $this->getResolvedResolutionScope($schema, $path, $scope);
 
-        // 7.1.) The initial resolution scope of a schema is the URI of the schema itself, if any, or the empty URI
-        // if the schema was not loaded from a URI.
+        return resolve_uri($ref, $scope);
+    }
 
-        // 7.2.2.) The "id" keyword (or "id", for short) is used to alter the resolution scope. When an id is
-        // encountered, an implementation MUST resolve this id against the most immediate parent scope. The resolved
-        // URI will be the new resolution scope for this subschema and all its children, until another id is
-        // encountered.
-
+    /**
+     * Get the resolved resolution scope by walking the schema and resolving
+     * every `id` against the msot immediate parent scope.
+     *
+     * @see  http://json-schema.org/latest/json-schema-core.html#anchor27
+     *
+     * @param  object $schema
+     * @param  string $path
+     * @param  string $scope
+     *
+     * @return string
+     */
+    private function getResolvedResolutionScope($schema, $path, $scope)
+    {
         $pointer     = new Pointer($schema);
         $currentPath = '';
-        $scope = $currentUri ?: '';
+
         foreach (explode('/', $path) as $segment) {
             if (!empty($segment)) {
                 $currentPath .= '/' . $segment;
@@ -382,6 +391,6 @@ class Dereferencer
             }
         }
 
-        return resolve_uri($ref, $scope);
+        return $scope;
     }
 }
