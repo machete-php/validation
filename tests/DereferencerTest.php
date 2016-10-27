@@ -4,6 +4,7 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard\Dereferencer;
 use League\JsonGuard\Loaders\ArrayLoader;
+use League\JsonGuard\Reference;
 
 class DereferencerTest extends \PHPUnit_Framework_TestCase
 {
@@ -141,5 +142,15 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $deref = new Dereferencer();
         $result = $deref->dereference(json_decode('{"id": "http://localhost:1234/test.json", "properties": {"album": {"$ref": "album.json"}}}'));
         $this->assertSame('object', $result->properties->album->type);
+    }
+
+    public function testCircularExternalReference()
+    {
+        $deref  = new Dereferencer();
+        $path   = 'file://' . __DIR__ . '/fixtures/circular-ext-ref.json';
+        $result = $deref->dereference($path);
+        $this->assertInstanceOf(Reference::class, $result->properties->rating);
+        $this->assertFalse($result->properties->rating->additionalProperties);
+        $this->assertFalse($result->properties->rating->properties->rating->additionalProperties);
     }
 }

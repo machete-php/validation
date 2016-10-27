@@ -115,7 +115,9 @@ class Dereferencer
         foreach ($references as $path => $ref) {
             // resolve
             if ($this->isExternalRef($ref)) {
-                $resolved = $this->resolveExternalReference($schema, $path, $ref, $currentUri);
+                $resolved = new Reference(function () use ($schema, $path, $ref, $currentUri) {
+                    return $this->resolveExternalReference($schema, $path, $ref, $currentUri);
+                }, $ref);
             } else {
                 $resolved = new Reference($schema, $ref);
             }
@@ -186,8 +188,10 @@ class Dereferencer
     {
         $fragment = parse_url($ref, PHP_URL_FRAGMENT);
         if ($this->isExternalRef($ref) && is_string($fragment)) {
-            $pointer = new Pointer($schema);
-
+            if ($schema instanceof Reference) {
+                $schema = $schema->resolve();
+            }
+            $pointer  = new Pointer($schema);
             return $pointer->get($fragment);
         }
 

@@ -2,6 +2,8 @@
 
 namespace League\JsonGuard;
 
+use Closure;
+
 /**
  * A Reference object represents an internal $ref in a JSON object.
  * Because JSON references can be circular, in-lining the reference is
@@ -11,9 +13,10 @@ namespace League\JsonGuard;
 class Reference implements \JsonSerializable
 {
     /**
-     * A JSON object resulting from a json_decode call.
+     * A JSON object resulting from a json_decode call or a Closure.
+     * If a closure is used it should resolve to a JSON object when called.
      *
-     * @var object
+     * @var object|Closure
      */
     private $schema;
 
@@ -26,8 +29,8 @@ class Reference implements \JsonSerializable
     private $ref;
 
     /**
-     * @param object $schema
-     * @param string $ref
+     * @param object|Closure $schema
+     * @param string         $ref
      */
     public function __construct($schema, $ref)
     {
@@ -42,6 +45,7 @@ class Reference implements \JsonSerializable
      * to inline the data.
      *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      */
@@ -57,6 +61,29 @@ class Reference implements \JsonSerializable
      */
     public function resolve()
     {
+        if ($this->schema instanceof Closure) {
+            return $this->resolveExternalReference();
+        }
+        return $this->resolveInternalReference();
+    }
+
+    /**
+     * Resolve an external reference and return the resolved schema.
+     *
+     * @return mixed The resolved schema
+     */
+    private function resolveExternalReference()
+    {
+        return call_user_func($this->schema);
+    }
+
+    /**
+     * Resolve an internal reference and return the resolved schema.
+     *
+     * @return mixed The resolved schema
+     */
+    private function resolveInternalReference()
+    {
         $path    = trim($this->ref, '#');
         $pointer = new Pointer($this->schema);
         return $pointer->get($path);
@@ -65,8 +92,10 @@ class Reference implements \JsonSerializable
     /**
      * Proxies property access to the underlying schema.
      *
-     * @param string $property
+     * @param  string $property
+     *
      * @return mixed
+     *
      * @throws \InvalidArgumentException
      */
     public function __get($property)

@@ -1,0 +1,9 @@
+{
+    "description": "A circular reference using external references",
+    "properties": {
+        "rating": {
+            "$ref": "circular-ext-ref.json"
+        }
+    },
+    "additionalProperties": false
+}

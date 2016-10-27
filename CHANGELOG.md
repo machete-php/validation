@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+* The dereferencer now lazily resolves external references.
+
 ### Fixed
 
 * You can now use pointers when using the file loader, I.E. 'file://my-schema.json#/some/property'.
