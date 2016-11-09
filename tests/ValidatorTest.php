@@ -149,6 +149,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(ErrorCode::INVALID_STRING, $errors[1]['code']);
         $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]['pointer']);
+        $this->assertSame(json_encode($errors[0]->toArray()), json_encode($errors[0]));
     }
 
     public function testErrorMessagePointerIsEscaped()
