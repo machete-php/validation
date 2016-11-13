@@ -79,9 +79,13 @@ class Type implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('Value "%s" is not a(n) %s.', JsonGuard\as_string($value), $type);
-
-        return new ValidationError($message, $errorCode, $value, $pointer);
+        return new ValidationError(
+            'Value {value} is not a(n) {type}',
+            $errorCode,
+            $value,
+            $pointer,
+            ['value' => $value, 'type' => $type]
+        );
     }
 
     /**
@@ -100,12 +104,15 @@ class Type implements PropertyConstraint
             }
         }
 
-        $message = sprintf(
-            'Value "%s" is not one of: %s',
-            JsonGuard\as_string($value),
-            implode(', ', array_map('League\JsonGuard\as_string', $choices))
+        return new ValidationError(
+            'Value {value} is not one of: {choices}',
+            ErrorCode::INVALID_TYPE,
+            $value,
+            $pointer,
+            [
+                'value'   => $value,
+                'choices' => $choices
+            ]
         );
-
-        return new ValidationError($message, ErrorCode::INVALID_TYPE, $value, $pointer, ['types' => $choices]);
     }
 }

@@ -54,9 +54,9 @@ Errors for failing validation are retrieved by calling the `errors` method.  For
 
 ## Limiting Depth
 
-Because circular references are allowed and sometimes neccessary, the validator will continue recursively validating the JSON data until it runs out of data.
+Because circular references are allowed and sometimes necessary, the validator will continue recursively validating the JSON data until it runs out of data.
 
-This means a payload like this with a cooresponding schema could cause the validator to continue to run for a _very_ long time:
+This means a payload like this with a corresponding schema could cause the validator to continue to run for a _very_ long time:
 
 ```json
 // data:

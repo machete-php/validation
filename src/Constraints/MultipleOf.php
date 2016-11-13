@@ -24,17 +24,12 @@ class MultipleOf implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Number "%d" is not a multiple of "%d"',
-            JsonGuard\as_string($value),
-            JsonGuard\as_string($multiple)
-        );
         return new ValidationError(
-            $message,
+            'Number {value} is not a multiple of {multiple_of}',
             ErrorCode::INVALID_MULTIPLE,
             $value,
             $pointer,
-            ['multiple_of' => $multiple]
+            ['value' => $value, 'multiple_of' => $multiple]
         );
     }
 }

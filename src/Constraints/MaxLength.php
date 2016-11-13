@@ -17,9 +17,8 @@ class MaxLength implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('String is not at most "%s" characters long', JsonGuard\as_string($parameter));
         return new ValidationError(
-            $message,
+            'String is not at most {max_length} characters long',
             ErrorCode::INVALID_MAX_LENGTH,
             $value,
             $pointer,

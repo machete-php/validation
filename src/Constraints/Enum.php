@@ -21,11 +21,12 @@ class Enum implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Value "%s" is not one of: %s',
-            JsonGuard\as_string($value),
-            implode(', ', array_map('League\JsonGuard\as_string', $parameter))
+        return new ValidationError(
+            'Value {value} is not one of: {choices}',
+            ErrorCode::INVALID_ENUM,
+            $value,
+            $pointer,
+            ['choices' => $parameter, 'value' => $value]
         );
-        return new ValidationError($message, ErrorCode::INVALID_ENUM, $value, $pointer, ['choices' => $parameter]);
     }
 }

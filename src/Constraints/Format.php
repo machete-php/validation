@@ -90,7 +90,13 @@ class Format implements PropertyConstraint
             return null;
         }
 
-        return new ValidationError(self::invalidFormatMessage($format, $value), $errorCode, $value, $pointer);
+        return new ValidationError(
+            'Value {value} does not match the format {format}',
+            $errorCode,
+            $value,
+            $pointer,
+            ['value' => $value, 'format' => $format]
+        );
     }
 
     /**
@@ -117,17 +123,12 @@ class Format implements PropertyConstraint
             }
         }
 
-        return new ValidationError(self::invalidFormatMessage($format, $value), $errorCode, $value, $pointer);
-    }
-
-    /**
-     * @param string $format
-     * @param mixed  $value
-     *
-     * @return string
-     */
-    private static function invalidFormatMessage($format, $value)
-    {
-        return sprintf('"%s" is not a valid %s.', JsonGuard\as_string($value), $format);
+        return new ValidationError(
+            'Value {value} does not match the format {format}',
+            $errorCode,
+            $value,
+            $pointer,
+            ['value' => $value, 'format' => $format]
+        );
     }
 }

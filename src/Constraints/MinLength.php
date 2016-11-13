@@ -17,10 +17,8 @@ class MinLength implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('String is not at least "%s" characters long', JsonGuard\as_string($parameter));
-
         return new ValidationError(
-            $message,
+            'String is not at least {min_length} characters long',
             ErrorCode::INVALID_MIN_LENGTH,
             $value,
             $pointer,

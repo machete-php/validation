@@ -20,11 +20,11 @@ class Required implements PropertyConstraint
         $missing          = array_diff($parameter, $actualProperties);
         if (count($missing)) {
             return new ValidationError(
-                'Required properties missing: ' . implode(', ', array_values($missing)),
+                'Required properties missing: {missing}',
                 ErrorCode::MISSING_REQUIRED,
                 $data,
                 $pointer,
-                ['required' => $parameter]
+                ['missing' => array_values($missing)]
             );
         }
 

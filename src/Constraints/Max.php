@@ -34,12 +34,13 @@ class Max implements ParentSchemaAwarePropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Number "%s" is not at most "%d"',
-            JsonGuard\as_string($value),
-            JsonGuard\as_string($parameter)
+        return new ValidationError(
+            'Value {value} is not at most {max}',
+            ErrorCode::INVALID_MAX,
+            $value,
+            $pointer,
+            ['value' => $value, 'max' => $parameter]
         );
-        return new ValidationError($message, ErrorCode::INVALID_MAX, $value, $pointer, ['max' => $parameter]);
     }
 
     /**
@@ -55,17 +56,12 @@ class Max implements ParentSchemaAwarePropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Number "%s" is not less than "%d"',
-            JsonGuard\as_string($value),
-            JsonGuard\as_string($parameter)
-        );
         return new ValidationError(
-            $message,
+            'Value {value} is not less than {exclusive_max}',
             ErrorCode::INVALID_EXCLUSIVE_MAX,
             $value,
             $pointer,
-            ['exclusive_max' => $parameter]
+            ['value' => $value, 'exclusive_max' => $parameter]
         );
     }
 }

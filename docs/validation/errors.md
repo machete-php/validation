@@ -12,17 +12,17 @@ The validator returns detailed errors for each validation failure.  Calling the 
 [
  [
    "code"        => 50,
-   "message"     => "'json-guard.dev/schema#' is not a valid uri.",
+   "message"     => "Value 'json-guard.dev/schema#' does not match the format 'uri'",
    "pointer"     => "/id",
    'value'       => 'json-guard.dev/schema#',
-   'constraints' => null,
+   'context'     => ['value' => 'json-guard.dev/schema#', 'format' => 'uri'],
  ],
  [
    "code"        => 25,
    "message"     => "Value '2192191' is not a string.",
    "pointer"     => "/name",
    'value'       => 2192191,
-   'constraints' => null,
+   'context'     => ['value' => '"2192191"'],
  ]
 ]
 ```
@@ -37,6 +37,8 @@ The code is a unique identifier for this error type.  You can view the complete 
 
 The message is a developer friendly explanation of what caused the error.
 
+The `message` is intended for developers and is not localized.  Error messages can be easily localized for your application using the error code, the context, and the [symfony/translation](http://symfony.com/doc/current/components/translation/usage.html) component or a similar library.
+
 ### Pointer
 
 The pointer is a [JSON Pointer](https://tools.ietf.org/html/rfc6901) to the attribute that caused the error.
@@ -45,10 +47,9 @@ The pointer is a [JSON Pointer](https://tools.ietf.org/html/rfc6901) to the attr
 
 The value that caused the error.
 
-### Constraints
+### Context
 
-Any constraints applied to the validation rule.  For example, the schema `{"minimum": 2}` would return the contraint `['min' => 2]`.
+The context array holds any data meant to be interpolated into the error message.  For example, the schema `{"minimum": 2}` and the data `1` would return the context `['value' => '1, min' => 2]`.
 
-## Localization
+Every value in the array is cast to a string so that it can be safely interpolated.
 
-The `message` is intended for developers and is not localized.  Error messages can be easily localized for your application using the error codes and the [symfony/translation](http://symfony.com/doc/current/components/translation/usage.html) component or a similar library.

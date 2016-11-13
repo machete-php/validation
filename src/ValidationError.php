@@ -27,22 +27,22 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     /**
      * @var array
      */
-    private $constraints;
+    private $context;
 
     /**
      * @param string      $message
      * @param int         $code
      * @param mixed       $value
      * @param string|null $pointer
-     * @param array       $constraints
+     * @param array       $context
      */
-    public function __construct($message, $code, $value, $pointer = null, array $constraints = [])
+    public function __construct($message, $code, $value, $pointer = null, array $context = [])
     {
         $this->message     = $message;
         $this->code        = $code;
         $this->pointer     = $pointer;
         $this->value       = $value;
-        $this->constraints = $constraints;
+        $this->context     = array_map('League\JsonGuard\as_string', $context);
     }
 
     /**
@@ -52,7 +52,25 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
      */
     public function getMessage()
     {
-        return $this->message;
+        return $this->interpolate($this->message, $this->context);
+    }
+
+    /**
+     * Interpolate the context values into the message placeholders.
+     *
+     * @param  string $message
+     * @param  array  $context
+     *
+     * @return string
+     */
+    private function interpolate($message, array $context = [])
+    {
+        $replace = [];
+        foreach ($context as $key => $val) {
+            $replace['{' . $key . '}'] = as_string($val);
+        }
+
+        return strtr($message, $replace);
     }
 
     /**
@@ -86,13 +104,13 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Get the constraints that applied to the failed assertion.
+     * Get the context that applied to the failed assertion.
      *
      * @return array
      */
-    public function getConstraints()
+    public function getContext()
     {
-        return $this->constraints;
+        return $this->context;
     }
 
     /**
@@ -101,11 +119,11 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     public function toArray()
     {
         return [
-            'code'        => $this->getCode(),
-            'message'     => $this->getMessage(),
-            'pointer'     => $this->getPointer(),
-            'value'       => $this->getValue(),
-            'constraints' => $this->getConstraints(),
+            'code'    => $this->getCode(),
+            'message' => $this->getMessage(),
+            'pointer' => $this->getPointer(),
+            'value'   => $this->getValue(),
+            'context' => $this->getContext(),
         ];
     }
 

@@ -30,9 +30,9 @@ class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstrai
         }
 
         if ($parameter === false) {
-            $message = sprintf('Additional properties are not allowed: "%s".', implode('", "', $diff));
-
-            return new ValidationError($message, ErrorCode::NOT_ALLOWED_PROPERTY, $data, $pointer);
+            $message = 'Additional properties found which are not allowed: {diff}';
+            $context = ['diff' => implode(', ', $diff)];
+            return new ValidationError($message, ErrorCode::NOT_ALLOWED_PROPERTY, $data, $pointer, $context);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.

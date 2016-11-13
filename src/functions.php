@@ -48,35 +48,11 @@ function strlen($string)
  */
 function as_string($value)
 {
-    if (is_string($value)) {
-        return $value;
-    }
-
-    if (is_int($value)) {
-        return (string)$value;
-    }
-
-    if (is_bool($value)) {
-        return $value ? '<TRUE>' : '<FALSE>';
-    }
-
-    if (is_object($value)) {
-        return get_class($value);
-    }
-
-    if (is_array($value)) {
-        return '<ARRAY>';
-    }
-
     if (is_resource($value)) {
         return '<RESOURCE>';
     }
 
-    if (is_null($value)) {
-        return '<NULL>';
-    }
-
-    return '<UNKNOWN>';
+    return (string) json_encode($value);
 }
 
 /**

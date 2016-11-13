@@ -34,13 +34,13 @@ class Min implements ParentSchemaAwarePropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Number "%s" is not at least "%d"',
-            JsonGuard\as_string($value),
-            JsonGuard\as_string($parameter)
+        return new ValidationError(
+            'Number {value} is not at least {min}',
+            ErrorCode::INVALID_MIN,
+            $value,
+            $pointer,
+            ['value' => $value, 'min' => $parameter]
         );
-
-        return new ValidationError($message, ErrorCode::INVALID_MIN, $value, $pointer, ['min' => $parameter]);
     }
 
     /**
@@ -56,18 +56,12 @@ class Min implements ParentSchemaAwarePropertyConstraint
             return null;
         }
 
-        $message = sprintf(
-            'Number "%s" is not at least greater than "%d"',
-            JsonGuard\as_string($value),
-            JsonGuard\as_string($parameter)
-        );
-
         return new ValidationError(
-            $message,
+            'Number {value} is not at least greater than {exclusive_min}',
             ErrorCode::INVALID_EXCLUSIVE_MIN,
             $value,
             $pointer,
-            ['exclusive_min' => $parameter]
+            ['value' => $value, 'exclusive_min' => $parameter]
         );
     }
 }

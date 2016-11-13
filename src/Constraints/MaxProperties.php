@@ -17,9 +17,8 @@ class MaxProperties implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('Object does not contain less than "%d" properties', JsonGuard\as_string($parameter));
         return new ValidationError(
-            $message,
+            'Object does not contain less than {max_properties} properties',
             ErrorCode::MAX_PROPERTIES_EXCEEDED,
             $value,
             $pointer,

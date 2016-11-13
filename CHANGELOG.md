@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+* Major breaking changes were made to the ValidationError class.
+    * Any calls to `ValidationError@getConstraint` need to be changed to `ValidationError@getContext`.
+    * If you are using the `ArrayAccess` interface for `ValidationError` you need to replace any usage of the `constraints` key with `context`.
+    * Unlike the old constraints array, every entry in the context array is a string. This makes implementing your own error messages a lot easier.
+
 ### Fixed
 
 * Type number was passing for numeric strings when it should not have been.

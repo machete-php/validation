@@ -21,7 +21,12 @@ class UniqueItems implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('Array "%s" is not unique.', JsonGuard\as_string($value));
-        return new ValidationError($message, ErrorCode::NOT_UNIQUE_ITEM, $value, $pointer);
+        return new ValidationError(
+            'Array {value} is not unique.',
+            ErrorCode::NOT_UNIQUE_ITEM,
+            $value,
+            $pointer,
+            ['value' => $value]
+        );
     }
 }

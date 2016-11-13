@@ -17,9 +17,8 @@ class MinProperties implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('Object does not contain at least "%d" properties', JsonGuard\as_string($min));
         return new ValidationError(
-            $message,
+            'Object does not contain at least {min_properties} properties',
             ErrorCode::INVALID_MIN_COUNT,
             $value,
             $pointer,

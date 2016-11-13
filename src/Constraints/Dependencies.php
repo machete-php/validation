@@ -46,7 +46,7 @@ class Dependencies implements ContainerInstanceConstraint
         foreach ($dependencies as $dependency) {
             if (!in_array($dependency, array_keys(get_object_vars($data)), true)) {
                 $errors[] = new ValidationError(
-                    sprintf('Unmet dependency "%s"', $dependency),
+                    'Unmet dependency {dependency}',
                     ErrorCode::UNMET_DEPENDENCY,
                     $data,
                     $pointer,

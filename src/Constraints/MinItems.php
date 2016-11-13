@@ -17,9 +17,8 @@ class MinItems implements PropertyConstraint
             return null;
         }
 
-        $message = sprintf('Array does not contain more than "%d" items', JsonGuard\as_string($parameter));
         return new ValidationError(
-            $message,
+            'Array does not contain more than {min_items} items',
             ErrorCode::INVALID_MIN_COUNT,
             $value,
             $pointer,
