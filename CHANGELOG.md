@@ -16,6 +16,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Type number was passing for numeric strings when it should not have been.
 
+### Added
+
+* Added a `getLoaders` method to the Dereferencer which returns all loaders.
+
 ## 0.4.0 - 2016-11-03
 
 ### Changed

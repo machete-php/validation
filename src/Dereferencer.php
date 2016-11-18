@@ -59,6 +59,16 @@ class Dereferencer
     }
 
     /**
+     * Get all registered loaders, keyed by the prefix they are registered to load schemas for.
+     *
+     * @return Loader[]
+     */
+    public function getLoaders()
+    {
+        return $this->loaders;
+    }
+
+    /**
      * Get the loader for the given prefix.
      *
      * @param $prefix

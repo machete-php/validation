@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Test;
 
 use League\JsonGuard\Dereferencer;
+use League\JsonGuard\Loader;
 use League\JsonGuard\Loaders\ArrayLoader;
 use League\JsonGuard\Reference;
 
@@ -152,5 +153,17 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Reference::class, $result->properties->rating);
         $this->assertFalse($result->properties->rating->additionalProperties);
         $this->assertFalse($result->properties->rating->properties->rating->additionalProperties);
+    }
+
+    public function testGetLoaders()
+    {
+        $deref = new Dereferencer();
+        $loaders = $deref->getLoaders();
+        $this->assertArrayHasKey('file', $loaders);
+        $this->assertInstanceOf(Loader::class, $loaders['file']);
+        $this->assertArrayHasKey('http', $loaders);
+        $this->assertInstanceOf(Loader::class, $loaders['http']);
+        $this->assertArrayHasKey('https', $loaders);
+        $this->assertInstanceOf(Loader::class, $loaders['https']);
     }
 }
