@@ -131,7 +131,7 @@ function escape_pointer($pointer)
  * Determines if the value is an integer or an integer that was cast to a string
  * because it is larger than PHP_INT_MAX.
  *
- * @param  mixed  $value
+ * @param  mixed $value
  * @return boolean
  */
 function is_json_integer($value)
@@ -141,6 +141,19 @@ function is_json_integer($value)
     }
 
     return is_int($value) || (is_string($value) && ctype_digit($value) && compare($value, PHP_INT_MAX) === 1);
+}
+
+/**
+ * Determines if the value is a number.  A number is a float, integer, or a number that was cast
+ * to a string because it is larger than PHP_INT_MAX.
+ *
+ * @param mixed $value
+ *
+ * @return boolean
+ */
+function is_json_number($value)
+{
+    return is_float($value) || is_json_integer($value);
 }
 
 /**

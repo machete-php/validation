@@ -27,7 +27,13 @@ class Type implements PropertyConstraint
             case 'null':
                 return self::validateType($value, $type, 'is_null', ErrorCode::INVALID_NULL, $pointer);
             case 'number':
-                return self::validateType($value, $type, 'is_numeric', ErrorCode::INVALID_NUMERIC, $pointer);
+                return self::validateType(
+                    $value,
+                    $type,
+                    'League\JsonGuard\is_json_number',
+                    ErrorCode::INVALID_NUMERIC,
+                    $pointer
+                );
             case 'integer':
                 return self::validateType(
                     $value,
