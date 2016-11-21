@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class UniqueItems implements PropertyConstraint
 {
+    const KEYWORD = 'uniqueItems';
+
     /**
      * {@inheritdoc}
      */
@@ -23,7 +24,7 @@ class UniqueItems implements PropertyConstraint
 
         return new ValidationError(
             'Array {value} is not unique.',
-            ErrorCode::NOT_UNIQUE_ITEM,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value]

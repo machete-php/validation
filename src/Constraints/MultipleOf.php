@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MultipleOf implements PropertyConstraint
 {
+    const KEYWORD = 'multipleOf';
+
     /**
      * {@inheritdoc}
      */
@@ -26,7 +27,7 @@ class MultipleOf implements PropertyConstraint
 
         return new ValidationError(
             'Number {value} is not a multiple of {multiple_of}',
-            ErrorCode::INVALID_MULTIPLE,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'multiple_of' => $multiple]

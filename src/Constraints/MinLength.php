@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MinLength implements PropertyConstraint
 {
+    const KEYWORD = 'minLength';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MinLength implements PropertyConstraint
 
         return new ValidationError(
             'String is not at least {min_length} characters long',
-            ErrorCode::INVALID_MIN_LENGTH,
+            self::KEYWORD,
             $value,
             $pointer,
             ['min_length' => $parameter]

@@ -11,14 +11,14 @@ The validator returns detailed errors for each validation failure.  Calling the 
 ```php
 [
  [
-   "code"        => 50,
+   "keyword"     => "format",
    "message"     => "Value 'json-guard.dev/schema#' does not match the format 'uri'",
    "pointer"     => "/id",
    'value'       => 'json-guard.dev/schema#',
    'context'     => ['value' => 'json-guard.dev/schema#', 'format' => 'uri'],
  ],
  [
-   "code"        => 25,
+   "keyword"     => "type",
    "message"     => "Value '2192191' is not a string.",
    "pointer"     => "/name",
    'value'       => 2192191,
@@ -29,15 +29,15 @@ The validator returns detailed errors for each validation failure.  Calling the 
 
 ## Error Format
 
-### Code
+### Keyword
 
-The code is a unique identifier for this error type.  You can view the complete list of error codes [here](https://github.com/thephpleague/json-guard/blob/master/src/ErrorCode.php).
+The keyword is a unique identifier for this error type.  The keyword is the property name used in the schema.  You can view the complete list of keywords [here](http://json-schema.org/latest/json-schema-validation.html#rfc.section.5).
 
 ### Message
 
 The message is a developer friendly explanation of what caused the error.
 
-The `message` is intended for developers and is not localized.  Error messages can be easily localized for your application using the error code, the context, and the [symfony/translation](http://symfony.com/doc/current/components/translation/usage.html) component or a similar library.
+The `message` is intended for developers and is not localized.  Error messages can be easily localized for your application using the keyword, the context, and the [symfony/translation](http://symfony.com/doc/current/components/translation/usage.html) component or a similar library.
 
 ### Pointer
 

@@ -6,6 +6,8 @@ use League\JsonGuard\SubSchemaValidatorFactory;
 
 class AllOf implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'allOf';
+
     /**
      * {@inheritdoc}
      */

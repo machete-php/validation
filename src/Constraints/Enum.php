@@ -2,12 +2,13 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard;
 
 class Enum implements PropertyConstraint
 {
+    const KEYWORD = 'enum';
+
     /**
      * {@inheritdoc}
      */
@@ -23,7 +24,7 @@ class Enum implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} is not one of: {choices}',
-            ErrorCode::INVALID_ENUM,
+            self::KEYWORD,
             $value,
             $pointer,
             ['choices' => $parameter, 'value' => $value]

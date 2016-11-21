@@ -3,12 +3,13 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
 class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstraint
 {
+    const KEYWORD = 'additionalProperties';
+
     /**
      * {@inheritdoc}
      */
@@ -32,7 +33,7 @@ class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstrai
         if ($parameter === false) {
             $message = 'Additional properties found which are not allowed: {diff}';
             $context = ['diff' => implode(', ', $diff)];
-            return new ValidationError($message, ErrorCode::NOT_ALLOWED_PROPERTY, $data, $pointer, $context);
+            return new ValidationError($message, self::KEYWORD, $data, $pointer, $context);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.

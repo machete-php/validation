@@ -2,11 +2,12 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Required implements PropertyConstraint
 {
+    const KEYWORD = 'required';
+
     /**
      * {@inheritdoc}
      */
@@ -21,7 +22,7 @@ class Required implements PropertyConstraint
         if (count($missing)) {
             return new ValidationError(
                 'Required properties missing: {missing}',
-                ErrorCode::MISSING_REQUIRED,
+                self::KEYWORD,
                 $data,
                 $pointer,
                 ['missing' => array_values($missing)]

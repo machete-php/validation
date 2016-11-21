@@ -12,7 +12,7 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     /**
      * @var int
      */
-    private $code;
+    private $keyword;
 
     /**
      * @var string|null
@@ -31,18 +31,18 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
 
     /**
      * @param string      $message
-     * @param int         $code
+     * @param string      $keyword
      * @param mixed       $value
      * @param string|null $pointer
      * @param array       $context
      */
-    public function __construct($message, $code, $value, $pointer = null, array $context = [])
+    public function __construct($message, $keyword, $value, $pointer = null, array $context = [])
     {
-        $this->message     = $message;
-        $this->code        = $code;
-        $this->pointer     = $pointer;
-        $this->value       = $value;
-        $this->context     = array_map('League\JsonGuard\as_string', $context);
+        $this->message = $message;
+        $this->keyword = $keyword;
+        $this->pointer = $pointer;
+        $this->value   = $value;
+        $this->context = array_map('League\JsonGuard\as_string', $context);
     }
 
     /**
@@ -74,13 +74,13 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * Get the error code for this error.
+     * Get the schema keyword for this error.
      *
      * @return int
      */
-    public function getCode()
+    public function getKeyword()
     {
-        return $this->code;
+        return $this->keyword;
     }
 
     /**
@@ -119,7 +119,7 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     public function toArray()
     {
         return [
-            'code'    => $this->getCode(),
+            'keyword' => $this->getKeyword(),
             'message' => $this->getMessage(),
             'pointer' => $this->getPointer(),
             'value'   => $this->getValue(),

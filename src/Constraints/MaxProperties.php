@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MaxProperties implements PropertyConstraint
 {
+    const KEYWORD = 'maxProperties';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MaxProperties implements PropertyConstraint
 
         return new ValidationError(
             'Object does not contain less than {max_properties} properties',
-            ErrorCode::MAX_PROPERTIES_EXCEEDED,
+            self::KEYWORD,
             $value,
             $pointer,
             ['max_properties' => $parameter]

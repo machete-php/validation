@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MinProperties implements PropertyConstraint
 {
+    const KEYWORD = 'minProperties';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MinProperties implements PropertyConstraint
 
         return new ValidationError(
             'Object does not contain at least {min_properties} properties',
-            ErrorCode::INVALID_MIN_COUNT,
+            self::KEYWORD,
             $value,
             $pointer,
             ['min_properties' => $min]

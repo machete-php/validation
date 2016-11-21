@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Type implements PropertyConstraint
 {
+    const KEYWORD = 'type';
+
     /**
      * {@inheritdoc}
      */
@@ -19,19 +20,18 @@ class Type implements PropertyConstraint
 
         switch ($type) {
             case 'object':
-                return self::validateType($value, $type, 'is_object', ErrorCode::INVALID_OBJECT, $pointer);
+                return self::validateType($value, $type, 'is_object', $pointer);
             case 'array':
-                return self::validateType($value, $type, 'is_array', ErrorCode::INVALID_ARRAY, $pointer);
+                return self::validateType($value, $type, 'is_array', $pointer);
             case 'boolean':
-                return self::validateType($value, $type, 'is_bool', ErrorCode::INVALID_BOOLEAN, $pointer);
+                return self::validateType($value, $type, 'is_bool', $pointer);
             case 'null':
-                return self::validateType($value, $type, 'is_null', ErrorCode::INVALID_NULL, $pointer);
+                return self::validateType($value, $type, 'is_null', $pointer);
             case 'number':
                 return self::validateType(
                     $value,
                     $type,
                     'League\JsonGuard\is_json_number',
-                    ErrorCode::INVALID_NUMERIC,
                     $pointer
                 );
             case 'integer':
@@ -39,7 +39,6 @@ class Type implements PropertyConstraint
                     $value,
                     $type,
                     'League\JsonGuard\is_json_integer',
-                    ErrorCode::INVALID_INTEGER,
                     $pointer
                 );
             case 'string':
@@ -58,7 +57,6 @@ class Type implements PropertyConstraint
 
                         return false;
                     },
-                    ErrorCode::INVALID_STRING,
                     $pointer
                 );
         }
@@ -68,12 +66,11 @@ class Type implements PropertyConstraint
      * @param mixed    $value
      * @param string   $type
      * @param callable $callable
-     * @param int      $errorCode
      * @param string   $pointer
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    private static function validateType($value, $type, callable $callable, $errorCode, $pointer)
+    private static function validateType($value, $type, callable $callable, $pointer)
     {
         if (call_user_func($callable, $value) === true) {
             return null;
@@ -81,7 +78,7 @@ class Type implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} is not a(n) {type}',
-            $errorCode,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'type' => $type]
@@ -106,7 +103,7 @@ class Type implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} is not one of: {choices}',
-            ErrorCode::INVALID_TYPE,
+            self::KEYWORD,
             $value,
             $pointer,
             [

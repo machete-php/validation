@@ -2,12 +2,13 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
 class AnyOf implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'anyOf';
+
     /**
      * {@inheritdoc}
      */
@@ -25,7 +26,7 @@ class AnyOf implements ContainerInstanceConstraint
         }
         return new ValidationError(
             'Failed matching any of the provided schemas.',
-            ErrorCode::ANY_OF_SCHEMA,
+            self::KEYWORD,
             $data,
             $pointer,
             ['any_of' => $parameter]

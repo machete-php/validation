@@ -7,10 +7,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Major breaking changes were made to the ValidationError class.
+* ValidationError "constraints" were replaced with "context".
     * Any calls to `ValidationError@getConstraint` need to be changed to `ValidationError@getContext`.
     * If you are using the `ArrayAccess` interface for `ValidationError` you need to replace any usage of the `constraints` key with `context`.
     * Unlike the old constraints array, every entry in the context array is a string. This makes implementing your own error messages a lot easier.
+* ValidationError "code" was replace with "keyword".
+    * Each validation error will now return a string keyword instead of a numeric code.
+    * The League\JsonGuard\ErrorCode class was removed.
+    * Any calls to `ValidationError@getCode` need to be changed to `ValidationError@getKeyword`.
+    * If you are using the `ArrayAccess` interface for `ValidationError` you need to replace any usage of the `code` key with `keyword`.
+    * Instead of there being a different code for every format failure, they just return the keyword 'format'.
 
 ### Fixed
 

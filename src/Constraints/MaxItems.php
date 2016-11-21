@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MaxItems implements PropertyConstraint
 {
+    const KEYWORD = 'maxItems';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MaxItems implements PropertyConstraint
 
         return new ValidationError(
             'Array does not contain less than {max_items} items',
-            ErrorCode::MAX_ITEMS_EXCEEDED,
+            self::KEYWORD,
             $value,
             $pointer,
             ['max_items' => $parameter]

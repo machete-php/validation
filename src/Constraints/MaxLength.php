@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MaxLength implements PropertyConstraint
 {
+    const KEYWORD = 'maxLength';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MaxLength implements PropertyConstraint
 
         return new ValidationError(
             'String is not at most {max_length} characters long',
-            ErrorCode::INVALID_MAX_LENGTH,
+            self::KEYWORD,
             $value,
             $pointer,
             ['max_length' => $parameter]

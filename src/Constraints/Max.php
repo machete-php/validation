@@ -3,11 +3,13 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Max implements ParentSchemaAwarePropertyConstraint
 {
+    const KEYWORD           = 'max';
+    const EXCLUSIVE_KEYWORD = 'exclusiveMax';
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +38,7 @@ class Max implements ParentSchemaAwarePropertyConstraint
 
         return new ValidationError(
             'Value {value} is not at most {max}',
-            ErrorCode::INVALID_MAX,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'max' => $parameter]
@@ -58,7 +60,7 @@ class Max implements ParentSchemaAwarePropertyConstraint
 
         return new ValidationError(
             'Value {value} is not less than {exclusive_max}',
-            ErrorCode::INVALID_EXCLUSIVE_MAX,
+            self::EXCLUSIVE_KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'exclusive_max' => $parameter]

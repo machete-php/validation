@@ -2,12 +2,13 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
 class OneOf implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'oneOf';
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +28,7 @@ class OneOf implements ContainerInstanceConstraint
         if ($passed !== 1) {
             return new ValidationError(
                 'Failed matching exactly one of the provided schemas.',
-                ErrorCode::ONE_OF_SCHEMA,
+                self::KEYWORD,
                 $data,
                 $pointer,
                 ['one_of' => $parameter]

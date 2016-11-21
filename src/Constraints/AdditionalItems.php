@@ -2,12 +2,13 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
 class AdditionalItems implements ParentSchemaAwareContainerInstanceConstraint
 {
+    const KEYWORD = 'additionalItems';
+
     /**
      * {@inheritdoc}
      */
@@ -89,7 +90,7 @@ class AdditionalItems implements ParentSchemaAwareContainerInstanceConstraint
         if (count($data) > count($items)) {
             return new ValidationError(
                 'Additional items are not allowed.',
-                ErrorCode::NOT_ALLOWED_ITEM,
+                self::KEYWORD,
                 $data,
                 $pointer
             );

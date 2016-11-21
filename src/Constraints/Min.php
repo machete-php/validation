@@ -3,11 +3,13 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Min implements ParentSchemaAwarePropertyConstraint
 {
+    const KEYWORD           = 'min';
+    const EXCLUSIVE_KEYWORD = 'exclusiveMin';
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +38,7 @@ class Min implements ParentSchemaAwarePropertyConstraint
 
         return new ValidationError(
             'Number {value} is not at least {min}',
-            ErrorCode::INVALID_MIN,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'min' => $parameter]
@@ -58,7 +60,7 @@ class Min implements ParentSchemaAwarePropertyConstraint
 
         return new ValidationError(
             'Number {value} is not at least greater than {exclusive_min}',
-            ErrorCode::INVALID_EXCLUSIVE_MIN,
+            self::EXCLUSIVE_KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'exclusive_min' => $parameter]

@@ -4,7 +4,6 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
 use League\JsonGuard\Dereferencer;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\FormatExtension;
@@ -143,11 +142,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $errors = $v->errors();
         $this->assertCount(2, $errors);
-        $this->assertTrue(isset($errors[0]['code']));
-        $this->assertSame(ErrorCode::INVALID_STRING, $errors[0]['code']);
+        $this->assertTrue(isset($errors[0]['keyword']));
+        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[0]['keyword']);
         $this->assertSame('/name', $errors[0]['pointer']);
 
-        $this->assertSame(ErrorCode::INVALID_STRING, $errors[1]['code']);
+        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[1]['keyword']);
         $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]['pointer']);
         $this->assertSame(json_encode($errors[0]->toArray()), json_encode($errors[0]));
     }
@@ -177,7 +176,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($v->fails());
         $error = $v->errors()[0];
         $this->assertSame('/foo/foo/foo/foo/foo/foo/foo/foo/foo', $error['pointer']);
-        $this->assertSame(ErrorCode::NOT_ALLOWED_PROPERTY, $error['code']);
+        $this->assertSame(JsonGuard\Constraints\AdditionalProperties::KEYWORD, $error['keyword']);
     }
 
     public function testStackAttack()
@@ -242,7 +241,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->registerFormatExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
-        $this->assertSame(99, $v->errors()[0]['code']);
+        $this->assertSame(JsonGuard\Constraints\Format::KEYWORD, $v->errors()[0]['keyword']);
     }
 
     public function testCustomFormatWorksWhenNested()
@@ -260,7 +259,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->registerFormatExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
-        $this->assertSame(99, $v->errors()[0]['code']);
+        $this->assertSame('format', $v->errors()[0]['keyword']);
     }
 
     public function testCustomRuleset()
@@ -334,7 +333,7 @@ class HelloFormatStub implements FormatExtension
     public function validate($value, $pointer = null)
     {
         if (stripos($value, 'hello') !== 0) {
-            return new JsonGuard\ValidationError('Must start with hello', 99, $value, $pointer);
+            return new JsonGuard\ValidationError('Must start with hello', 'format', $value, $pointer);
         }
     }
 }

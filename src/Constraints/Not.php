@@ -2,12 +2,13 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\SubSchemaValidatorFactory;
 
 class Not implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'not';
+
     /**
      * {@inheritdoc}
      */
@@ -17,7 +18,7 @@ class Not implements ContainerInstanceConstraint
         if ($validator->passes()) {
             return new ValidationError(
                 'Data should not match the schema.',
-                ErrorCode::NOT_SCHEMA,
+                self::KEYWORD,
                 $data,
                 $pointer,
                 ['not_schema' => $parameter]

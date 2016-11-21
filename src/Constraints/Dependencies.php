@@ -3,12 +3,13 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
 class Dependencies implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'dependencies';
+
     /**
      * {@inheritdoc}
      */
@@ -47,7 +48,7 @@ class Dependencies implements ContainerInstanceConstraint
             if (!in_array($dependency, array_keys(get_object_vars($data)), true)) {
                 $errors[] = new ValidationError(
                     'Unmet dependency {dependency}',
-                    ErrorCode::UNMET_DEPENDENCY,
+                    self::KEYWORD,
                     $data,
                     $pointer,
                     ['dependency' => $dependency]

@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Pattern implements PropertyConstraint
 {
+    const KEYWORD = 'pattern';
+
     /**
      * {@inheritdoc}
      */
@@ -23,7 +24,7 @@ class Pattern implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} does not match the pattern {pattern}.',
-            ErrorCode::INVALID_PATTERN,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'pattern' => $pattern]

@@ -6,6 +6,8 @@ use League\JsonGuard\SubSchemaValidatorFactory;
 
 class Items implements ContainerInstanceConstraint
 {
+    const KEYWORD = 'items';
+
     /**
      * {@inheritdoc}
      */

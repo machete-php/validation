@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class MinItems implements PropertyConstraint
 {
+    const KEYWORD = 'minItems';
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class MinItems implements PropertyConstraint
 
         return new ValidationError(
             'Array does not contain more than {min_items} items',
-            ErrorCode::INVALID_MIN_COUNT,
+            self::KEYWORD,
             $value,
             $pointer,
             ['min_items' => $parameter]

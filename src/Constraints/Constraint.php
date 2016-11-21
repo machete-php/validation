@@ -4,5 +4,4 @@ namespace League\JsonGuard\Constraints;
 
 interface Constraint
 {
-
 }

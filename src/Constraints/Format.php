@@ -3,11 +3,12 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
-use League\JsonGuard\ErrorCode;
 use League\JsonGuard\ValidationError;
 
 class Format implements PropertyConstraint
 {
+    const KEYWORD = 'format';
+
     // @codingStandardsIgnoreStart
     const DATE_TIME_PATTERN = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})([Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(\\.[0-9]+)?)?(([Zz]|([+-])([0-9]{2}):([0-9]{2})))?/';
     // @codingStandardsIgnoreEnd
@@ -25,7 +26,6 @@ class Format implements PropertyConstraint
                     $parameter,
                     $value,
                     self::DATE_TIME_PATTERN,
-                    ErrorCode::INVALID_DATE_TIME,
                     $pointer
                 );
             case 'uri':
@@ -34,7 +34,6 @@ class Format implements PropertyConstraint
                     $value,
                     FILTER_VALIDATE_URL,
                     null,
-                    ErrorCode::INVALID_URI,
                     $pointer
                 );
             case 'email':
@@ -43,7 +42,6 @@ class Format implements PropertyConstraint
                     $value,
                     FILTER_VALIDATE_EMAIL,
                     null,
-                    ErrorCode::INVALID_EMAIL,
                     $pointer
                 );
             case 'ipv4':
@@ -52,7 +50,6 @@ class Format implements PropertyConstraint
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV4,
-                    ErrorCode::INVALID_IPV4,
                     $pointer
                 );
             case 'ipv6':
@@ -61,7 +58,6 @@ class Format implements PropertyConstraint
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV6,
-                    ErrorCode::INVALID_IPV6,
                     $pointer
                 );
             case 'hostname':
@@ -69,7 +65,6 @@ class Format implements PropertyConstraint
                     $parameter,
                     $value,
                     self::HOST_NAME_PATTERN,
-                    ErrorCode::INVALID_HOST_NAME,
                     $pointer
                 );
         }
@@ -79,12 +74,11 @@ class Format implements PropertyConstraint
      * @param string $format
      * @param mixed $value
      * @param string $pattern
-     * @param int $errorCode
      * @param string $pointer
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    private static function validateRegex($format, $value, $pattern, $errorCode, $pointer)
+    private static function validateRegex($format, $value, $pattern, $pointer)
     {
         if (!is_string($value) || preg_match($pattern, $value) === 1) {
             return null;
@@ -92,7 +86,7 @@ class Format implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} does not match the format {format}',
-            $errorCode,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'format' => $format]
@@ -104,12 +98,11 @@ class Format implements PropertyConstraint
      * @param mixed  $value
      * @param int    $filter
      * @param mixed  $options
-     * @param int    $errorCode
      * @param string $pointer
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    private static function validateFilter($format, $value, $filter, $options, $errorCode, $pointer)
+    private static function validateFilter($format, $value, $filter, $options, $pointer)
     {
         if (!is_string($value) || filter_var($value, $filter, $options) !== false) {
             return null;
@@ -125,7 +118,7 @@ class Format implements PropertyConstraint
 
         return new ValidationError(
             'Value {value} does not match the format {format}',
-            $errorCode,
+            self::KEYWORD,
             $value,
             $pointer,
             ['value' => $value, 'format' => $format]
