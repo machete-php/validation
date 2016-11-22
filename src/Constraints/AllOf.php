@@ -2,6 +2,7 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\SubSchemaValidatorFactory;
 
 class AllOf implements ContainerInstanceConstraint
@@ -13,9 +14,8 @@ class AllOf implements ContainerInstanceConstraint
      */
     public static function validate($data, $parameter, SubSchemaValidatorFactory $validatorFactory, $pointer = null)
     {
-        if (!is_array($parameter)) {
-            return null;
-        }
+        Assert::type($parameter, 'array', self::KEYWORD, $pointer);
+        Assert::notEmpty($parameter, self::KEYWORD, $pointer);
 
         $errors = [];
 

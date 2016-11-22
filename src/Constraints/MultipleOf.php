@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class MultipleOf implements PropertyConstraint
@@ -14,6 +15,9 @@ class MultipleOf implements PropertyConstraint
      */
     public static function validate($value, $multiple, $pointer = null)
     {
+        Assert::type($multiple, 'number', self::KEYWORD, $pointer);
+        Assert::nonNegative($multiple, self::KEYWORD, $pointer);
+
         if (!is_numeric($value)) {
             return null;
         }

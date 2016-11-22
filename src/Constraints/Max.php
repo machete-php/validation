@@ -3,18 +3,21 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Max implements ParentSchemaAwarePropertyConstraint
 {
-    const KEYWORD           = 'max';
-    const EXCLUSIVE_KEYWORD = 'exclusiveMax';
+    const KEYWORD           = 'maximum';
+    const EXCLUSIVE_KEYWORD = 'exclusiveMaximum';
 
     /**
      * {@inheritdoc}
      */
     public static function validate($value, $schema, $parameter, $pointer = null)
     {
+        Assert::type($parameter, 'number', self::KEYWORD, $pointer);
+
         if (isset($schema->exclusiveMaximum) && $schema->exclusiveMaximum === true) {
             return self::validateExclusiveMax($value, $parameter, $pointer);
         }

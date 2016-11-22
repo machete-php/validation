@@ -4,6 +4,7 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
 use League\JsonGuard\Dereferencer;
+use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\FormatExtension;
@@ -38,6 +39,15 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         return array_map(function ($file) {
             return [$file];
         }, glob(__DIR__ . '/unofficial/*.json'));
+    }
+
+    public function invalidSchemas()
+    {
+        $schemas = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid-schemas.json'));
+
+        return array_map(function ($schema) {
+            return [$schema];
+        }, $schemas);
     }
 
     /**
@@ -76,6 +86,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $test = json_decode(file_get_contents($testFile));
 
         $this->runTestCase($test);
+    }
+
+    /**
+     * @dataProvider invalidSchemas
+     */
+    public function testInvalidSchemas($schema)
+    {
+        $this->setExpectedException(InvalidSchemaException::class);
+        $validator = new Validator([], $schema);
+        $validator->errors();
     }
 
     /**

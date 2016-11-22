@@ -2,6 +2,7 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Required implements PropertyConstraint
@@ -13,6 +14,9 @@ class Required implements PropertyConstraint
      */
     public static function validate($data, $parameter, $pointer = null)
     {
+        Assert::type($parameter, 'array', self::KEYWORD, $pointer);
+        Assert::notEmpty($parameter, self::KEYWORD, $pointer);
+
         if (!is_object($data)) {
             return null;
         }

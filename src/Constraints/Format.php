@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Format implements PropertyConstraint
@@ -20,6 +21,8 @@ class Format implements PropertyConstraint
      */
     public static function validate($value, $parameter, $pointer = null)
     {
+        Assert::type($parameter, 'string', self::KEYWORD, $pointer);
+
         switch ($parameter) {
             case 'date-time':
                 return self::validateRegex(

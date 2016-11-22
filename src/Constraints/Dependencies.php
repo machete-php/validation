@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
@@ -15,6 +16,8 @@ class Dependencies implements ContainerInstanceConstraint
      */
     public static function validate($data, $parameter, SubSchemaValidatorFactory $validatorFactory, $pointer = null)
     {
+        Assert::type($parameter, ['object', 'array'], self::KEYWORD, $pointer);
+
         $errors = [];
         foreach ($parameter as $property => $dependencies) {
             if (!is_object($data) || !property_exists($data, $property)) {

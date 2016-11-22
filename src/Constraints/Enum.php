@@ -2,8 +2,8 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
-use League\JsonGuard;
 
 class Enum implements PropertyConstraint
 {
@@ -14,9 +14,7 @@ class Enum implements PropertyConstraint
      */
     public static function validate($value, $parameter, $pointer = null)
     {
-        if (!is_array($parameter)) {
-            return null;
-        }
+        Assert::type($parameter, 'array', self::KEYWORD, $pointer);
 
         if (in_array($value, $parameter, true)) {
             return null;

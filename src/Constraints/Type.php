@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Type implements PropertyConstraint
@@ -14,6 +15,8 @@ class Type implements PropertyConstraint
      */
     public static function validate($value, $type, $pointer = null)
     {
+        Assert::type($type, ['array', 'string'], self::KEYWORD, $pointer);
+
         if (is_array($type)) {
             return self::anyType($value, $type, $pointer);
         }

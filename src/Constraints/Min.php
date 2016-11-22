@@ -3,18 +3,21 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Min implements ParentSchemaAwarePropertyConstraint
 {
-    const KEYWORD           = 'min';
-    const EXCLUSIVE_KEYWORD = 'exclusiveMin';
+    const KEYWORD           = 'minimum';
+    const EXCLUSIVE_KEYWORD = 'exclusiveMinimum';
 
     /**
      * {@inheritdoc}
      */
     public static function validate($value, $schema, $parameter, $pointer = null)
     {
+        Assert::type($parameter, 'number', self::KEYWORD, $pointer);
+
         if (isset($schema->exclusiveMinimum) && $schema->exclusiveMinimum === true) {
             return self::validateExclusiveMin($value, $parameter, $pointer);
         }

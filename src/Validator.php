@@ -258,7 +258,9 @@ class Validator implements SubSchemaValidatorFactory
      */
     private function isCustomFormatExtension($rule, $parameter)
     {
-        return $rule === 'format' && isset($this->formatExtensions[$parameter]);
+        return $rule === 'format' &&
+            is_string($parameter) &&
+            isset($this->formatExtensions[$parameter]);
     }
 
     /**

@@ -1,0 +1,104 @@
+[
+  {
+    "additionalItems": "false"
+  },
+  {
+    "additionalProperties": []
+  },
+  {
+    "allOf": {}
+  },
+  {
+    "anyOf": {}
+  },
+  {
+    "dependencies": "none"
+  },
+  {
+    "enum": "HELLO"
+  },
+  {
+    "format": ["email", "uri"]
+  },
+  {
+    "items": "/some/items"
+  },
+  {
+    "maximum": []
+  },
+  {
+    "maxItems": []
+  },
+  {
+    "maxItems": -1
+  },
+  {
+    "maxLength": []
+  },
+  {
+    "maxLength": -4
+  },
+  {
+    "maxProperties": []
+  },
+  {
+    "maxProperties": -2
+  },
+  {
+    "minimum": []
+  },
+  {
+    "minItems": []
+  },
+  {
+    "minItems": -1
+  },
+  {
+    "minLength": []
+  },
+  {
+    "minLength": -4
+  },
+  {
+    "minProperties": []
+  },
+  {
+    "minProperties": -2
+  },
+  {
+    "multipleOf": "five"
+  },
+  {
+    "multipleOf": -5
+  },
+  {
+    "not": []
+  },
+  {
+    "oneOf": {}
+  },
+  {
+    "oneOf": []
+  },
+  {
+    "pattern": {}
+  },
+  {
+    "patternProperties": "/[a-z]/"
+  },
+  {
+    "properties": ""
+  },
+  {
+    "required": {}
+  },
+  {
+    "required": []
+  },
+  {
+    "type": {}
+  },
+  {
+    "uniqueItems": "true"
+  }
+]

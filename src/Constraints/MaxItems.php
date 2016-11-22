@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class MaxItems implements PropertyConstraint
@@ -14,6 +15,9 @@ class MaxItems implements PropertyConstraint
      */
     public static function validate($value, $parameter, $pointer = null)
     {
+        Assert::type($parameter, 'integer', self::KEYWORD, $pointer);
+        Assert::nonNegative($parameter, self::KEYWORD, $pointer);
+
         if (!is_array($value) || count($value) <= $parameter) {
             return null;
         }

@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     * Any calls to `ValidationError@getCode` need to be changed to `ValidationError@getKeyword`.
     * If you are using the `ArrayAccess` interface for `ValidationError` you need to replace any usage of the `code` key with `keyword`.
     * Instead of there being a different code for every format failure, they just return the keyword 'format'.
+* Invalid schemas now throw an InvalidSchemaException.
 
 ### Fixed
 

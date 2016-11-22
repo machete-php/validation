@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
@@ -20,9 +21,12 @@ class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstrai
         SubSchemaValidatorFactory $validatorFactory,
         $pointer = null
     ) {
+        Assert::type($parameter, ['object', 'boolean'], self::KEYWORD, $pointer);
+
         if (!is_object($data)) {
             return null;
         }
+
 
         $diff = self::getDiff($data, $schema);
 

@@ -2,6 +2,7 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\SubSchemaValidatorFactory;
 
 class Items implements ContainerInstanceConstraint
@@ -13,6 +14,8 @@ class Items implements ContainerInstanceConstraint
      */
     public static function validate($data, $parameter, SubSchemaValidatorFactory $validatorFactory, $pointer = null)
     {
+        Assert::type($parameter, ['array', 'object'], self::KEYWORD, $pointer);
+
         if (!is_array($data)) {
             return null;
         }

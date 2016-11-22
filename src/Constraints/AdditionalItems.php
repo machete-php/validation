@@ -2,6 +2,7 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 
@@ -19,9 +20,12 @@ class AdditionalItems implements ParentSchemaAwareContainerInstanceConstraint
         SubSchemaValidatorFactory $validatorFactory,
         $pointer = null
     ) {
+        Assert::type($parameter, ['boolean', 'object'], self::KEYWORD, $pointer);
+
         if (!is_array($data) || $parameter === true) {
             return null;
         }
+
 
         if (!is_array($items = self::getItems($schema))) {
             return null;

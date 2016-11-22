@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class Pattern implements PropertyConstraint
@@ -14,6 +15,8 @@ class Pattern implements PropertyConstraint
      */
     public static function validate($value, $pattern, $pointer = null)
     {
+        Assert::type($pattern, 'string', self::KEYWORD, $pointer);
+
         if (!is_string($value)) {
             return null;
         }

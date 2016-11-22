@@ -2,6 +2,7 @@
 
 namespace League\JsonGuard\Constraints;
 
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\SubSchemaValidatorFactory;
 
@@ -14,6 +15,8 @@ class Not implements ContainerInstanceConstraint
      */
     public static function validate($data, $parameter, SubSchemaValidatorFactory $validatorFactory, $pointer = null)
     {
+        Assert::type($parameter, 'object', self::KEYWORD, $pointer);
+
         $validator = $validatorFactory->makeSubSchemaValidator($data, $parameter, $pointer);
         if ($validator->passes()) {
             return new ValidationError(

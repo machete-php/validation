@@ -3,6 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
+use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 
 class MinProperties implements PropertyConstraint
@@ -14,6 +15,9 @@ class MinProperties implements PropertyConstraint
      */
     public static function validate($value, $min, $pointer = null)
     {
+        Assert::type($min, 'integer', self::KEYWORD, $pointer);
+        Assert::nonNegative($min, self::KEYWORD, $pointer);
+
         if (!is_object($value) || count(get_object_vars($value)) >= $min) {
             return null;
         }
