@@ -166,4 +166,11 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('https', $loaders);
         $this->assertInstanceOf(Loader::class, $loaders['https']);
     }
+
+    public function testGetLoaderThrowsIfTheLoaderDoesNotExist()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $deref = new Dereferencer();
+        $deref->dereference('couchdb://some-schema');
+    }
 }

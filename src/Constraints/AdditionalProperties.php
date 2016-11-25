@@ -45,8 +45,6 @@ class AdditionalProperties implements ParentSchemaAwareContainerInstanceConstrai
 
             return Properties::validate($data, $additionalSchema, $validatorFactory, $pointer);
         }
-
-        return null;
     }
 
     /**

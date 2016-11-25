@@ -295,7 +295,43 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new Validator($data, $schema, $ruleSet);
         $this->assertTrue($v->fails());
     }
+
+    public function testThrowsWhenInstantiatedWithANonObjectSchema()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        new Validator([], []);
+    }
+
+    public function testThrowsWhenConstraintDoesNotImplementAKnownInterface()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class, 'Invalid constraint.');
+        $v = new Validator([], (object) ['minimum' => 0], new InvalidRulesetStub());
+        $v->errors();
+    }
 }
+
+class InvalidRulesetStub implements JsonGuard\RuleSet
+{
+    public function has($rule)
+    {
+        return true;
+    }
+
+    /**
+     * Get the registered constraint for $rule.
+     *
+     * @param string $rule
+     *
+     * @return \League\JsonGuard\Constraints\Constraint
+     * @throws \League\JsonGuard\Exceptions\ConstraintNotFoundException
+     */
+    public function getConstraint($rule)
+    {
+        return new InvalidConstraint();
+    }
+}
+
+class InvalidConstraint implements JsonGuard\Constraints\Constraint{}
 
 class CustomRulesetStub extends DraftFour
 {

@@ -43,8 +43,6 @@ class AdditionalItems implements ParentSchemaAwareContainerInstanceConstraint
                 $pointer
             );
         }
-
-        return null;
     }
 
     /**

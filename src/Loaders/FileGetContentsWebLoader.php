@@ -28,7 +28,7 @@ class FileGetContentsWebLoader implements Loader
     {
         $uri = $this->prefix . $path;
         set_error_handler(function () use ($uri) {
-            throw new SchemaLoadingException($uri);
+            throw SchemaLoadingException::create($uri);
         });
         $response = file_get_contents($uri);
         restore_error_handler();

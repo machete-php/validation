@@ -120,6 +120,15 @@ class PointerTest extends \PHPUnit_Framework_TestCase
         $pointer->set('', []);
     }
 
+    public function testCanTraverseEmptyProperty()
+    {
+        // This was fixed in PHP 7.1 so we are going to simulate it in the test.
+        // @see https://github.com/php/php-src/pull/1926/commits/f0d1cca6729f2593900af10d6aa324b7eedfe0c3
+        $document = (object) ['_empty_' => ['bar' => 'baz']];
+        $pointer  = new Pointer($document);
+        $this->assertSame('baz', $pointer->get('//bar'));
+    }
+
     protected function assertCorrectJson($expected, $actual, $message = '')
     {
         $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($actual), $message);

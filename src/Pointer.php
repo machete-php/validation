@@ -114,7 +114,7 @@ class Pointer
         $reference = array_shift($pointer);
 
         // who does this?
-        if ($reference === '' && property_exists($json, '_empty_')) {
+        if ($reference === '' && is_object($json) && property_exists($json, '_empty_')) {
             return $this->traverse($json->_empty_, $pointer);
         }
 

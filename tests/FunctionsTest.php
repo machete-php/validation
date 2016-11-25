@@ -57,4 +57,30 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         $result = \League\JsonGuard\resolve_uri($id, $parentScope);
         $this->assertSame($expectedResult, $result);
     }
+
+    public function nonStringValues()
+    {
+        return [
+            [1, '1'],
+            [[1,2,3], "[1,2,3]"],
+            [(object) ['name' => 'Matt'], '{"name":"Matt"}'],
+            [fopen('php://temp', 'r'), '<RESOURCE>'],
+        ];
+    }
+
+
+    /**
+     * @dataProvider nonStringValues
+     */
+    public function testAsString($value, $expected)
+    {
+        $this->assertSame($expected, \League\JsonGuard\as_string($value));
+    }
+
+    public function testJsonDecodeThrowsWhenTheJsonIsInvalid()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $json = 'some-bad-data';
+        \League\JsonGuard\json_decode($json);
+    }
 }
