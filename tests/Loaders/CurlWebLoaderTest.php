@@ -1,6 +1,6 @@
 <?php
 
-namespace League\JsonGuard\Test;
+namespace League\JsonGuard\Test\Loaders;
 
 use League\JsonGuard\Exceptions\SchemaLoadingException;
 use League\JsonGuard\Loaders\CurlWebLoader;

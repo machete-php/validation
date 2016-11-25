@@ -1,6 +1,6 @@
 <?php
 
-namespace League\JsonGuard\Test;
+namespace League\JsonGuard\Test\RuleSets;
 
 use League\JsonGuard\Exceptions\ConstraintNotFoundException;
 use League\JsonGuard\RuleSets\DraftFour;

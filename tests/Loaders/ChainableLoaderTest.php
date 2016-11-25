@@ -1,6 +1,6 @@
 <?php
 
-namespace League\JsonGuard\Test;
+namespace League\JsonGuard\Test\Loaders;
 
 use League\JsonGuard\Loaders\ArrayLoader;
 use League\JsonGuard\Loaders\ChainableLoader;
