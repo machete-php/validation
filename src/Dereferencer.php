@@ -71,12 +71,12 @@ class Dereferencer
     /**
      * Get the loader for the given prefix.
      *
-     * @param $prefix
+     * @param string $prefix
      *
      * @return Loader
      * @throws \InvalidArgumentException
      */
-    private function getLoader($prefix)
+    public function getLoader($prefix)
     {
         if (!array_key_exists($prefix, $this->loaders)) {
             throw new \InvalidArgumentException(sprintf('A loader is not registered for the prefix "%s"', $prefix));
