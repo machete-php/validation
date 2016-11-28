@@ -17,7 +17,7 @@ class ValidationErrorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            'Value "-5" must be greater than "0"',
+            'Value -5 must be greater than 0',
             $e->getMessage()
         );
     }

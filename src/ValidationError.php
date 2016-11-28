@@ -67,7 +67,7 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     {
         $replace = [];
         foreach ($context as $key => $val) {
-            $replace['{' . $key . '}'] = as_string($val);
+            $replace['{' . $key . '}'] = $val;
         }
 
         return strtr($message, $replace);
