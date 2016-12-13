@@ -47,7 +47,7 @@ Now call the `dereference` method with your schema.  The schema should be the re
 ```php
 <?php
 
-$schema = json_decode('"properties": { "username": {"type": "string"}, "login": {"$ref": "#/properties/username"} }');
+$schema = json_decode('{"properties": { "username": {"type": "string"}, "login": {"$ref": "#/properties/username"} }');
 $schema = $deref->dereference($schema);
 ```
 
