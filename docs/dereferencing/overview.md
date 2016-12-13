@@ -67,7 +67,7 @@ By default `http://`, `https://`, and `file://` paths are supported.
 
 ### Custom Loaders
 
-You can make your own loaders by implementing the [Loader Interface](https://github.com/league/json-guard/blob/master/src/Dereferencer/Loader.php).  Imagine you may want to load schemas from a CouchDb database, and your references look like this:
+You can make your own loaders by implementing the [Loader Interface](https://github.com/thephpleague/json-guard/blob/master/src/Loader.php).  Imagine you may want to load schemas from a CouchDb database, and your references look like this:
 
 ```json
 { "$ref":"couchdb://00a271787f89c0ef2e10e88a0c0001f4" }
