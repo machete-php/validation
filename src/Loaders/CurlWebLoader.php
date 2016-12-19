@@ -65,6 +65,8 @@ class CurlWebLoader implements Loader
     {
         return [
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 20,
         ];
     }
 
