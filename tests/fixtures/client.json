@@ -1,0 +1,14 @@
+{
+    "definitions": {
+        "company": {
+            "$ref": "company.json"
+        }
+    },
+    "type": "object",
+    "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "company": { "$ref": "#/definitions/company" }
+    },
+    "required": ["name", "phone", "company"]
+}

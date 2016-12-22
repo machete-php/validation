@@ -10,7 +10,7 @@ use Closure;
  * impossible.  This object can be substituted for the $ref instead,
  * allowing lazy resolution of the $ref when needed.
  */
-class Reference implements \JsonSerializable
+class Reference implements \JsonSerializable, \IteratorAggregate
 {
     /**
      * A JSON object resulting from a json_decode call or a Closure.
@@ -19,6 +19,8 @@ class Reference implements \JsonSerializable
      * @var object|Closure
      */
     private $schema;
+
+    private $cached;
 
     /**
      * A valid JSON reference.  The reference should point to a location in $schema.
@@ -61,10 +63,15 @@ class Reference implements \JsonSerializable
      */
     public function resolve()
     {
-        if ($this->schema instanceof Closure) {
-            return $this->resolveExternalReference();
+        if (empty($this->cached)) {
+            if ($this->schema instanceof Closure) {
+                return $this->resolveExternalReference();
+            }
+
+            return $this->resolveInternalReference();
         }
-        return $this->resolveInternalReference();
+
+        return $this->cached;
     }
 
     /**
@@ -106,5 +113,10 @@ class Reference implements \JsonSerializable
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown property "%s"', $property));
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->resolve());
     }
 }

@@ -308,6 +308,23 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new Validator([], (object) ['minimum' => 0], new InvalidRulesetStub());
         $v->errors();
     }
+
+
+    public function testNestedReference() {
+        $deref = new Dereferencer();
+        $path   = 'file://' . __DIR__ . '/fixtures/client.json';
+        $schema = $deref->dereference($path);
+
+        $validator = new Validator((object) [
+            'name' => 'Test user',
+            'phone' => 'some-phone',
+            'company' => (object) [
+                'name' => 'some-company'
+            ]
+        ], $schema);
+
+        $this->assertTrue($validator->fails());
+    }
 }
 
 class InvalidRulesetStub implements JsonGuard\RuleSet
