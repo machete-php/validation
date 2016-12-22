@@ -75,7 +75,8 @@ class Validator implements SubSchemaValidatorFactory
             );
         }
 
-        if ($schema instanceof Reference) {
+
+        while ($schema instanceof Reference) {
             $schema = $schema->resolve();
         }
 
