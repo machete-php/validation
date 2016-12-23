@@ -307,6 +307,7 @@ class Dereferencer
     {
         $this->validateAbsolutePath($reference);
         list($prefix, $path) = explode('://', $reference, 2);
+        $path = rtrim(strip_fragment($path), '#');
 
         $loader = $this->getLoader($prefix);
 

@@ -22,7 +22,7 @@ class DereferencerTest extends \PHPUnit_Framework_TestCase
     public function testRemote()
     {
         $loader = new ArrayLoader(
-            ['json-schema.org/draft-04/schema#' => file_get_contents(__DIR__ . '/fixtures/draft4-schema.json')]
+            ['json-schema.org/draft-04/schema' => file_get_contents(__DIR__ . '/fixtures/draft4-schema.json')]
         );
         $deref  = new Dereferencer();
         $deref->registerLoader($loader, 'http');
