@@ -68,7 +68,6 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider nonStringValues
      */
@@ -82,5 +81,18 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\InvalidArgumentException::class);
         $json = 'some-bad-data';
         \League\JsonGuard\json_decode($json);
+    }
+
+    public function testSchemaExtract()
+    {
+        $schema = json_decode('{ "properties": { "money": { "enum": [ { "currency": "USD" } ] } } }');
+
+        $matches = \League\JsonGuard\schema_extract($schema, function ($keyword, $value) {
+            return $keyword === 'currency' && $value === 'USD';
+        });
+
+        $this->assertCount(1, $matches);
+        $this->assertSame('/properties/money/enum/0', array_keys($matches)[0]);
+        $this->assertSame('USD', reset($matches));
     }
 }

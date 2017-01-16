@@ -103,6 +103,20 @@ function escape_pointer($pointer)
     return str_replace('/', '~1', $pointer);
 }
 
+
+/**
+ * Push a segment onto the given JSON Pointer.
+ *
+ * @param string $path
+ * @param string $segment
+ *
+ * @return string
+ */
+function pointer_push($path, $segment)
+{
+    return $path . '/' . escape_pointer($segment);
+}
+
 /**
  * Determines if the value is an integer or an integer that was cast to a string
  * because it is larger than PHP_INT_MAX.
@@ -186,4 +200,44 @@ function resolve_uri($id, $parentScope)
     }
 
     return Uri\resolve($parentScope, $id);
+}
+
+/**
+ * Recursively iterates over each value in the schema passing them to the callback function.
+ * If the callback function returns true, the value is returned into the result array, keyed by a JSON Pointer.
+ *
+ * @param mixed    $schema
+ * @param callable $callback
+ * @param string   $pointer
+ *
+ * @return array
+ */
+function schema_extract($schema, callable $callback, $pointer = '')
+{
+    $matches = [];
+
+    if (!is_array($schema) && !is_object($schema)) {
+        return $matches;
+    }
+
+    foreach ($schema as $keyword => $value) {
+        switch (true) {
+            case is_object($value):
+                $matches = array_merge($matches, schema_extract($value, $callback, pointer_push($pointer, $keyword)));
+                break;
+            case is_array($value):
+                foreach ($value as $k => $v) {
+                    $matches = array_merge(
+                        $matches,
+                        schema_extract($v, $callback, pointer_push(pointer_push($pointer, $keyword), $k))
+                    );
+                }
+                break;
+            case $callback($keyword, $value):
+                $matches[$pointer] = $value;
+                break;
+        }
+    }
+
+    return $matches;
 }

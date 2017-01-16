@@ -120,7 +120,9 @@ class Dereferencer
      */
     private function crawl($schema, $currentUri = null)
     {
-        $references = $this->getReferences($schema);
+        $references = schema_extract($schema, function ($keyword, $value) {
+            return $this->isRef($keyword, $value);
+        });
 
         foreach ($references as $path => $ref) {
             // resolve
@@ -206,63 +208,6 @@ class Dereferencer
         }
 
         return $schema;
-    }
-
-    /**
-     * Recursively get all of the references for the given schema.
-     * Returns an associative array like [path => reference].
-     * Example:
-     *
-     * ['/properties' => '#/definitions/b']
-     *
-     * The path does NOT include the $ref.
-     *
-     * @param object $schema The schema to resolve references for.
-     * @param string $path   The current schema path.
-     *
-     * @return array
-     */
-    private function getReferences($schema, $path = '')
-    {
-        $refs = [];
-
-        if (!is_array($schema) && !is_object($schema)) {
-            return $refs;
-        }
-
-        foreach ($schema as $attribute => $parameter) {
-            switch (true) {
-                case $this->isRef($attribute, $parameter):
-                    $refs[$path] = $parameter;
-                    break;
-                case is_object($parameter):
-                    $refs = array_merge($refs, $this->getReferences($parameter, $this->pathPush($path, $attribute)));
-                    break;
-                case is_array($parameter):
-                    foreach ($parameter as $k => $v) {
-                        $refs = array_merge(
-                            $refs,
-                            $this->getReferences($v, $this->pathPush($this->pathPush($path, $attribute), $k))
-                        );
-                    }
-                    break;
-            }
-        }
-
-        return $refs;
-    }
-
-    /**
-     * Push a segment onto the given path.
-     *
-     * @param string $path
-     * @param string $segment
-     *
-     * @return string
-     */
-    private function pathPush($path, $segment)
-    {
-        return $path . '/' . escape_pointer($segment);
     }
 
     /**
