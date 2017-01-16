@@ -125,23 +125,34 @@ class Dereferencer
         });
 
         foreach ($references as $path => $ref) {
-            // resolve
-            if ($this->isExternalRef($ref)) {
-                $resolved = new Reference(function () use ($schema, $path, $ref, $currentUri) {
-                    return $this->resolveExternalReference($schema, $path, $ref, $currentUri);
-                }, $ref);
-            } else {
-                $resolved = new Reference($schema, $ref);
-            }
-
-            // handle any fragments
-            $resolved = $this->resolveFragment($ref, $resolved);
-
-            // merge
-            $this->mergeResolvedReference($schema, $resolved, $path);
+            $this->resolveReference($schema, $path, $ref, $currentUri);
         }
 
         return $schema;
+    }
+
+    /**
+     * @param object $schema
+     * @param string $path
+     * @param string $ref
+     * @param string $currentUri
+     */
+    private function resolveReference($schema, $path, $ref, $currentUri)
+    {
+        // resolve
+        if ($this->isExternalRef($ref)) {
+            $resolved = new Reference(function () use ($schema, $path, $ref, $currentUri) {
+                return $this->resolveExternalReference($schema, $path, $ref, $currentUri);
+            }, $ref);
+        } else {
+            $resolved = new Reference($schema, $ref);
+        }
+
+        // handle any fragments
+        $resolved = $this->resolveFragment($ref, $resolved);
+
+        // merge
+        $this->mergeResolvedReference($schema, $resolved, $path);
     }
 
     /**
