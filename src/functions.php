@@ -185,6 +185,16 @@ function is_relative_ref($ref)
 }
 
 /**
+ * @param string $value
+ *
+ * @return bool
+ */
+function is_internal_ref($value)
+{
+    return is_string($value) && substr($value, 0, 1) === '#';
+}
+
+/**
  * Resolve the given id against the parent scope and return the resolved URI.
  *
  * @param string $id          The id to resolve.  This should be a valid relative or absolute URI.

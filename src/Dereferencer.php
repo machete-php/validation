@@ -140,7 +140,7 @@ class Dereferencer
     private function resolveReference($schema, $path, $ref, $currentUri)
     {
         // resolve
-        if ($this->isExternalRef($ref)) {
+        if (!is_internal_ref($ref)) {
             $resolved = new Reference(function () use ($schema, $path, $ref, $currentUri) {
                 return $this->resolveExternalReference($schema, $path, $ref, $currentUri);
             }, $ref);
@@ -210,7 +210,7 @@ class Dereferencer
     private function resolveFragment($ref, $schema)
     {
         $fragment = parse_url($ref, PHP_URL_FRAGMENT);
-        if ($this->isExternalRef($ref) && is_string($fragment)) {
+        if (!is_internal_ref($ref) && is_string($fragment)) {
             if ($schema instanceof Reference) {
                 $schema = $schema->resolve();
             }
@@ -230,26 +230,6 @@ class Dereferencer
     private function isRef($attribute, $attributeValue)
     {
         return $attribute === '$ref' && is_string($attributeValue);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isInternalRef($value)
-    {
-        return is_string($value) && substr($value, 0, 1) === '#';
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isExternalRef($value)
-    {
-        return !$this->isInternalRef($value);
     }
 
     /**
