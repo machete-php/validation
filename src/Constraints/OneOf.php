@@ -3,7 +3,6 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\SubSchemaValidatorFactory;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 

@@ -5,7 +5,7 @@ namespace League\JsonGuard;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
 
-class Validator implements SubSchemaValidatorFactory
+class Validator
 {
     /**
      * @var array

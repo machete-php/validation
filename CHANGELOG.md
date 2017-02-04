@@ -15,6 +15,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * All constraints now implement a single interface.  See `League\JsonGuard\Constraints\Constraint` for more info.  If you are using custom constraints you should update them to match the new signature.
 * The Dereferencer now accepts a LoaderManager which takes care of registering and getting schema loaders.  You should replace any calls to `Dereferencer::getLoader`, `Dereferencer::getLoaders`, or `Dereferencer::registerLoader` with `Dereferencer::getLoaderManager` and then call the method on the loader manager.  The order of arguments for `LoaderManager::registerLoader` was also changed;
 
+## Removed
+
+* Removed the SubSchemaValidatorFactory interface since it isn't used by constraints anymore.
+
 ## 0.5.1 - 2016-11-28
 
 ### Fixed
