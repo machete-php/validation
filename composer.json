@@ -34,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "sabre/uri": "^1.1"
     },
     "suggest": {
@@ -45,6 +45,7 @@
         "scrutinizer/ocular": "~1.1",
         "squizlabs/php_codesniffer": "~2.3",
         "json-schema/JSON-Schema-Test-Suite": "1.2.0",
+        "league/json-reference": "*@dev",
         "ext-curl": "*",
         "ext-bcmath": "*"
     },
@@ -67,6 +68,7 @@
     },
     "scripts": {
         "test": "phpunit",
+        "test-server": "php -S localhost:1234 -t ./vendor/json-schema/JSON-Schema-Test-Suite/remotes/",
         "cs": "phpcs --standard=psr2 src/",
         "bench": "phpbench run ./tests/benchmarks --report=default"
     },

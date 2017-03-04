@@ -2,11 +2,17 @@ Getting Started:
     Introduction: '/'
     Simple Example: '/simple-example/'
     Installation: '/installation/'
-Dereferencing:
-    Overview: '/dereferencing/overview/'
-    Circular References: '/dereferencing/circular-references/'
-Validation:
+JSON References:
+    Overview: '/json-reference/overview/'
+    Installation: '/json-reference/installation/'
+    Dereferencing: '/json-reference/dereferencing/'
+    Loaders: '/json-reference/loaders/'
+    Scope Resolution: '/json-reference/scope-resolution/'
+    Circular References: '/json-reference/circular-references/'
+JSON Schema Validation:
     Overview: '/validation/overview/'
     Errors: '/validation/errors/'
     Extending: '/validation/extending/'
     FAQ: '/faq'
+Upgrade Guide:
+    0.x to 1.0: '/upgrade-guide/1-0'

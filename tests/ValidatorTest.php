@@ -4,15 +4,17 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
 use League\JsonGuard\Constraints\Constraint;
-use League\JsonGuard\Dereferencer;
+use League\JsonReference\CoreDereferencer;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\FormatExtension;
-use League\JsonGuard\Loaders\ArrayLoader;
-use League\JsonGuard\Loaders\CurlWebLoader;
+use League\JsonReference\Loaders\ArrayLoader;
+use League\JsonReference\Loaders\ChainableLoader;
+use League\JsonReference\Loaders\CurlWebLoader;
 use League\JsonGuard\Validator;
 use League\JsonGuard\RuleSets\DraftFour;
+use League\JsonReference\ScopeResolvers\JsonSchemaScopeResolver;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,13 +34,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         return array_map(function ($file) {
             return [$file];
         }, glob(schema_test_suite_path() . '/draft4/*.json'));
-    }
-
-    public function unofficialTests()
-    {
-        return array_map(function ($file) {
-            return [$file];
-        }, glob(__DIR__ . '/unofficial/*.json'));
     }
 
     public function invalidSchemas()
@@ -79,16 +74,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider unofficialTests
-     */
-    public function testUnofficialTests($testFile)
-    {
-        $test = json_decode(file_get_contents($testFile));
-
-        $this->runTestCase($test);
-    }
-
-    /**
      * @dataProvider invalidSchemas
      */
     public function testInvalidSchemas($schema)
@@ -114,6 +99,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             foreach ($testCase->tests as $test) {
                 $validator = new Validator($test->data, $schema);
                 $msg       = $description . ' : ' . $test->description;
+
                 if ($test->valid) {
                     $this->assertTrue($validator->passes(), $msg);
                 } else {
@@ -128,22 +114,22 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
      * schema from memory, but defer any other http(s) calls to the Curl loader.  This allows
      * us to run tests without requiring the json-schema.org website to be available.
      *
-     * @return \League\JsonGuard\Dereferencer
+     * @return \League\JsonReference\Dereferencer
      */
     private static function createDereferencer()
     {
         $arrayLoader = new ArrayLoader(
-            ['json-schema.org/draft-04/schema#' => file_get_contents(__DIR__ . '/fixtures/draft4-schema.json')]
+            ['json-schema.org/draft-04/schema' => file_get_contents(__DIR__ . '/fixtures/draft4-schema.json')]
         );
-        $httpsLoader = new JsonGuard\Loaders\ChainableLoader(
+        $httpsLoader = new ChainableLoader(
             $arrayLoader,
             new CurlWebLoader('https://')
         );
-        $httpLoader = new JsonGuard\Loaders\ChainableLoader(
+        $httpLoader = new ChainableLoader(
             $arrayLoader,
             new CurlWebLoader('http://')
         );
-        $refResolver  = new Dereferencer();
+        $refResolver  = new CoreDereferencer(null, new JsonSchemaScopeResolver());
         $refResolver->getLoaderManager()->registerLoader('http', $httpLoader);
         $refResolver->getLoaderManager()->registerLoader('https', $httpsLoader);
 
@@ -155,7 +141,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/schema.json'));
 
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $v = new Validator($data, $schema);
@@ -176,7 +162,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-data.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-schema.json'));
 
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $v = new Validator($data, $schema);
@@ -188,7 +174,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testDeeplyNestedDataWithinReason()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"bar": {}}}}}}}}}}}');
@@ -203,7 +189,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(MaximumDepthExceededException::class);
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode(file_get_contents(__DIR__ . '/fixtures/stack-attack.json'));
@@ -216,7 +202,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxDepth()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {}}}');
@@ -234,7 +220,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxDepthIsReset()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new Dereferencer();
+        $deref  = new CoreDereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {}}}');
@@ -303,7 +289,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testNestedReference() {
-        $deref = new Dereferencer();
+        $deref = new CoreDereferencer();
         $path   = 'file://' . __DIR__ . '/fixtures/client.json';
         $schema = $deref->dereference($path);
 
