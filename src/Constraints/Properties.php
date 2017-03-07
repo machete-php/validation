@@ -2,9 +2,9 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\Validator;
+use League\JsonReference;
 
 class Properties implements Constraint
 {
@@ -28,7 +28,7 @@ class Properties implements Constraint
         foreach ($parameter as $property => $schema) {
             if (is_object($value) && property_exists($value, $property)) {
                 $propertyData    = $value->$property;
-                $propertyPointer = JsonGuard\pointer_push($validator->getPointer(), $property);
+                $propertyPointer = JsonReference\pointer_push($validator->getPointer(), $property);
                 $subValidator       = $validator->makeSubSchemaValidator($propertyData, $schema, $propertyPointer);
                 if ($subValidator->fails()) {
                     $errors = array_merge($errors, $subValidator->errors());
