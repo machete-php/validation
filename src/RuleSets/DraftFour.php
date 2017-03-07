@@ -27,16 +27,17 @@ use League\JsonGuard\Constraints\Properties;
 use League\JsonGuard\Constraints\Required;
 use League\JsonGuard\Constraints\Type;
 use League\JsonGuard\Constraints\UniqueItems;
-use League\JsonGuard\Exceptions\ConstraintNotFoundException;
-use League\JsonGuard\RuleSet;
+use Psr\Container\ContainerInterface;
 
 /**
  * The default rule set for JSON Schema Draft 4.
  * @see http://tools.ietf.org/html/draft-zyp-json-schema-04
  * @see  https://tools.ietf.org/html/draft-fge-json-schema-validation-00
  */
-class DraftFour implements RuleSet
+class DraftFour implements ContainerInterface
 {
+    use RuleSetTrait;
+
     protected $rules = [
         'additionalItems'      => AdditionalItems::class,
         'additionalProperties' => AdditionalProperties::class,
@@ -68,20 +69,16 @@ class DraftFour implements RuleSet
     /**
      * {@inheritdoc}
      */
-    public function has($rule)
+    protected function rules()
     {
-        return array_key_exists($rule, $this->rules);
+        return $this->rules;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConstraint($rule)
+    protected function setRule($id, $constraint)
     {
-        if (!$this->has($rule)) {
-            throw ConstraintNotFoundException::forRule($rule);
-        }
-
-        return new $this->rules[$rule];
+        $this->rules[$id] = $constraint;
     }
 }
