@@ -2,27 +2,6 @@
 
 namespace League\JsonGuard;
 
-use Sabre\Uri;
-
-/**
- * @param string $json
- * @param bool   $assoc
- * @param int    $depth
- * @param int    $options
- * @return mixed
- * @throws \InvalidArgumentException
- */
-function json_decode($json, $assoc = false, $depth = 512, $options = 0)
-{
-    $data = \json_decode($json, $assoc, $depth, $options);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new \InvalidArgumentException(sprintf('Invalid JSON: %s', json_last_error_msg()));
-    }
-
-    return $data;
-}
-
 /**
  * @param $string
  * @return int
@@ -92,32 +71,6 @@ function delimit_pattern($pattern)
 }
 
 /**
- * Escape a JSON Pointer.
- *
- * @param  string $pointer
- * @return string
- */
-function escape_pointer($pointer)
-{
-    $pointer = str_replace('~', '~0', $pointer);
-    return str_replace('/', '~1', $pointer);
-}
-
-
-/**
- * Push a segment onto the given JSON Pointer.
- *
- * @param string $path
- * @param string $segment
- *
- * @return string
- */
-function pointer_push($path, $segment)
-{
-    return $path . '/' . escape_pointer($segment);
-}
-
-/**
  * Determines if the value is an integer or an integer that was cast to a string
  * because it is larger than PHP_INT_MAX.
  *
@@ -156,125 +109,4 @@ function is_json_number($value)
 function compare($leftOperand, $rightOperand)
 {
     return Comparator::compare($leftOperand, $rightOperand);
-}
-
-/**
- * Removes the fragment from a reference.
- *
- * @param  string $ref
- * @return string
- */
-function strip_fragment($ref)
-{
-    $fragment = parse_url($ref, PHP_URL_FRAGMENT);
-
-    return $fragment ? str_replace($fragment, '', $ref) : $ref;
-}
-
-/**
- * Determine if a reference is relative.
- * A reference is relative if it does not being with a prefix.
- *
- * @param string $ref
- *
- * @return bool
- */
-function is_relative_ref($ref)
-{
-    return !preg_match('#^.+\:\/\/.*#', $ref);
-}
-
-/**
- * @param string $value
- *
- * @return bool
- */
-function is_internal_ref($value)
-{
-    return is_string($value) && substr($value, 0, 1) === '#';
-}
-
-/**
- * Parse an external reference returning the prefix and path.
- *
- * @param string $ref
- *
- * @return array
- *
- * @throws \InvalidArgumentException
- */
-function parse_external_ref($ref)
-{
-    if (is_relative_ref($ref)) {
-        throw new \InvalidArgumentException(
-            sprintf(
-                'The path  "%s" was expected to be an external reference but is missing a prefix.  ' .
-                'The schema path should start with a prefix i.e. "file://".',
-                $ref
-            )
-        );
-    }
-
-    list($prefix, $path) = explode('://', $ref, 2);
-    $path = rtrim(strip_fragment($path), '#');
-
-    return [$prefix, $path];
-}
-
-/**
- * Resolve the given id against the parent scope and return the resolved URI.
- *
- * @param string $id          The id to resolve.  This should be a valid relative or absolute URI.
- * @param string $parentScope The parent scope to resolve against.  Should be a valid URI or empty.
- *
- * @return string
- */
-function resolve_uri($id, $parentScope)
-{
-    // If there is no parent scope, there is nothing to resolve against.
-    if ($parentScope === '') {
-        return $id;
-    }
-
-    return Uri\resolve($parentScope, $id);
-}
-
-/**
- * Recursively iterates over each value in the schema passing them to the callback function.
- * If the callback function returns true the value is returned into the result array, keyed by a JSON Pointer.
- *
- * @param mixed    $schema
- * @param callable $callback
- * @param string   $pointer
- *
- * @return array
- */
-function schema_extract($schema, callable $callback, $pointer = '')
-{
-    $matches = [];
-
-    if (!is_array($schema) && !is_object($schema)) {
-        return $matches;
-    }
-
-    foreach ($schema as $keyword => $value) {
-        switch (true) {
-            case is_object($value):
-                $matches = array_merge($matches, schema_extract($value, $callback, pointer_push($pointer, $keyword)));
-                break;
-            case is_array($value):
-                foreach ($value as $k => $v) {
-                    $matches = array_merge(
-                        $matches,
-                        schema_extract($v, $callback, pointer_push(pointer_push($pointer, $keyword), $k))
-                    );
-                }
-                break;
-            case $callback($keyword, $value):
-                $matches[$pointer] = $value;
-                break;
-        }
-    }
-
-    return $matches;
 }

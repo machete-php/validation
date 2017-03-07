@@ -2,10 +2,10 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use League\JsonReference;
 
 class AdditionalItems implements Constraint
 {
@@ -57,7 +57,7 @@ class AdditionalItems implements Constraint
         $errors = [];
         foreach ($items as $key => $item) {
             // Escaping isn't necessary since the key is always numeric.
-            $currentPointer = JsonGuard\pointer_push($validator->getPointer(), $key);
+            $currentPointer = JsonReference\pointer_push($validator->getPointer(), $key);
             $validator      = $validator->makeSubSchemaValidator($item, $schema, $currentPointer);
             $errors         = array_merge($errors, $validator->errors());
         }

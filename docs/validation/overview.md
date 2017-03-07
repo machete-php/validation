@@ -1,6 +1,6 @@
 ---
 layout: default
-permalink: validation/overview/
+permalink: validation/overview
 title: Overview
 ---
 

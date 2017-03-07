@@ -1,6 +1,6 @@
 ---
 layout: default
-permalink: validation/errors/
+permalink: validation/errors
 title: Errors
 ---
 

@@ -4,6 +4,7 @@ namespace League\JsonGuard;
 
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
+use League\JsonReference\Reference;
 
 class Validator
 {

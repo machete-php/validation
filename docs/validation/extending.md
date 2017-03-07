@@ -1,6 +1,6 @@
 ---
 layout: default
-permalink: validation/extending/
+permalink: validation/extending
 title: Extending
 ---
 

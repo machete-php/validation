@@ -2,9 +2,9 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\Validator;
+use League\JsonReference;
 
 class Items implements Constraint
 {
@@ -31,7 +31,7 @@ class Items implements Constraint
                 continue;
             }
 
-            $pointer   = JsonGuard\pointer_push($validator->getPointer(), $key);
+            $pointer   = JsonReference\pointer_push($validator->getPointer(), $key);
             $subValidator = $validator->makeSubSchemaValidator($itemValue, $schema, $pointer);
             $errors    = array_merge($errors, $subValidator->errors());
         }
