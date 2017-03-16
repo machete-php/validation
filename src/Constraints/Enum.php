@@ -23,8 +23,7 @@ class Enum implements Constraint
                     return null;
                 }
             }
-        }
-        else {
+        } else {
             if (in_array($value, $parameter, true)) {
                 return null;
             }
