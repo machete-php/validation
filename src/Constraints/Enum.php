@@ -17,8 +17,17 @@ class Enum implements Constraint
     {
         Assert::type($parameter, 'array', self::KEYWORD, $validator->getPointer());
 
-        if (in_array($value, $parameter, true)) {
-            return null;
+        if (is_object($value)) {
+            foreach ($parameter as $i) {
+                if (is_object($i) && $value == $i) {
+                    return null;
+                }
+            }
+        }
+        else {
+            if (in_array($value, $parameter, true)) {
+                return null;
+            }
         }
 
         return new ValidationError(
