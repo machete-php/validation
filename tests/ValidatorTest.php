@@ -4,7 +4,7 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
 use League\JsonGuard\Constraints\Constraint;
-use League\JsonReference\CoreDereferencer;
+use League\JsonReference\Dereferencer;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
@@ -14,7 +14,6 @@ use League\JsonReference\Loaders\ChainableLoader;
 use League\JsonReference\Loaders\CurlWebLoader;
 use League\JsonGuard\Validator;
 use League\JsonGuard\RuleSets\DraftFour;
-use League\JsonReference\ScopeResolvers\JsonSchemaScopeResolver;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -129,7 +128,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $arrayLoader,
             new CurlWebLoader('http://')
         );
-        $refResolver  = new CoreDereferencer(null, new JsonSchemaScopeResolver());
+        $refResolver  = Dereferencer::draft4();
         $refResolver->getLoaderManager()->registerLoader('http', $httpLoader);
         $refResolver->getLoaderManager()->registerLoader('https', $httpsLoader);
 
@@ -141,7 +140,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/schema.json'));
 
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $v = new Validator($data, $schema);
@@ -162,7 +161,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-data.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-schema.json'));
 
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $v = new Validator($data, $schema);
@@ -174,7 +173,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testDeeplyNestedDataWithinReason()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"foo": {"bar": {}}}}}}}}}}}');
@@ -189,7 +188,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(MaximumDepthExceededException::class);
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode(file_get_contents(__DIR__ . '/fixtures/stack-attack.json'));
@@ -202,7 +201,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxDepth()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {}}}');
@@ -220,7 +219,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxDepthIsReset()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new CoreDereferencer();
+        $deref  = new Dereferencer();
         $schema = $deref->dereference($schema);
 
         $data = json_decode('{"foo": {"foo": {}}}');
@@ -289,7 +288,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testNestedReference() {
-        $deref = new CoreDereferencer();
+        $deref = new Dereferencer();
         $path   = 'file://' . __DIR__ . '/fixtures/client.json';
         $schema = $deref->dereference($path);
 
