@@ -59,20 +59,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider draft4CoreTests
-     * @runInSeparateProcess
-     *
-     * @param string $testFile
-     */
-    public function testDraft4CoreTestsPassWithoutBcMath($testFile)
-    {
-        require __DIR__ . '/disable_bccomp.php';
-        $test = json_decode(file_get_contents($testFile));
-
-        $this->runTestCase($test);
-    }
-
-    /**
      * @dataProvider invalidSchemas
      */
     public function testInvalidSchemas($schema)
