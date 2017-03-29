@@ -272,7 +272,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $schema = json_decode('{"properties": { "foo": {"type": "string", "emoji": true} } }');
         $data = json_decode('{ "foo": ":)" }');
 
-        $ruleSet = new CustomRulesetStub();
+        $ruleSet = new DraftFour();
+        $ruleSet->set('emoji', EmojiConstraint::class);
         $v = new Validator($data, $schema, $ruleSet);
         $this->assertTrue($v->passes());
 
@@ -301,31 +302,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         ], $schema);
 
         $this->assertTrue($validator->fails());
-    }
-}
-
-class CustomRulesetStub extends DraftFour
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function has($rule)
-    {
-        if ($rule === 'emoji') {
-            return true;
-        }
-        return parent::has($rule);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConstraint($rule)
-    {
-        if ($rule === 'emoji') {
-            return new EmojiConstraint();
-        }
-        return parent::getConstraint($rule);
     }
 }
 

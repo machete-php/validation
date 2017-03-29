@@ -2,9 +2,11 @@
 
 namespace League\JsonGuard;
 
+use League\JsonGuard\Constraints\Constraint;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
 use League\JsonReference\Reference;
+use Psr\Container\ContainerInterface;
 
 class Validator
 {
@@ -49,7 +51,7 @@ class Validator
     private $formatExtensions = [];
 
     /**
-     * @var \League\JsonGuard\RuleSet
+     * @var \Psr\Container\ContainerInterface
      */
     private $ruleSet;
 
@@ -59,11 +61,11 @@ class Validator
     private $hasValidated;
 
     /**
-     * @param mixed        $data
-     * @param object       $schema
-     * @param RuleSet|null $ruleSet
+     * @param mixed                   $data
+     * @param object                  $schema
+     * @param ContainerInterface|null $ruleSet
      */
-    public function __construct($data, $schema, RuleSet $ruleSet = null)
+    public function __construct($data, $schema, ContainerInterface $ruleSet = null)
     {
         if (!is_object($schema)) {
             throw new \InvalidArgumentException(
@@ -232,7 +234,8 @@ class Validator
             return $this->validateCustomFormat($parameter);
         }
 
-        $constraint = $this->ruleSet->getConstraint($rule);
+        /** @var Constraint $constraint */
+        $constraint = $this->ruleSet->get($rule);
 
         return $constraint->validate($this->data, $parameter, $this);
     }
