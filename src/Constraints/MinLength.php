@@ -12,6 +12,19 @@ class MinLength implements Constraint
     const KEYWORD = 'minLength';
 
     /**
+     * @var string
+     */
+    private $charset;
+
+    /**
+     * @param string $charset
+     */
+    public function __construct($charset = 'UTF-8')
+    {
+        $this->charset = $charset;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate($value, $parameter, Validator $validator)
@@ -19,7 +32,7 @@ class MinLength implements Constraint
         Assert::type($parameter, 'number', self::KEYWORD, $validator->getPointer());
         Assert::nonNegative($parameter, self::KEYWORD, $validator->getPointer());
 
-        if (!is_string($value) || JsonGuard\strlen($value) >= $parameter) {
+        if (!is_string($value) || JsonGuard\strlen($value, $this->charset) >= $parameter) {
             return null;
         }
 

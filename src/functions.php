@@ -3,17 +3,23 @@
 namespace League\JsonGuard;
 
 /**
- * @param $string
+ * @param string $string
+ * @param string $charset
+ *
  * @return int
  */
-function strlen($string)
+function strlen($string, $charset = 'UTF-8')
 {
-    if (extension_loaded('intl')) {
-        return grapheme_strlen($string);
+    if (function_exists('iconv_strlen')) {
+        return iconv_strlen($string, $charset);
     }
 
-    if (extension_loaded('mbstring')) {
-        return mb_strlen($string, mb_detect_encoding($string));
+    if (function_exists('mb_strlen')) {
+        return mb_strlen($string, $charset);
+    }
+
+    if (function_exists('utf8_decode') && $charset === 'UTF-8') {
+        $string = utf8_decode($string);
     }
 
     return \strlen($string);
@@ -79,7 +85,7 @@ function delimit_pattern($pattern)
  */
 function is_json_integer($value)
 {
-    if (is_string($value) && strlen($value) && $value[0] === '-') {
+    if (is_string($value) && \strlen($value) && $value[0] === '-') {
         $value = substr($value, 1);
     }
 
