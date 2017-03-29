@@ -41,12 +41,16 @@ If your schema contains numbers larger than PHP_INT_MAX (usually 2147483647), yo
 $data = json_decode($data, false, 512, JSON_BIGINT_AS_STRING);
 ```
 
-Comparison will only work correctly with large numbers if you have the [bcmatch extension](http://php.net/manual/en/book.bc.php), so make sure it is enabled on your platform.  It's usually enabled by default.
+Comparison with large numbers uses the [bcmatch extension](http://php.net/manual/en/book.bc.php), so make sure it is enabled on your platform.  It's usually enabled by default.
 
-If you need to compare floats with more than 10 places after the decimal place, you can change the scale used for comparisons:
+If you need to compare floats with more than 10 places after the decimal place, you can set the scale of the Max or Min constraint when instantiating it, then add it to the ruleset.
 
 ```php
 <?php
 
-League\JsonGuard\Comparator::setScale(20);
+$ruleset = new \League\JsonGuard\RuleSets\DraftFour();
+$ruleset->set('minimum', function () {
+    return new \League\JsonGuard\Constraints\Min(20);
+});
+$validator = new \League\JsonGuard\Validator($data, $schema, $ruleset);
 ```

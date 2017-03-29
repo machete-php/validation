@@ -11,6 +11,19 @@ class MultipleOf implements Constraint
     const KEYWORD = 'multipleOf';
 
     /**
+     * @var int|null
+     */
+    private $precision;
+
+    /**
+     * @param int|null $precision
+     */
+    public function __construct($precision = 10)
+    {
+        $this->precision = $precision;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate($value, $parameter, Validator $validator)
@@ -22,10 +35,9 @@ class MultipleOf implements Constraint
             return null;
         }
 
-        // for some reason fmod does not return 0 for cases like fmod(0.0075,0.0001) so I'm doing this manually.
-        $quotient = $value / $parameter;
-        $mod      = $quotient - floor($quotient);
-        if ($mod == 0) {
+        $quotient = bcdiv($value, $parameter, $this->precision);
+        $mod      = bcsub($quotient, floor($quotient), $this->precision);
+        if (bccomp($mod, 0, $this->precision) === 0) {
             return null;
         }
 

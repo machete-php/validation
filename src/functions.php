@@ -83,7 +83,7 @@ function is_json_integer($value)
         $value = substr($value, 1);
     }
 
-    return is_int($value) || (is_string($value) && ctype_digit($value) && compare($value, PHP_INT_MAX) === 1);
+    return is_int($value) || (is_string($value) && ctype_digit($value) && bccomp($value, PHP_INT_MAX) === 1);
 }
 
 /**
@@ -97,16 +97,4 @@ function is_json_integer($value)
 function is_json_number($value)
 {
     return is_float($value) || is_json_integer($value);
-}
-
-/**
- * @param string|double|int $leftOperand
- * @param string|double|int $rightOperand
- *
- * @return int Returns 0 if the two operands are equal, 1 if the left_operand is larger than the right_operand,
- * -1 otherwise.
- */
-function compare($leftOperand, $rightOperand)
-{
-    return Comparator::compare($leftOperand, $rightOperand);
 }

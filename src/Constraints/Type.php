@@ -54,7 +54,7 @@ class Type implements Constraint
                             // Make sure the string isn't actually a number that was too large
                             // to be cast to an int on this platform.  This will only happen if
                             // you decode JSON with the JSON_BIGINT_AS_STRING option.
-                            if (!(ctype_digit($value) && JsonGuard\compare($value, PHP_INT_MAX) === 1)) {
+                            if (!(ctype_digit($value) && bccomp($value, PHP_INT_MAX) === 1)) {
                                 return true;
                             }
                         }
