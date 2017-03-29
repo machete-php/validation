@@ -18,6 +18,6 @@ class DraftFourRuleSetTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(ConstraintNotFoundException::class);
         $ruleSet = new DraftFour();
-        $ruleSet->getConstraint('nonExistent');
+        $ruleSet->get('nonExistent');
     }
 }
