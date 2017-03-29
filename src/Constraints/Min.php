@@ -2,7 +2,6 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
@@ -11,6 +10,19 @@ class Min implements Constraint
 {
     const KEYWORD           = 'minimum';
     const EXCLUSIVE_KEYWORD = 'exclusiveMinimum';
+
+    /**
+     * @var int|null
+     */
+    private $precision;
+
+    /**
+     * @param int|null $precision
+     */
+    public function __construct($precision = 10)
+    {
+        $this->precision = $precision;
+    }
 
     /**
      * {@inheritdoc}
@@ -33,10 +45,10 @@ class Min implements Constraint
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    public static function validateMin($value, $parameter, $pointer = null)
+    private function validateMin($value, $parameter, $pointer = null)
     {
         if (!is_numeric($value) ||
-            JsonGuard\compare($value, $parameter) === 1 || JsonGuard\compare($value, $parameter) === 0) {
+            bccomp($value, $parameter, $this->precision) === 1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 
@@ -56,9 +68,9 @@ class Min implements Constraint
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    public static function validateExclusiveMin($value, $parameter, $pointer = null)
+    private function validateExclusiveMin($value, $parameter, $pointer = null)
     {
-        if (!is_numeric($value) || JsonGuard\compare($value, $parameter) === 1) {
+        if (!is_numeric($value) || bccomp($value, $parameter, $this->precision) === 1) {
             return null;
         }
 

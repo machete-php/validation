@@ -2,7 +2,6 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
@@ -11,6 +10,19 @@ class Max implements Constraint
 {
     const KEYWORD           = 'maximum';
     const EXCLUSIVE_KEYWORD = 'exclusiveMaximum';
+
+    /**
+     * @var int|null
+     */
+    private $precision;
+
+    /**
+     * @param int|null $precision
+     */
+    public function __construct($precision = 10)
+    {
+        $this->precision = $precision;
+    }
 
     /**
      * {@inheritdoc}
@@ -33,10 +45,10 @@ class Max implements Constraint
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    public static function validateMax($value, $parameter, $pointer)
+    private function validateMax($value, $parameter, $pointer)
     {
         if (!is_numeric($value) ||
-            JsonGuard\compare($value, $parameter) === -1 || JsonGuard\compare($value, $parameter) === 0) {
+            bccomp($value, $parameter, $this->precision) === -1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 
@@ -56,9 +68,9 @@ class Max implements Constraint
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    public static function validateExclusiveMax($value, $parameter, $pointer)
+    private function validateExclusiveMax($value, $parameter, $pointer)
     {
-        if (!is_numeric($value) || JsonGuard\compare($value, $parameter) === -1) {
+        if (!is_numeric($value) || bccomp($value, $parameter, $this->precision) === -1) {
             return null;
         }
 
