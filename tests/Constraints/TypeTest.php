@@ -8,7 +8,7 @@ use League\JsonGuard\Validator;
 
 class TypeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNumericStringIsNotANumber()
+    function test_numeric_string_is_not_a_number()
     {
         $type = new Type();
 

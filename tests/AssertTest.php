@@ -7,29 +7,29 @@ use League\JsonGuard\Exceptions\InvalidSchemaException;
 
 class AssertTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNotEmptyWhenInvalid()
+    function test_not_empty_when_invalid()
     {
         $this->throws('someConstraint', '/someConstraint');
         Assert::notEmpty([], 'someConstraint', '/someConstraint');
     }
 
-    public function testNotEmptyWhenValid()
+    function test_not_empty_when_valid()
     {
         Assert::notEmpty([1,2,3], 'someConstraint', '/someConstraint');
     }
 
-    public function testNonNegativeWhenInvalid()
+    function test_non_negative_when_invalid()
     {
         $this->throws('someConstraint', '/someConstraint');
         Assert::nonNegative(-1, 'someConstraint', '/someConstraint');
     }
 
-    public function testNonNegativeWhenValid()
+    function test_non_negative_when_valid()
     {
         Assert::nonNegative(1, 'someConstraint', '/someConstraint');
     }
 
-    public function testTypeWhenInvalid()
+    function test_type_when_invalid()
     {
         $this->throws('someConstraint', '/someConstraint');
         Assert::type([], ['string', 'integer'], 'someConstraint', '/someConstraint');
@@ -54,7 +54,7 @@ class AssertTest extends \PHPUnit_Framework_TestCase
      * @param $value
      * @param $choices
      */
-    public function testTypeWhenValid($value, $choices)
+    function test_type_when_valid($value, $choices)
     {
         Assert::type($value, $choices, 'someConstraint', '/someConstraint');
     }

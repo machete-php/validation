@@ -19,20 +19,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     public function allDraft4Tests()
     {
-        $required = glob(schema_test_suite_path() . '/draft4/*.json');
-        $optional = glob(schema_test_suite_path() . '/draft4/optional/*.json');
+        $required = glob(static::schemaTestSuitePath() . '/draft4/*.json');
+        $optional = glob(static::schemaTestSuitePath() . '/draft4/optional/*.json');
         $files    = array_merge($required, $optional);
 
         return array_map(function ($file) {
             return [$file];
         }, $files);
-    }
-
-    public function draft4CoreTests()
-    {
-        return array_map(function ($file) {
-            return [$file];
-        }, glob(schema_test_suite_path() . '/draft4/*.json'));
     }
 
     public function invalidSchemas()
@@ -44,12 +37,17 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         }, $schemas);
     }
 
+    public static function schemaTestSuitePath()
+    {
+        return realpath(__DIR__ . '/../vendor/json-schema/JSON-Schema-Test-Suite/tests');
+    }
+
     /**
      * @dataProvider allDraft4Tests
      *
      * @param string $testFile
      */
-    public function testAllOfDraft4($testFile)
+    function test_it_passes_the_draft4_test_suite($testFile)
     {
         // We need to use the option that treats big numbers as a
         // string value so that the 'bignum.json' test will pass.
@@ -61,7 +59,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidSchemas
      */
-    public function testInvalidSchemas($schema)
+    function test_invalid_schemas($schema)
     {
         $this->setExpectedException(InvalidSchemaException::class);
         $validator = new Validator([], $schema);
@@ -121,7 +119,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         return $refResolver;
     }
 
-    public function testErrorMessages()
+    function test_error_messages()
     {
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/schema.json'));
@@ -142,7 +140,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(json_encode($errors[0]->toArray()), json_encode($errors[0]));
     }
 
-    public function testErrorMessagePointerIsEscaped()
+    function test_error_message_pointer_is_escaped()
     {
         $data   = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-data.json'));
         $schema = json_decode(file_get_contents(__DIR__ . '/fixtures/needs-escaping-schema.json'));
@@ -156,7 +154,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/~1path/~0prop', $errors[0]['pointer']);
     }
 
-    public function testDeeplyNestedDataWithinReason()
+    function test_deeply_nested_data_within_reason_validates()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
         $deref  = new Dereferencer();
@@ -170,7 +168,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(JsonGuard\Constraints\AdditionalProperties::KEYWORD, $error['keyword']);
     }
 
-    public function testStackAttack()
+    function test_stack_attack_throws_max_depth_exception()
     {
         $this->setExpectedException(MaximumDepthExceededException::class);
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
@@ -184,7 +182,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->passes();
     }
 
-    public function testMaxDepth()
+    function test_it_throws_when_max_depth_is_exceeded()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
         $deref  = new Dereferencer();
@@ -202,7 +200,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->passes();
     }
 
-    public function testMaxDepthIsReset()
+    function test_max_depth_is_reset()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
         $deref  = new Dereferencer();
@@ -217,7 +215,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->passes();
     }
 
-    public function testCustomFormat()
+    function test_it_can_use_a_custom_format()
     {
         $schema = json_decode('{"format": "hello"}');
 
@@ -235,7 +233,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(JsonGuard\Constraints\Format::KEYWORD, $v->errors()[0]['keyword']);
     }
 
-    public function testCustomFormatWorksWhenNested()
+    function test_custom_format_works_when_nested()
     {
         $schema = json_decode('{"properties": { "foo": {"type": "string", "format": "hello"} } }');
 
@@ -253,7 +251,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('format', $v->errors()[0]['keyword']);
     }
 
-    public function testCustomRuleset()
+    function test_it_can_use_a_custom_ruleset()
     {
         $schema = json_decode('{"properties": { "foo": {"type": "string", "emoji": true} } }');
         $data = json_decode('{ "foo": ":)" }');
@@ -268,13 +266,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($v->fails());
     }
 
-    public function testThrowsWhenInstantiatedWithANonObjectSchema()
+    function test_throws_when_instantiated_with_a_non_object_schema()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         new Validator([], []);
     }
 
-    public function testNestedReference() {
+    function test_nested_reference() {
         $deref = new Dereferencer();
         $path   = 'file://' . __DIR__ . '/fixtures/client.json';
         $schema = $deref->dereference($path);

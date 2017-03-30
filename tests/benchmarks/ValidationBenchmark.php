@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Bench;
 
-use League\JsonGuard\Dereferencer;
+use League\JsonReference\Dereferencer;
 use League\JsonGuard\Validator;
 
 /**
@@ -22,7 +22,7 @@ abstract class ValidationBenchmark extends Benchmark
     public function setUp()
     {
         $this->data   = $this->getData();
-        $this->schema = (new Dereferencer())->dereference($this->getSchema());
+        $this->schema = Dereferencer::draft4()->dereference($this->getSchema());
     }
 
     public function benchJsonGuard()
