@@ -59,10 +59,7 @@
         "psr-4": {
             "League\\JsonGuard\\Test\\": "tests",
             "League\\JsonGuard\\Bench\\": "tests/benchmarks"
-        },
-        "files": [
-            "tests/helpers.php"
-        ]
+        }
     },
     "scripts": {
         "test": "phpunit",

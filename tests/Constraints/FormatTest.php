@@ -20,7 +20,7 @@ class FormatTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidFormatValues
      */
-    public function testFormatPassesForNonStringValues($value, $parameter)
+    function test_format_passes_for_non_string_values($value, $parameter)
     {
         $format = new Format();
         $result = $format->validate($value, $parameter, new Validator([], new \stdClass()));
@@ -41,7 +41,7 @@ class FormatTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidDateTimeValues
      */
-    public function testDateTimeDoesNotPassForInvalidValues($value)
+    function test_date_time_does_not_pass_for_invalid_values($value)
     {
         $result = (new Format())->validate($value, 'date-time', new Validator([], new \stdClass()));
         $this->assertInstanceOf(ValidationError::class, $result);

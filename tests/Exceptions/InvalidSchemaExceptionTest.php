@@ -6,14 +6,14 @@ use League\JsonGuard\Exceptions\InvalidSchemaException;
 
 class InvalidSchemaExceptionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCanGetKeywordAndPointer()
+    function test_can_get_keyword_and_pointer()
     {
         $e = new InvalidSchemaException('Invalid format', $keyword = 'format', $pointer = '/properties/email/format');
         $this->assertSame($keyword, $e->getKeyword());
         $this->assertSame($pointer, $e->getPointer());
     }
 
-    public function testInvalidParameterTypeConstructor()
+    function test_invalid_parameter_type_constructor()
     {
         $e = InvalidSchemaException::invalidParameterType(
             'string',
@@ -27,7 +27,7 @@ class InvalidSchemaExceptionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($pointer, $e->getPointer());
     }
 
-    public function testNegativeValueConstructor()
+    function test_negative_value_constructor()
     {
         $e = InvalidSchemaException::negativeValue(-5, $keyword = 'minimum', $pointer = '/properties/likes');
 
@@ -36,7 +36,7 @@ class InvalidSchemaExceptionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($pointer, $e->getPointer());
     }
 
-    public function testEmptyArrayConstructor()
+    function test_empty_array_constructor()
     {
         $e = InvalidSchemaException::emptyArray($keyword = 'items', $pointer = '/properties/emails');
 

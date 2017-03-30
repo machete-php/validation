@@ -23,7 +23,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
      * @param string|int $jsonInteger
      * @param bool $isValid
      */
-    public function testIsJsonInteger($jsonInteger, $isValid)
+    function test_is_json_integer($jsonInteger, $isValid)
     {
         if ($isValid) {
             $this->assertTrue(\League\JsonGuard\is_json_integer($jsonInteger));
@@ -45,7 +45,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider nonStringValues
      */
-    public function testAsString($value, $expected)
+    function test_as_string($value, $expected)
     {
         $this->assertSame($expected, \League\JsonGuard\as_string($value));
     }

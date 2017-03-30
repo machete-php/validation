@@ -6,7 +6,7 @@ use League\JsonGuard\Validator;
 
 class AdditionalPropertiesTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExceptionMessageContainsPropertyName()
+    function test_it_returns_property_name_in_message()
     {
         $data = ['prop-name' => 'Property value in test'];
         $data = json_decode(json_encode($data));

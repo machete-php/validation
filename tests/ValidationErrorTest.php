@@ -6,7 +6,7 @@ use League\JsonGuard\ValidationError;
 
 class ValidationErrorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInterpolatesContextIntoMessage()
+    function test_interpolates_context_into_message()
     {
         $e = new ValidationError(
             'Value {value} must be greater than {min}',
@@ -22,7 +22,7 @@ class ValidationErrorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testContextIsAlwaysAString()
+    function test_context_is_always_astring()
     {
         $e = new ValidationError(
             'some message',
@@ -37,7 +37,7 @@ class ValidationErrorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testValidationErrorIsArrayAccessible()
+    function test_validation_error_is_array_accessible()
     {
         $e = new ValidationError(
             'Value {value} must be greater than {min}',
@@ -61,7 +61,7 @@ class ValidationErrorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($e->getContext(), $e['context']);
     }
 
-    public function testCannotSetOrUnsetUsingArrayAccess()
+    function test_cannot_set_or_unset_using_array_access()
     {
         $e = new ValidationError(
             'Value {value} must be greater than {min}',
