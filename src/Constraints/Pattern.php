@@ -16,7 +16,7 @@ class Pattern implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'string', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'string', self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_string($value)) {
             return null;
@@ -30,7 +30,7 @@ class Pattern implements Constraint
             'Value {value} does not match the pattern {pattern}.',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['value' => $value, 'pattern' => $parameter]
         );
     }

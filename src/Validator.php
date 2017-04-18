@@ -7,6 +7,7 @@ use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
 use League\JsonReference\Reference;
 use Psr\Container\ContainerInterface;
+use function League\JsonReference\pointer_push;
 
 class Validator
 {
@@ -28,7 +29,12 @@ class Validator
     /**
      * @var string
      */
-    private $pointer = '';
+    private $dataPath = '';
+
+    /**
+     * @var string
+     */
+    private $baseSchemaPath = '';
 
     /**
      * The maximum depth the validator should recurse into $data
@@ -61,6 +67,16 @@ class Validator
     private $hasValidated;
 
     /**
+     * @var string
+     */
+    private $currentKeyword;
+
+    /**
+     * @var mixed
+     */
+    private $currentParameter;
+
+    /**
      * @param mixed                   $data
      * @param object                  $schema
      * @param ContainerInterface|null $ruleSet
@@ -72,7 +88,6 @@ class Validator
                 sprintf('The schema should be an object from a json_decode call, got "%s"', gettype($schema))
             );
         }
-
 
         while ($schema instanceof Reference) {
             $schema = $schema->resolve();
@@ -140,9 +155,9 @@ class Validator
     /**
      * @return string
      */
-    public function getPointer()
+    public function getDataPath()
     {
-        return $this->pointer;
+        return $this->dataPath;
     }
 
     /**
@@ -162,19 +177,37 @@ class Validator
     }
 
     /**
+     * @return string
+     */
+    public function getSchemaPath()
+    {
+        return pointer_push($this->baseSchemaPath, $this->currentKeyword);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentKeyword()
+    {
+        return $this->currentKeyword;
+    }
+
+    /**
      * Create a new sub-validator.
      *
      * @param mixed       $data
      * @param object      $schema
-     * @param string|null $pointer
+     * @param string|null $dataPath
+     * @param string|null $schemaPath
      *
      * @return Validator
      */
-    public function makeSubSchemaValidator($data, $schema, $pointer = null)
+    public function makeSubSchemaValidator($data, $schema, $dataPath = null, $schemaPath = null)
     {
         $validator = new Validator($data, $schema, $this->ruleSet);
 
-        $validator->pointer          = $pointer ?: $this->pointer;
+        $validator->dataPath         = $dataPath ?: $this->dataPath;
+        $validator->baseSchemaPath   = $schemaPath ?: $this->getSchemaPath();
         $validator->maxDepth         = $this->maxDepth;
         $validator->formatExtensions = $this->formatExtensions;
         $validator->depth            = $this->depth + 1;
@@ -194,8 +227,10 @@ class Validator
         $this->checkDepth();
 
         foreach ($this->schema as $rule => $parameter) {
-            $errors = $this->validateRule($rule, $parameter);
-            $this->mergeErrors($errors);
+            $this->currentKeyword   = $rule;
+            $this->currentParameter = $parameter;
+            $this->mergeErrors($this->validateRule($rule, $parameter));
+            $this->currentKeyword = $this->currentParameter = null;
         }
 
         $this->hasValidated = true;
@@ -219,23 +254,23 @@ class Validator
     /**
      * Validate the data using the given rule and parameter.
      *
-     * @param string $rule
+     * @param string $keyword
      * @param mixed  $parameter
      *
      * @return null|ValidationError|ValidationError[]
      */
-    private function validateRule($rule, $parameter)
+    private function validateRule($keyword, $parameter)
     {
-        if (!$this->ruleSet->has($rule)) {
+        if (!$this->ruleSet->has($keyword)) {
             return null;
         }
 
-        if ($this->isCustomFormatExtension($rule, $parameter)) {
+        if ($this->isCustomFormatExtension($keyword, $parameter)) {
             return $this->validateCustomFormat($parameter);
         }
 
         /** @var Constraint $constraint */
-        $constraint = $this->ruleSet->get($rule);
+        $constraint = $this->ruleSet->get($keyword);
 
         return $constraint->validate($this->data, $parameter, $this);
     }
@@ -243,14 +278,14 @@ class Validator
     /**
      * Determine if a rule has a custom format extension registered.
      *
-     * @param string $rule
+     * @param string $keyword
      * @param mixed  $parameter
      *
      * @return bool
      */
-    private function isCustomFormatExtension($rule, $parameter)
+    private function isCustomFormatExtension($keyword, $parameter)
     {
-        return $rule === 'format' &&
+        return $keyword === 'format' &&
             is_string($parameter) &&
             isset($this->formatExtensions[$parameter]);
     }
@@ -267,7 +302,7 @@ class Validator
         /** @var FormatExtension $extension */
         $extension = $this->formatExtensions[$format];
 
-        return $extension->validate($this->data, $this->getPointer());
+        return $extension->validate($this->data, $this->getDataPath());
     }
 
     /**

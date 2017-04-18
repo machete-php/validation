@@ -22,7 +22,7 @@ class Format implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'string', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'string', self::KEYWORD, $validator->getSchemaPath());
 
         switch ($parameter) {
             case 'date-time':
@@ -30,7 +30,7 @@ class Format implements Constraint
                     $parameter,
                     $value,
                     self::DATE_TIME_PATTERN,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
             case 'uri':
                 return self::validateFilter(
@@ -38,7 +38,7 @@ class Format implements Constraint
                     $value,
                     FILTER_VALIDATE_URL,
                     null,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
             case 'email':
                 return self::validateFilter(
@@ -46,7 +46,7 @@ class Format implements Constraint
                     $value,
                     FILTER_VALIDATE_EMAIL,
                     null,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
             case 'ipv4':
                 return self::validateFilter(
@@ -54,7 +54,7 @@ class Format implements Constraint
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV4,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
             case 'ipv6':
                 return self::validateFilter(
@@ -62,14 +62,14 @@ class Format implements Constraint
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV6,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
             case 'hostname':
                 return self::validateRegex(
                     $parameter,
                     $value,
                     self::HOST_NAME_PATTERN,
-                    $validator->getPointer()
+                    $validator->getDataPath()
                 );
         }
     }

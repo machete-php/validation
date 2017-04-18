@@ -6,6 +6,7 @@ use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 use League\JsonReference;
+use function League\JsonReference\pointer_push;
 
 class AdditionalItems implements Constraint
 {
@@ -16,7 +17,7 @@ class AdditionalItems implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, ['boolean', 'object'], self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, ['boolean', 'object'], self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_array($value) || $parameter === true) {
             return null;
@@ -27,7 +28,7 @@ class AdditionalItems implements Constraint
         }
 
         if ($parameter === false) {
-            return self::validateAdditionalItemsWhenNotAllowed($value, $items, $validator->getPointer());
+            return self::validateAdditionalItemsWhenNotAllowed($value, $items, $validator->getDataPath());
         } elseif (is_object($parameter)) {
             $additionalItems = array_slice($value, count($items));
 
@@ -56,10 +57,13 @@ class AdditionalItems implements Constraint
     {
         $errors = [];
         foreach ($items as $key => $item) {
-            // Escaping isn't necessary since the key is always numeric.
-            $currentPointer = JsonReference\pointer_push($validator->getPointer(), $key);
-            $validator      = $validator->makeSubSchemaValidator($item, $schema, $currentPointer);
-            $errors         = array_merge($errors, $validator->errors());
+            $subValidator = $validator->makeSubSchemaValidator(
+                $item,
+                $schema,
+                pointer_push($validator->getDataPath(), $key),
+                pointer_push($validator->getSchemaPath(), $key)
+            );
+            $errors = array_merge($errors, $subValidator->errors());
         }
 
         return $errors;

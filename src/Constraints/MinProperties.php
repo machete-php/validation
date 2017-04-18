@@ -15,8 +15,8 @@ class MinProperties implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'integer', self::KEYWORD, $validator->getPointer());
-        Assert::nonNegative($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'integer', self::KEYWORD, $validator->getSchemaPath());
+        Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value) || count(get_object_vars($value)) >= $parameter) {
             return null;
@@ -26,7 +26,7 @@ class MinProperties implements Constraint
             'Object does not contain at least {min_properties} properties',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['min_properties' => $parameter]
         );
     }

@@ -29,13 +29,13 @@ class Max implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'number', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
 
         if (isset($validator->getSchema()->exclusiveMaximum) && $validator->getSchema()->exclusiveMaximum === true) {
-            return self::validateExclusiveMax($value, $parameter, $validator->getPointer());
+            return self::validateExclusiveMax($value, $parameter, $validator->getDataPath());
         }
 
-        return self::validateMax($value, $parameter, $validator->getPointer());
+        return self::validateMax($value, $parameter, $validator->getDataPath());
     }
 
     /**

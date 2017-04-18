@@ -15,8 +15,8 @@ class MaxProperties implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'integer', self::KEYWORD, $validator->getPointer());
-        Assert::nonNegative($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'integer', self::KEYWORD, $validator->getSchemaPath());
+        Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value) || count(get_object_vars($value)) <= $parameter) {
             return null;
@@ -26,7 +26,7 @@ class MaxProperties implements Constraint
             'Object does not contain less than {max_properties} properties',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['max_properties' => $parameter]
         );
     }

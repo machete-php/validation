@@ -15,7 +15,7 @@ class Not implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'object', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'object', self::KEYWORD, $validator->getSchemaPath());
 
         $validator = $validator->makeSubSchemaValidator($value, $parameter);
         if ($validator->passes()) {
@@ -23,7 +23,7 @@ class Not implements Constraint
                 'Data should not match the schema.',
                 self::KEYWORD,
                 $value,
-                $validator->getPointer(),
+                $validator->getDataPath(),
                 ['not_schema' => $parameter]
             );
         }

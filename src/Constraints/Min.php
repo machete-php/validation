@@ -29,13 +29,13 @@ class Min implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'number', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
 
         if (isset($validator->getSchema()->exclusiveMinimum) && $validator->getSchema()->exclusiveMinimum === true) {
-            return self::validateExclusiveMin($value, $parameter, $validator->getPointer());
+            return self::validateExclusiveMin($value, $parameter, $validator->getDataPath());
         }
 
-        return self::validateMin($value, $parameter, $validator->getPointer());
+        return self::validateMin($value, $parameter, $validator->getDataPath());
     }
 
     /**

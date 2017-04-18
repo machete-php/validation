@@ -5,6 +5,7 @@ namespace League\JsonGuard\Constraints;
 use League\JsonGuard\Assert;
 use League\JsonGuard\Validator;
 use League\JsonReference;
+use function League\JsonReference\pointer_push;
 
 class Properties implements Constraint
 {
@@ -15,7 +16,7 @@ class Properties implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, ['array', 'object'], self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, ['array', 'object'], self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value)) {
             return null;
@@ -28,8 +29,12 @@ class Properties implements Constraint
         foreach ($parameter as $property => $schema) {
             if (is_object($value) && property_exists($value, $property)) {
                 $propertyData    = $value->$property;
-                $propertyPointer = JsonReference\pointer_push($validator->getPointer(), $property);
-                $subValidator       = $validator->makeSubSchemaValidator($propertyData, $schema, $propertyPointer);
+                $subValidator       = $validator->makeSubSchemaValidator(
+                    $propertyData,
+                    $schema,
+                    pointer_push($validator->getDataPath(), $property),
+                    pointer_push($validator->getSchemaPath(), $property)
+                );
                 if ($subValidator->fails()) {
                     $errors = array_merge($errors, $subValidator->errors());
                 }

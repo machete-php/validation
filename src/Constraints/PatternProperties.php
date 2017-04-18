@@ -15,7 +15,7 @@ class PatternProperties implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'object', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'object', self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value)) {
             return null;
