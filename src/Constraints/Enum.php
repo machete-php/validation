@@ -15,7 +15,7 @@ class Enum implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'array', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'array', self::KEYWORD, $validator->getSchemaPath());
 
         if (is_object($value)) {
             foreach ($parameter as $i) {
@@ -33,7 +33,7 @@ class Enum implements Constraint
             'Value {value} is not one of: {choices}',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['choices' => $parameter, 'value' => $value]
         );
     }

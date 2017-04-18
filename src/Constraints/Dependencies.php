@@ -5,6 +5,7 @@ namespace League\JsonGuard\Constraints;
 use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonReference\pointer_push;
 
 class Dependencies implements Constraint
 {
@@ -15,7 +16,7 @@ class Dependencies implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, ['object', 'array'], self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, ['object', 'array'], self::KEYWORD, $validator->getSchemaPath());
 
         $errors = [];
         foreach ($parameter as $property => $dependencies) {
@@ -26,60 +27,31 @@ class Dependencies implements Constraint
             if (is_array($dependencies)) {
                 $errors = array_merge(
                     $errors,
-                    self::validatePropertyDependency($value, $dependencies, $validator->getPointer())
+                    array_filter(array_map(function ($dependency) use ($value, $validator) {
+                        if (!in_array($dependency, array_keys(get_object_vars($value)), true)) {
+                            return new ValidationError(
+                                'Unmet dependency {dependency}',
+                                self::KEYWORD,
+                                $value,
+                                $validator->getDataPath(),
+                                ['dependency' => $dependency]
+                            );
+                        }
+                    }, $dependencies))
                 );
             } elseif (is_object($dependencies)) {
                 $errors = array_merge(
                     $errors,
-                    self::validateSchemaDependency($value, $dependencies, $validator)
+                    $validator->makeSubSchemaValidator(
+                        $value,
+                        $dependencies,
+                        $validator->getDataPath(),
+                        pointer_push($validator->getSchemaPath(), $property)
+                    )->errors()
                 );
             }
         }
 
         return $errors;
-    }
-
-    /**
-     * @param object $data
-     * @param array  $dependencies
-     * @param string $pointer
-     *
-     * @return array
-     */
-    protected static function validatePropertyDependency($data, $dependencies, $pointer)
-    {
-        $errors = [];
-        foreach ($dependencies as $dependency) {
-            if (!in_array($dependency, array_keys(get_object_vars($data)), true)) {
-                $errors[] = new ValidationError(
-                    'Unmet dependency {dependency}',
-                    self::KEYWORD,
-                    $data,
-                    $pointer,
-                    ['dependency' => $dependency]
-                );
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param object    $data
-     * @param object    $dependencies
-     *
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    protected static function validateSchemaDependency($data, $dependencies, Validator $validator)
-    {
-        $subValidator = $validator->makeSubSchemaValidator(
-            $data,
-            $dependencies,
-            $validator->getPointer()
-        );
-
-        return $subValidator->errors();
     }
 }

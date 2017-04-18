@@ -29,8 +29,8 @@ class MinLength implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'number', self::KEYWORD, $validator->getPointer());
-        Assert::nonNegative($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
+        Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_string($value) || JsonGuard\strlen($value, $this->charset) >= $parameter) {
             return null;
@@ -40,7 +40,7 @@ class MinLength implements Constraint
             'String is not at least {min_length} characters long',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['min_length' => $parameter]
         );
     }

@@ -15,8 +15,8 @@ class Required implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'array', self::KEYWORD, $validator->getPointer());
-        Assert::notEmpty($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'array', self::KEYWORD, $validator->getSchemaPath());
+        Assert::notEmpty($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value)) {
             return null;
@@ -29,7 +29,7 @@ class Required implements Constraint
                 'Required properties missing: {missing}',
                 self::KEYWORD,
                 $value,
-                $validator->getPointer(),
+                $validator->getDataPath(),
                 ['missing' => array_values($missing)]
             );
         }

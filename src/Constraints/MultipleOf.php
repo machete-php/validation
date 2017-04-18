@@ -28,8 +28,8 @@ class MultipleOf implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'number', self::KEYWORD, $validator->getPointer());
-        Assert::nonNegative($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
+        Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_numeric($value)) {
             return null;
@@ -45,7 +45,7 @@ class MultipleOf implements Constraint
             'Number {value} is not a multiple of {multiple_of}',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['value' => $value, 'multiple_of' => $parameter]
         );
     }

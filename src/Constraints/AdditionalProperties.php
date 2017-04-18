@@ -16,7 +16,7 @@ class AdditionalProperties implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, ['object', 'boolean'], self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, ['object', 'boolean'], self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_object($value)) {
             return null;
@@ -31,7 +31,7 @@ class AdditionalProperties implements Constraint
         if ($parameter === false) {
             $message = 'Additional properties found which are not allowed: {diff}';
             $context = ['diff' => implode(', ', $diff)];
-            return new ValidationError($message, self::KEYWORD, $value, $validator->getPointer(), $context);
+            return new ValidationError($message, self::KEYWORD, $value, $validator->getDataPath(), $context);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.

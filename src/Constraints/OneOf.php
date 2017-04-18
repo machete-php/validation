@@ -5,6 +5,7 @@ namespace League\JsonGuard\Constraints;
 use League\JsonGuard\Assert;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonReference\pointer_push;
 
 class OneOf implements Constraint
 {
@@ -15,12 +16,17 @@ class OneOf implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'array', self::KEYWORD, $validator->getPointer());
-        Assert::notEmpty($parameter, self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'array', self::KEYWORD, $validator->getSchemaPath());
+        Assert::notEmpty($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         $passed = 0;
-        foreach ($parameter as $schema) {
-            $validator = $validator->makeSubSchemaValidator($value, $schema, $validator->getPointer());
+        foreach ($parameter as $key => $schema) {
+            $validator = $validator->makeSubSchemaValidator(
+                $value,
+                $schema,
+                $validator->getDataPath(),
+                pointer_push($validator->getSchemaPath(), $key)
+            );
             if ($validator->passes()) {
                 $passed++;
             }
@@ -30,7 +36,7 @@ class OneOf implements Constraint
                 'Failed matching exactly one of the provided schemas.',
                 self::KEYWORD,
                 $value,
-                $validator->getPointer(),
+                $validator->getDataPath(),
                 ['one_of' => $parameter]
             );
         }

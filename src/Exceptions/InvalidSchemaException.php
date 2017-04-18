@@ -2,6 +2,8 @@
 
 namespace League\JsonGuard\Exceptions;
 
+// @todo: these should use pointers to the schema, not the data.
+
 class InvalidSchemaException extends \RuntimeException
 {
     /**

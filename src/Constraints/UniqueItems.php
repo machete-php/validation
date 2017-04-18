@@ -15,7 +15,7 @@ class UniqueItems implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'boolean', self::KEYWORD, $validator->getPointer());
+        Assert::type($parameter, 'boolean', self::KEYWORD, $validator->getSchemaPath());
 
         if (!is_array($value) || $parameter === false) {
             return null;
@@ -29,7 +29,7 @@ class UniqueItems implements Constraint
             'Array {value} is not unique.',
             self::KEYWORD,
             $value,
-            $validator->getPointer(),
+            $validator->getDataPath(),
             ['value' => $value]
         );
     }
