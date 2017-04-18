@@ -21,13 +21,13 @@ class AllOf implements Constraint
         $errors = [];
 
         foreach ($parameter as $key => $schema) {
-            $validator = $validator->makeSubSchemaValidator(
+            $subValidator = $validator->makeSubSchemaValidator(
                 $value,
                 $schema,
                 $validator->getDataPath(),
                 pointer_push($validator->getSchemaPath(), $key)
             );
-            $errors = array_merge($errors, $validator->errors());
+            $errors = array_merge($errors, $subValidator->errors());
         }
 
         return $errors;

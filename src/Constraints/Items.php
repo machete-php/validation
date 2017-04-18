@@ -4,7 +4,6 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
 use League\JsonGuard\Validator;
-use League\JsonReference;
 use function League\JsonReference\pointer_push;
 
 class Items implements Constraint

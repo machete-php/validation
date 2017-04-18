@@ -3,8 +3,8 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
 class MaxItems implements Constraint
 {
@@ -22,12 +22,6 @@ class MaxItems implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Array does not contain less than {max_items} items',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['max_items' => $parameter]
-        );
+        return error('Array does not contain less than {parameter} items', $validator);
     }
 }

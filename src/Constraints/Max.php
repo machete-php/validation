@@ -3,8 +3,8 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
 class Max implements Constraint
 {
@@ -32,54 +32,44 @@ class Max implements Constraint
         Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
 
         if (isset($validator->getSchema()->exclusiveMaximum) && $validator->getSchema()->exclusiveMaximum === true) {
-            return self::validateExclusiveMax($value, $parameter, $validator->getDataPath());
+            return self::validateExclusiveMax($value, $parameter, $validator);
         }
 
-        return self::validateMax($value, $parameter, $validator->getDataPath());
+        return self::validateMax($value, $parameter, $validator);
     }
 
     /**
-     * @param mixed       $value
-     * @param mixed       $parameter
-     * @param string|null $pointer
+     * @param mixed                       $value
+     * @param mixed                       $parameter
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private function validateMax($value, $parameter, $pointer)
+    private function validateMax($value, $parameter, Validator $validator)
     {
         if (!is_numeric($value) ||
             bccomp($value, $parameter, $this->precision) === -1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 
-        return new ValidationError(
-            'Value {value} is not at most {max}',
-            self::KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'max' => $parameter]
-        );
+        return error('Value {value} is not at most {parameter}', $validator);
     }
 
     /**
-     * @param mixed       $value
-     * @param mixed       $parameter
-     * @param string|null $pointer
+     * @param mixed                       $value
+     * @param mixed                       $parameter
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private function validateExclusiveMax($value, $parameter, $pointer)
+    private function validateExclusiveMax($value, $parameter, Validator $validator)
     {
         if (!is_numeric($value) || bccomp($value, $parameter, $this->precision) === -1) {
             return null;
         }
 
-        return new ValidationError(
-            'Value {value} is not less than {exclusive_max}',
-            self::EXCLUSIVE_KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'exclusive_max' => $parameter]
-        );
+        return error('Value {value} is not less than {parameter}', $validator);
     }
 }

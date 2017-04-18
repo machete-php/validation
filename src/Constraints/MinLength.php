@@ -4,7 +4,7 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MinLength implements Constraint
@@ -36,12 +36,6 @@ class MinLength implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'String is not at least {min_length} characters long',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['min_length' => $parameter]
-        );
+        return error('String is not at least {parameter} characters long', $validator);
     }
 }

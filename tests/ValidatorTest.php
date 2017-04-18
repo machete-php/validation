@@ -4,9 +4,9 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
 use League\JsonGuard\Constraints\Constraint;
+use function League\JsonGuard\error;
 use League\JsonReference\Dereferencer;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\FormatExtension;
 use League\JsonReference\Loaders\ArrayLoader;
@@ -131,12 +131,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $errors = $v->errors();
         $this->assertCount(2, $errors);
-        $this->assertTrue(isset($errors[0]['keyword']));
-        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[0]['keyword']);
-        $this->assertSame('/name', $errors[0]['pointer']);
+        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[0]->getKeyword());
+        $this->assertSame('/name', $errors[0]->getDataPath());
 
-        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[1]['keyword']);
-        $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]['pointer']);
+        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[1]->getKeyword());
+        $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]->getDataPath());
         $this->assertSame(json_encode($errors[0]->toArray()), json_encode($errors[0]));
     }
 
@@ -151,7 +150,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new Validator($data, $schema);
 
         $errors = $v->errors();
-        $this->assertSame('/~1path/~0prop', $errors[0]['pointer']);
+        $this->assertSame('/~1path/~0prop', $errors[0]->getDataPath());
     }
 
     function test_deeply_nested_data_within_reason_validates()
@@ -164,8 +163,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v = new Validator($data, $schema);
         $this->assertTrue($v->fails());
         $error = $v->errors()[0];
-        $this->assertSame('/foo/foo/foo/foo/foo/foo/foo/foo/foo', $error['pointer']);
-        $this->assertSame(JsonGuard\Constraints\AdditionalProperties::KEYWORD, $error['keyword']);
+        $this->assertSame('/foo/foo/foo/foo/foo/foo/foo/foo/foo', $error->getDataPath());
+        $this->assertSame(JsonGuard\Constraints\AdditionalProperties::KEYWORD, $error->getKeyword());
     }
 
     function test_stack_attack_throws_max_depth_exception()
@@ -230,7 +229,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->registerFormatExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
-        $this->assertSame(JsonGuard\Constraints\Format::KEYWORD, $v->errors()[0]['keyword']);
+        $this->assertSame(JsonGuard\Constraints\Format::KEYWORD, $v->errors()[0]->getKeyword());
     }
 
     function test_custom_format_works_when_nested()
@@ -248,7 +247,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->registerFormatExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
-        $this->assertSame('format', $v->errors()[0]['keyword']);
+        $this->assertSame('format', $v->errors()[0]->getKeyword());
     }
 
     function test_it_can_use_a_custom_ruleset()
@@ -304,16 +303,16 @@ class EmojiConstraint implements Constraint
             return null;
         }
 
-        return new ValidationError('Not an emoji', 999, (string) $value);
+        return error('Not an emoji', $validator);
     }
 }
 
 class HelloFormatStub implements FormatExtension
 {
-    public function validate($value, $pointer = null)
+    public function validate($value, Validator $validator)
     {
         if (stripos($value, 'hello') !== 0) {
-            return new JsonGuard\ValidationError('Must start with hello', 'format', $value, $pointer);
+            return error('must start with hello', $validator);
         }
     }
 }

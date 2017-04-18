@@ -4,8 +4,8 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
 class AdditionalProperties implements Constraint
 {
@@ -29,9 +29,8 @@ class AdditionalProperties implements Constraint
         }
 
         if ($parameter === false) {
-            $message = 'Additional properties found which are not allowed: {diff}';
-            $context = ['diff' => implode(', ', $diff)];
-            return new ValidationError($message, self::KEYWORD, $value, $validator->getDataPath(), $context);
+            $message = 'Additional properties found which are not allowed: {cause}';
+            return error($message, $validator)->withCause($diff);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.

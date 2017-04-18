@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MultipleOf implements Constraint
@@ -41,12 +41,6 @@ class MultipleOf implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Number {value} is not a multiple of {multiple_of}',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['value' => $value, 'multiple_of' => $parameter]
-        );
+        return error('Number {value} is not a multiple of {parameter}', $validator);
     }
 }

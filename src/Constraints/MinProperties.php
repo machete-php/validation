@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MinProperties implements Constraint
@@ -22,12 +22,6 @@ class MinProperties implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Object does not contain at least {min_properties} properties',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['min_properties' => $parameter]
-        );
+        return error('Object does not contain at least {parameter} properties', $validator);
     }
 }

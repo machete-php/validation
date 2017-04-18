@@ -2,8 +2,8 @@
 
 namespace League\JsonGuard\Constraints;
 
-use League\JsonGuard;
 use League\JsonGuard\Assert;
+use function League\JsonGuard\error;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 
@@ -24,31 +24,28 @@ class Type implements Constraint
 
         switch ($type) {
             case 'object':
-                return $this->validateType($value, $type, 'is_object', $validator->getDataPath());
+                return $this->validateType($value, 'is_object', $validator);
             case 'array':
-                return $this->validateType($value, $type, 'is_array', $validator->getDataPath());
+                return $this->validateType($value, 'is_array', $validator);
             case 'boolean':
-                return $this->validateType($value, $type, 'is_bool', $validator->getDataPath());
+                return $this->validateType($value, 'is_bool', $validator);
             case 'null':
-                return $this->validateType($value, $type, 'is_null', $validator->getDataPath());
+                return $this->validateType($value, 'is_null', $validator);
             case 'number':
                 return $this->validateType(
                     $value,
-                    $type,
                     'League\JsonGuard\is_json_number',
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'integer':
                 return $this->validateType(
                     $value,
-                    $type,
                     'League\JsonGuard\is_json_integer',
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'string':
                 return $this->validateType(
                     $value,
-                    $type,
                     function ($value) {
                         if (is_string($value)) {
                             // Make sure the string isn't actually a number that was too large
@@ -61,32 +58,26 @@ class Type implements Constraint
 
                         return false;
                     },
-                    $validator->getDataPath()
+                    $validator
                 );
         }
     }
 
     /**
-     * @param mixed    $value
-     * @param string   $type
-     * @param callable $callable
-     * @param string   $pointer
+     * @param mixed                       $value
+     * @param callable                    $callable
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private function validateType($value, $type, callable $callable, $pointer)
+    private function validateType($value, callable $callable, Validator $validator)
     {
         if (call_user_func($callable, $value) === true) {
             return null;
         }
 
-        return new ValidationError(
-            'Value {value} is not a(n) {type}',
-            self::KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'type' => $type]
-        );
+        return error('Value {value} is not a(n) {parameter}', $validator);
     }
 
     /**
@@ -106,15 +97,6 @@ class Type implements Constraint
             }
         }
 
-        return new ValidationError(
-            'Value {value} is not one of: {choices}',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            [
-                'value'   => $value,
-                'type'    => $choices
-            ]
-        );
+        return error('Value {value} is not one of: {parameter}', $validator);
     }
 }

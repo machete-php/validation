@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Enum implements Constraint
@@ -29,12 +29,6 @@ class Enum implements Constraint
             }
         }
 
-        return new ValidationError(
-            'Value {value} is not one of: {choices}',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['choices' => $parameter, 'value' => $value]
-        );
+        return error('Value {value} is not one of: {parameter}', $validator);
     }
 }

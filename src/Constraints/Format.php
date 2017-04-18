@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Format implements Constraint
@@ -27,86 +27,74 @@ class Format implements Constraint
         switch ($parameter) {
             case 'date-time':
                 return self::validateRegex(
-                    $parameter,
                     $value,
                     self::DATE_TIME_PATTERN,
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'uri':
                 return self::validateFilter(
-                    $parameter,
                     $value,
                     FILTER_VALIDATE_URL,
                     null,
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'email':
                 return self::validateFilter(
-                    $parameter,
                     $value,
                     FILTER_VALIDATE_EMAIL,
                     null,
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'ipv4':
                 return self::validateFilter(
-                    $parameter,
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV4,
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'ipv6':
                 return self::validateFilter(
-                    $parameter,
                     $value,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV6,
-                    $validator->getDataPath()
+                    $validator
                 );
             case 'hostname':
                 return self::validateRegex(
-                    $parameter,
                     $value,
                     self::HOST_NAME_PATTERN,
-                    $validator->getDataPath()
+                    $validator
                 );
         }
     }
 
     /**
-     * @param string $format
-     * @param mixed $value
-     * @param string $pattern
-     * @param string $pointer
+     * @param mixed                       $value
+     * @param string                      $pattern
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private static function validateRegex($format, $value, $pattern, $pointer)
+    private static function validateRegex($value, $pattern, Validator $validator)
     {
         if (!is_string($value) || preg_match($pattern, $value) === 1) {
             return null;
         }
 
-        return new ValidationError(
-            'Value {value} does not match the format {format}',
-            self::KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'format' => $format]
-        );
+        return error('Value {value} does not match the format {parameter}', $validator);
     }
 
     /**
-     * @param string $format
-     * @param mixed  $value
-     * @param int    $filter
-     * @param mixed  $options
-     * @param string $pointer
+     * @param mixed                       $value
+     * @param int                         $filter
+     * @param mixed                       $options
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private static function validateFilter($format, $value, $filter, $options, $pointer)
+    private static function validateFilter($value, $filter, $options, Validator $validator)
     {
         if (!is_string($value) || filter_var($value, $filter, $options) !== false) {
             return null;
@@ -120,12 +108,6 @@ class Format implements Constraint
             }
         }
 
-        return new ValidationError(
-            'Value {value} does not match the format {format}',
-            self::KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'format' => $format]
-        );
+        return error('Value {value} does not match the format {parameter}', $validator);
     }
 }

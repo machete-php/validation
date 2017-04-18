@@ -193,6 +193,14 @@ class Validator
     }
 
     /**
+     * @return string
+     */
+    public function getCurrentParameter()
+    {
+        return $this->currentParameter;
+    }
+
+    /**
      * Create a new sub-validator.
      *
      * @param mixed       $data
@@ -302,7 +310,7 @@ class Validator
         /** @var FormatExtension $extension */
         $extension = $this->formatExtensions[$format];
 
-        return $extension->validate($this->data, $this->getDataPath());
+        return $extension->validate($this->data, $this);
     }
 
     /**

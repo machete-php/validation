@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
@@ -30,12 +30,6 @@ class AnyOf implements Constraint
                 return null;
             }
         }
-        return new ValidationError(
-            'Failed matching any of the provided schemas.',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['any_of' => $parameter]
-        );
+        return error('Failed matching any of the provided schemas.', $validator);
     }
 }

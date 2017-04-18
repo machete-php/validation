@@ -3,6 +3,27 @@
 namespace League\JsonGuard;
 
 /**
+ * A helper function to quickly build an error from a validator instance.
+ *
+ * @param string                      $message
+ * @param \League\JsonGuard\Validator $validator
+ *
+ * @return \League\JsonGuard\ValidationError
+ */
+function error($message, Validator $validator)
+{
+    return new ValidationError(
+        $message,
+        $validator->getCurrentKeyword(),
+        $validator->getCurrentParameter(),
+        $validator->getData(),
+        $validator->getDataPath(),
+        $validator->getSchema(),
+        $validator->getSchemaPath()
+    );
+}
+
+/**
  * @param string $string
  * @param string $charset
  *

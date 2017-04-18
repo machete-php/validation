@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Not implements Constraint
@@ -17,15 +17,9 @@ class Not implements Constraint
     {
         Assert::type($parameter, 'object', self::KEYWORD, $validator->getSchemaPath());
 
-        $validator = $validator->makeSubSchemaValidator($value, $parameter);
-        if ($validator->passes()) {
-            return new ValidationError(
-                'Data should not match the schema.',
-                self::KEYWORD,
-                $value,
-                $validator->getDataPath(),
-                ['not_schema' => $parameter]
-            );
+        $subValidator = $validator->makeSubSchemaValidator($value, $parameter);
+        if ($subValidator->passes()) {
+            return error('Data should not match the schema.', $validator);
         }
         return null;
     }
