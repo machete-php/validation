@@ -26,6 +26,6 @@ class Pattern implements Constraint
             return null;
         }
 
-        return error('Value {value} does not match the pattern {parameter}.', $validator);
+        return error('Value {cause} does not match the pattern {parameter}.', $validator);
     }
 }

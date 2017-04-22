@@ -20,13 +20,13 @@ class AnyOf implements Constraint
         Assert::notEmpty($parameter, self::KEYWORD, $validator->getSchemaPath());
 
         foreach ($parameter as $key => $schema) {
-            $validator = $validator->makeSubSchemaValidator(
+            $subValidator = $validator->makeSubSchemaValidator(
                 $value,
                 $schema,
                 $validator->getDataPath(),
                 pointer_push($validator->getSchemaPath(), $key)
             );
-            if ($validator->passes()) {
+            if ($subValidator->passes()) {
                 return null;
             }
         }

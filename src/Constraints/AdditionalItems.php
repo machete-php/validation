@@ -59,8 +59,7 @@ class AdditionalItems implements Constraint
             $subValidator = $validator->makeSubSchemaValidator(
                 $item,
                 $schema,
-                pointer_push($validator->getDataPath(), $key),
-                pointer_push($validator->getSchemaPath(), $key)
+                pointer_push($validator->getDataPath(), $key)
             );
             $errors = array_merge($errors, $subValidator->errors());
         }

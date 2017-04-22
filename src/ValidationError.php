@@ -171,7 +171,15 @@ final class ValidationError implements \JsonSerializable
         if ($this->context === null) {
             $this->context = array_map(
                 'League\JsonGuard\as_string',
-                $this->toArray()
+                [
+                    'keyword'     => $this->keyword,
+                    'parameter'   => $this->parameter,
+                    'source'      => $this->data,
+                    'source_path' => $this->dataPath,
+                    'schema'      => $this->schema,
+                    'schema_path' => $this->schemaPath,
+                    'cause'       => $this->getCause(),
+                ]
             );
         }
 
@@ -184,6 +192,7 @@ final class ValidationError implements \JsonSerializable
     public function toArray()
     {
         return [
+            'message'     => $this->getMessage(),
             'keyword'     => $this->keyword,
             'parameter'   => $this->parameter,
             'source'      => $this->data,

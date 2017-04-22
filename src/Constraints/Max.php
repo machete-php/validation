@@ -53,7 +53,7 @@ class Max implements Constraint
             return null;
         }
 
-        return error('Value {value} is not at most {parameter}', $validator);
+        return error('Value {cause} is not at most {parameter}', $validator);
     }
 
     /**
@@ -70,6 +70,6 @@ class Max implements Constraint
             return null;
         }
 
-        return error('Value {value} is not less than {parameter}', $validator);
+        return error('Value {cause} is not less than {parameter}', $validator);
     }
 }

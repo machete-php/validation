@@ -82,7 +82,7 @@ class Format implements Constraint
             return null;
         }
 
-        return error('Value {value} does not match the format {parameter}', $validator);
+        return error('Value {cause} does not match the format {parameter}', $validator);
     }
 
     /**
@@ -108,6 +108,6 @@ class Format implements Constraint
             }
         }
 
-        return error('Value {value} does not match the format {parameter}', $validator);
+        return error('Value {cause} does not match the format {parameter}', $validator);
     }
 }

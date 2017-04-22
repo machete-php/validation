@@ -5,6 +5,7 @@ namespace League\JsonGuard\Constraints;
 use League\JsonGuard;
 use League\JsonGuard\Assert;
 use League\JsonGuard\Validator;
+use function League\JsonReference\pointer_push;
 
 class PatternProperties implements Constraint
 {
@@ -23,12 +24,17 @@ class PatternProperties implements Constraint
 
         $errors = [];
         foreach ($parameter as $property => $schema) {
-            $matches       = JsonGuard\properties_matching_pattern($property, $value);
-            $matchedSchema = array_fill_keys($matches, $schema);
-            $propertyErrors = (new Properties())->validate($value, $matchedSchema, $validator);
-            if (is_array($propertyErrors)) {
-                $errors = array_merge($errors, $propertyErrors);
+            $matches = JsonGuard\properties_matching_pattern($property, $value);
+            foreach ($matches as $match) {
+                $subValidator = $validator->makeSubSchemaValidator(
+                    $value->$match,
+                    $schema,
+                    pointer_push($validator->getDataPath(), $match),
+                    pointer_push($validator->getSchemaPath(), $property)
+                );
+                $errors = array_merge($errors, $subValidator->errors());
             }
+
         }
         return $errors;
     }

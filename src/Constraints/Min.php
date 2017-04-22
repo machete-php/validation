@@ -53,7 +53,7 @@ class Min implements Constraint
             return null;
         }
 
-        return error('Number {value} is not at least {parameter}', $validator);
+        return error('Number {cause} is not at least {parameter}', $validator);
     }
 
     /**
@@ -70,6 +70,6 @@ class Min implements Constraint
             return null;
         }
 
-        return error('Number {value} is not at least greater than {parameter}', $validator);
+        return error('Number {cause} is not at least greater than {parameter}', $validator);
     }
 }
