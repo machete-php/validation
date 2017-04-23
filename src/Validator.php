@@ -28,12 +28,12 @@ class Validator
     /**
      * @var string
      */
-    private $dataPath = '';
+    private $dataPath = '/';
 
     /**
      * @var string
      */
-    private $baseSchemaPath = '';
+    private $baseSchemaPath = '/';
 
     /**
      * The maximum depth the validator should recurse into $data
