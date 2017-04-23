@@ -54,11 +54,22 @@ function strlen($string, $charset = 'UTF-8')
  */
 function as_string($value)
 {
-    if (is_resource($value)) {
-        return '<RESOURCE>';
+    switch (true) {
+        case is_scalar($value);
+            $result = (string) $value;
+            break;
+        case is_resource($value):
+            $result = '<RESOURCE>';
+            break;
+        default:
+            $result = (string) json_encode($value, JSON_UNESCAPED_SLASHES);
     }
 
-    return (string) json_encode($value);
+    if (\strlen($result) > 100) {
+        $result = substr($result, 0, 97) . '...';
+    }
+
+    return $result;
 }
 
 /**
