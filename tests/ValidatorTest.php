@@ -17,29 +17,17 @@ use League\JsonGuard\RuleSets\DraftFour;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    const TEST_SUITE_PATH = __DIR__ . '/../vendor/json-schema/JSON-Schema-Test-Suite/tests';
+
     public function allDraft4Tests()
     {
-        $required = glob(static::schemaTestSuitePath() . '/draft4/*.json');
-        $optional = glob(static::schemaTestSuitePath() . '/draft4/optional/*.json');
+        $required = glob(self::TEST_SUITE_PATH . '/draft4/*.json');
+        $optional = glob(self::TEST_SUITE_PATH . '/draft4/optional/*.json');
         $files    = array_merge($required, $optional);
 
         return array_map(function ($file) {
             return [$file];
         }, $files);
-    }
-
-    public function invalidSchemas()
-    {
-        $schemas = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid-schemas.json'));
-
-        return array_map(function ($schema) {
-            return [$schema];
-        }, $schemas);
-    }
-
-    public static function schemaTestSuitePath()
-    {
-        return realpath(__DIR__ . '/../vendor/json-schema/JSON-Schema-Test-Suite/tests');
     }
 
     /**
@@ -56,10 +44,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->runTestCase($test);
     }
 
+    public function invalidSchemas()
+    {
+        $schemas = json_decode(file_get_contents(__DIR__ . '/fixtures/invalid-schemas.json'));
+
+        return array_map(function ($schema) {
+            return [$schema];
+        }, $schemas);
+    }
+
     /**
      * @dataProvider invalidSchemas
+     *
+     * @param object $schema
      */
-    function test_invalid_schemas($schema)
+    function test_invalid_schemas_cause_exceptions($schema)
     {
         $this->setExpectedException(InvalidSchemaException::class);
         $validator = new Validator([], $schema);
@@ -131,12 +130,58 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $errors = $v->errors();
         $this->assertCount(2, $errors);
-        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[0]->getKeyword());
-        $this->assertSame('/name', $errors[0]->getDataPath());
 
-        $this->assertSame(JsonGuard\Constraints\Type::KEYWORD, $errors[1]->getKeyword());
-        $this->assertSame('/sub-product/sub-product/tags/1', $errors[1]->getDataPath());
-        $this->assertSame(json_encode($errors[0]->toArray()), json_encode($errors[0]));
+        $this->assertSame(
+            JsonGuard\Constraints\Type::KEYWORD,
+            $errors[0]->getKeyword(),
+            'The error should include the keyword'
+        );
+        $this->assertSame(
+            'string',
+            $errors[0]->getParameter(),
+            'The error should include the parameter'
+        );
+        $this->assertSame(
+            '/name',
+            $errors[0]->getDataPath(),
+            'The error should have a pointer to the data'
+        );
+        $this->assertSame(
+            1234,
+            $errors[0]->getData(),
+            'The error should include the data'
+        );
+        $this->assertSame(
+            '/properties/name/type',
+            $errors[0]->getSchemaPath(),
+            'The error should have a pointer to the schema'
+        );
+        $this->assertEquals(
+            (object) ['type' => 'string', 'description' => 'Name of the product'],
+            $errors[0]->getSchema(),
+            'The error should include the schema'
+        );
+        $this->assertSame(
+            json_encode($errors[0]->toArray()),
+            json_encode($errors[0]),
+            'The error message should encode as JSON.'
+        );
+        $this->assertSame(
+            1234,
+            $errors[0]->getCause(),
+            'The error should include the cause'
+        );
+
+        $this->assertSame(
+            '/sub-product/sub-product/tags/1',
+            $errors[1]->getDataPath(),
+            'Deeply nested data paths should work'
+        );
+        $this->assertSame(
+            '/properties/sub-product/properties/sub-product/properties/tags/items/1/type',
+            $errors[1]->getSchemaPath(),
+            'Deeply nested schema paths should work'
+        );
     }
 
     function test_error_message_pointer_is_escaped()
@@ -167,7 +212,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(JsonGuard\Constraints\AdditionalProperties::KEYWORD, $error->getKeyword());
     }
 
-    function test_stack_attack_throws_max_depth_exception()
+    function test_it__throws_max_depth_exception_when_max_depth_is_exceeded()
     {
         $this->setExpectedException(MaximumDepthExceededException::class);
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
@@ -181,25 +226,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->passes();
     }
 
-    function test_it_throws_when_max_depth_is_exceeded()
-    {
-        $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
-        $deref  = new Dereferencer();
-        $schema = $deref->dereference($schema);
-
-        $data = json_decode('{"foo": {"foo": {}}}');
-
-        $v = new Validator($data, $schema);
-        $v->setMaxDepth(2);
-        $v->passes(); // should not throw an exception.
-
-        $this->setExpectedException(MaximumDepthExceededException::class);
-        $v = new Validator($data, $schema);
-        $v->setMaxDepth(1);
-        $v->passes();
-    }
-
-    function test_max_depth_is_reset()
+    function test_it_resets_max_depth_each_time_it_validates()
     {
         $schema = json_decode('{"properties": {"foo": {"$ref": "#"}}, "additionalProperties": false}');
         $deref  = new Dereferencer();
