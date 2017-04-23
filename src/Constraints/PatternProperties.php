@@ -34,7 +34,6 @@ class PatternProperties implements Constraint
                 );
                 $errors = array_merge($errors, $subValidator->errors());
             }
-
         }
         return $errors;
     }

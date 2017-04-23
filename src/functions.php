@@ -55,7 +55,7 @@ function strlen($string, $charset = 'UTF-8')
 function as_string($value)
 {
     switch (true) {
-        case is_scalar($value);
+        case is_scalar($value):
             $result = (string) $value;
             break;
         case is_resource($value):
