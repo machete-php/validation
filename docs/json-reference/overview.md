@@ -13,13 +13,14 @@ title: Overview
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 
-A package for working with [JSON references](https://tools.ietf.org/id/draft-pbryan-zyp-json-ref-03.html).
+Most JSON schemas use [JSON references](https://tools.ietf.org/id/draft-pbryan-zyp-json-ref-03.html) to minimize duplication. A JSON reference is an object that looks like `{"$ref": "http://some/where"}` and points to a JSON object somewhere else.
+
+JSON Reference is a library for resolving references.
 
 - Resolves all references, replacing them with proxy objects.
 - Supports references to external files, urls, or custom sources.
 - Safely resolves circular references.
 - Supports caching dereferenced schemas.
-- Dereferenced schemas can be cached.
 - Dereferenced schemas can be safely json_encoded.
 - Works with Swagger, JSON Schema, and any other spec compliant JSON documents.
 

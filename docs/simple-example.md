@@ -8,7 +8,7 @@ title: Simple example
 
 To demonstrate how to use this package, let's validate some JSON against the JSON that defines the JSON schema itself.
 
-First we create a dereferencer, and dereference the schema.  This resolves any JSON like `{"$ref" "#"}` into reference objects, which are required for the validator to resolve `$ref` keywords properly.
+First we create a dereferencer, and dereference the schema.  This resolves any JSON like `{"$ref" "#"}` into reference objects, which are required for the validator to resolve `$ref` keywords properly.  Make sure you [installed league/json-reference](json-reference/installation) if you are using references.
 
 Next we create the validator.  The first argument is the data we are validating.  The second argument is the dereferenced schema.
 
@@ -17,7 +17,7 @@ Once the validator is created you can call `$validator->passes()` or `$validator
 ```php
 <?php
 
-$dereferencer  = new League\JsonReference\CoreDereferencer();
+$dereferencer  = League\JsonReference\Dereferencer::draft4();
 $schema        = $dereferencer->dereference('http://json-schema.org/draft-04/schema#');
 $data          = json_decode('{ "id": "json-guard.dev/schema#" }');
 

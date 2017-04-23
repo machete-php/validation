@@ -17,9 +17,9 @@ This package lets you validate JSON data using [json schema](http://json-schema.
 ## Notable Features:
 
 - Passes the entire [draft 4 JSON Schema Test Suite](https://github.com/json-schema/JSON-Schema-Test-Suite).
-- Fully supports remote references.
-- Fully supports circular references.
-- Really helpful error messages, with error keywords and JSON pointers to the failing data.
+- Fully customizable with [custom rule sets](validation/extending).
+- Includes a [powerful JSON Reference resolver](json-reference/overview) with support for custom URIs, caching, and custom URI resolution. 
+- Helpful [error messages](validation/errors) with JSON Pointers.
 
 [link-source]: https://github.com/thephpleague/json-guard
 [link-author]: https://twitter.com/__yuloh

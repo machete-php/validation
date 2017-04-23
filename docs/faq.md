@@ -12,8 +12,10 @@ To make sure your schema is valid, you can check it against the [meta-schema](ht
 
 ```php
 <?php
+use League\JsonReference\Dereferencer;
+use League\JsonGuard\Validator;
 
-$metaSchema = (new Dereferencer())->dereference('http://json-schema.org/draft-04/schema#');
+$metaSchema = Dereferencer::draft4()->dereference('http://json-schema.org/draft-04/schema#');
 $validator  = new Validator($mySchema, $metaSchema);
 
 if ($validator->fails()) {
@@ -43,14 +45,14 @@ $data = json_decode($data, false, 512, JSON_BIGINT_AS_STRING);
 
 Comparison with large numbers uses the [bcmatch extension](http://php.net/manual/en/book.bc.php), so make sure it is enabled on your platform.  It's usually enabled by default.
 
-If you need to compare floats with more than 10 places after the decimal place, you can set the scale of the Max or Min constraint when instantiating it, then add it to the ruleset.
+If you need to compare floats with more than 10 places after the decimal place, you can set the scale of the Max or Min constraint when instantiating it, then add it to the rule set.
 
 ```php
 <?php
 
-$ruleset = new \League\JsonGuard\RuleSets\DraftFour();
-$ruleset->set('minimum', function () {
-    return new \League\JsonGuard\Constraints\DraftFour\Min(20);
+$ruleSet = new \League\JsonGuard\RuleSets\DraftFour();
+$ruleSet->set('minimum', function () {
+    return new \League\JsonGuard\Constraints\DraftFour\Minimum(20);
 });
-$validator = new \League\JsonGuard\Validator($data, $schema, $ruleset);
+$validator = new \League\JsonGuard\Validator($data, $schema, $ruleSet);
 ```

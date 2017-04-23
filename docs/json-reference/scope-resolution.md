@@ -22,13 +22,23 @@ In JSON Schema [the id property](https://spacetelescope.github.io/understanding-
 
 If the top of your schema had `{ "id": "http://ref.dev/api/schema.json" }` and you encountered the reference `{"$ref": "user.json"}`, JSON Schema dictates that the schema should be loaded from `http://ref.dev/api/user.json`, even if the schema was loaded from `http://ref.dev/api/v2/schema.json` or even the local filesystem.
 
-To enable JSON Schema scope resolution, you can pass the `JsonSchemaScopeResolver` into the dereferencer.
+To enable JSON Schema scope resolution, you can pass the `JsonSchemaScopeResolver` into the dereferencer.  The JSON Schema scope resolver takes the keyword it should use as the only parameter.
 
 ```php
 <?php
 
-use League\JsonReference\CoreDereferencer;
+use League\JsonReference\Dereferencer;
 use League\JsonReference\ScopeResolvers\JsonSchemaScopeResolver;
 
-$dereferencer = new CoreDereferencer(null, new JsonSchemaScopeResolver());
+$dereferencer = new Dereferencer(null, new JsonSchemaScopeResolver('id'));
+```
+
+There are some helper functions to make this easier.
+
+```php
+use League\JsonReference\Dereferencer;
+
+$dereferencer = Dereferencer::draft4(); // schemas using `id`
+
+$dereferencer = Dereferencer::draft6(); // schemas using `$id`
 ```

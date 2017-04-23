@@ -9,7 +9,7 @@ JSON References:
     Loaders: '/json-reference/loaders/'
     Scope Resolution: '/json-reference/scope-resolution/'
     Circular References: '/json-reference/circular-references/'
-JSON Schema Validation:
+Validation:
     Overview: '/validation/overview/'
     Errors: '/validation/errors/'
     Extending: '/validation/extending/'

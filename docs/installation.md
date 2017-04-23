@@ -17,3 +17,5 @@ This package is installed using [Composer](https://getcomposer.org/):
 ```bash
 $ composer require league/json-guard
 ```
+
+If your schema contains JSON References, you probably want to install [league/json-reference](json-reference/installation) too.

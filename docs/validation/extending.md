@@ -8,7 +8,7 @@ title: Extending
 
 You may need to validate JSON with constraints beyond what is defined in Draft4 of the JSON Schema specification.  To add validaton rules you can either define a custom rule set or write a format extension.
 
-## Rulesets
+## Rule Sets
 
 Internally JSON Guard uses rule sets, which are composed of [constraints](https://github.com/league/json-guard/tree/master/src/Constraints).  The rule set is just a [PSR-11 container](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md) of constraints identified by the validation keyword.  By default the Draft4 rule set is used, which corresponds to Draft 4 of the JSON Schema specification.  You can easily provide your own rule set by passing it as a constructor parameter.
 
