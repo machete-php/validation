@@ -2,7 +2,6 @@
 
 namespace League\JsonGuard;
 
-use League\JsonGuard\Constraints\Constraint;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
 use League\JsonReference\Reference;
@@ -50,11 +49,6 @@ class Validator
      * @var int
      */
     private $depth = 0;
-
-    /**
-     * @var \League\JsonGuard\FormatExtension[]
-     */
-    private $formatExtensions = [];
 
     /**
      * @var \Psr\Container\ContainerInterface
@@ -142,14 +136,11 @@ class Validator
     }
 
     /**
-     * Register a custom format validation extension.
-     *
-     * @param string          $format
-     * @param FormatExtension $extension
+     * @return \Psr\Container\ContainerInterface
      */
-    public function registerFormatExtension($format, FormatExtension $extension)
+    public function getRuleSet()
     {
-        $this->formatExtensions[$format] = $extension;
+        return $this->ruleSet;
     }
 
     /**
@@ -217,7 +208,6 @@ class Validator
         $validator->dataPath         = $dataPath ?: $this->dataPath;
         $validator->baseSchemaPath   = $schemaPath ?: $this->getSchemaPath();
         $validator->maxDepth         = $this->maxDepth;
-        $validator->formatExtensions = $this->formatExtensions;
         $validator->depth            = $this->depth + 1;
 
         return $validator;
@@ -273,44 +263,7 @@ class Validator
             return null;
         }
 
-        if ($this->isCustomFormatExtension($keyword, $parameter)) {
-            return $this->validateCustomFormat($parameter);
-        }
-
-        /** @var Constraint $constraint */
-        $constraint = $this->ruleSet->get($keyword);
-
-        return $constraint->validate($this->data, $parameter, $this);
-    }
-
-    /**
-     * Determine if a rule has a custom format extension registered.
-     *
-     * @param string $keyword
-     * @param mixed  $parameter
-     *
-     * @return bool
-     */
-    private function isCustomFormatExtension($keyword, $parameter)
-    {
-        return $keyword === 'format' &&
-            is_string($parameter) &&
-            isset($this->formatExtensions[$parameter]);
-    }
-
-    /**
-     * Call a custom format extension to validate the data.
-     *
-     * @param string $format
-     *
-     * @return ValidationError|null
-     */
-    private function validateCustomFormat($format)
-    {
-        /** @var FormatExtension $extension */
-        $extension = $this->formatExtensions[$format];
-
-        return $extension->validate($this->data, $this);
+        return $this->ruleSet->get($keyword)->validate($this->data, $parameter, $this);
     }
 
     /**
