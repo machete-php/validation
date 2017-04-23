@@ -4,6 +4,15 @@ namespace League\JsonGuard;
 
 final class ValidationError implements \JsonSerializable
 {
+    const KEYWORD     = 'keyword';
+    const PARAMETER   = 'parameter';
+    const DATA        = 'data';
+    const DATA_PATH   = 'data_path';
+    const SCHEMA      = 'schema';
+    const SCHEMA_PATH = 'schema_path';
+    const CAUSE       = 'cause';
+    const MESSAGE     = 'message';
+
     /**
      * @var string
      */
@@ -172,13 +181,13 @@ final class ValidationError implements \JsonSerializable
             $this->context = array_map(
                 'League\JsonGuard\as_string',
                 [
-                    'keyword'     => $this->keyword,
-                    'parameter'   => $this->parameter,
-                    'source'      => $this->data,
-                    'source_path' => $this->dataPath,
-                    'schema'      => $this->schema,
-                    'schema_path' => $this->schemaPath,
-                    'cause'       => $this->getCause(),
+                    self::KEYWORD     => $this->keyword,
+                    self::PARAMETER   => $this->parameter,
+                    self::DATA        => $this->data,
+                    self::DATA_PATH   => $this->dataPath,
+                    self::SCHEMA      => $this->schema,
+                    self::SCHEMA_PATH => $this->schemaPath,
+                    self::CAUSE       => $this->getCause(),
                 ]
             );
         }
@@ -192,14 +201,14 @@ final class ValidationError implements \JsonSerializable
     public function toArray()
     {
         return [
-            'message'     => $this->getMessage(),
-            'keyword'     => $this->keyword,
-            'parameter'   => $this->parameter,
-            'source'      => $this->data,
-            'source_path' => $this->dataPath,
-            'schema'      => $this->schema,
-            'schema_path' => $this->schemaPath,
-            'cause'       => $this->getCause(),
+            self::MESSAGE     => $this->getMessage(),
+            self::KEYWORD     => $this->keyword,
+            self::PARAMETER   => $this->parameter,
+            self::DATA        => $this->data,
+            self::DATA_PATH   => $this->dataPath,
+            self::SCHEMA      => $this->schema,
+            self::SCHEMA_PATH => $this->schemaPath,
+            self::CAUSE       => $this->getCause(),
         ];
     }
 
