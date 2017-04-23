@@ -22,6 +22,6 @@ class MaxProperties implements Constraint
             return null;
         }
 
-        return error('Object does not contain less than {parameter} properties', $validator);
+        return error('The object must contain less than {parameter} properties.', $validator);
     }
 }

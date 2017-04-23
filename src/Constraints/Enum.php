@@ -29,6 +29,6 @@ class Enum implements Constraint
             }
         }
 
-        return error('Value {cause} is not one of: {parameter}', $validator);
+        return error('The value must be one of: {parameter}', $validator);
     }
 }

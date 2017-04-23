@@ -30,8 +30,8 @@ class AdditionalProperties implements Constraint
         }
 
         if ($parameter === false) {
-            $message = 'Additional properties found which are not allowed: {cause}';
-            return error($message, $validator)->withCause($diff);
+            return error('The object must not contain additional properties ({cause}).', $validator)
+                ->withCause($diff);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.

@@ -77,7 +77,7 @@ class Type implements Constraint
             return null;
         }
 
-        return error('Value {cause} is not a(n) {parameter}', $validator);
+        return error('The data must be a(n) {parameter}.', $validator);
     }
 
     /**
@@ -97,6 +97,6 @@ class Type implements Constraint
             }
         }
 
-        return error('Value {cause} is not one of: {parameter}', $validator);
+        return error('The data must be one of {parameter}.', $validator);
     }
 }

@@ -39,6 +39,6 @@ class Maximum implements Constraint
             return null;
         }
 
-        return error('Value {cause} is not at most {parameter}', $validator);
+        return error('The number must be less than {parameter}.', $validator);
     }
 }

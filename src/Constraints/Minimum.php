@@ -39,6 +39,6 @@ class Minimum implements Constraint
             return null;
         }
 
-        return error('Number {cause} is not at least {parameter}', $validator);
+        return error('The number must be at least {parameter}.', $validator);
     }
 }

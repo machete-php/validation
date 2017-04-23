@@ -42,7 +42,7 @@ class AdditionalItems implements Constraint
      */
     private static function getItems($schema)
     {
-        return property_exists($schema, 'items') ? $schema->items : null;
+        return property_exists($schema, Items::KEYWORD) ? $schema->items : null;
     }
 
     /**
@@ -77,7 +77,7 @@ class AdditionalItems implements Constraint
     private static function validateAdditionalItemsWhenNotAllowed($value, $items, Validator $validator)
     {
         if (count($value) > count($items)) {
-            return error('Additional items are not allowed.', $validator);
+            return error('The array must not contain additional items.', $validator);
         }
     }
 }

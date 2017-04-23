@@ -25,6 +25,6 @@ class UniqueItems implements Constraint
             return null;
         }
 
-        return error('Array {cause} is not unique', $validator);
+        return error('The array must be unique.', $validator);
     }
 }

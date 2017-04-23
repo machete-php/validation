@@ -43,6 +43,6 @@ class ExclusiveMinimum implements Constraint
             return null;
         }
 
-        return error('Number {cause} is not at least greater than {parameter}', $validator);
+        return error('The number must be greater than {parameter}.', $validator);
     }
 }

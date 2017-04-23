@@ -30,6 +30,6 @@ class AnyOf implements Constraint
                 return null;
             }
         }
-        return error('Failed matching any of the provided schemas.', $validator);
+        return error('The data must match one of the schemas.', $validator);
     }
 }

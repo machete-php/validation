@@ -36,6 +36,6 @@ class MinLength implements Constraint
             return null;
         }
 
-        return error('String is not at least {parameter} characters long', $validator);
+        return error('The string must be at least {parameter} characters long.', $validator);
     }
 }

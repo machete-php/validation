@@ -22,6 +22,6 @@ class MaxItems implements Constraint
             return null;
         }
 
-        return error('Array does not contain less than {parameter} items', $validator);
+        return error('The array must contain less than {parameter} items.', $validator);
     }
 }

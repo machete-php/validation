@@ -32,7 +32,7 @@ class OneOf implements Constraint
             }
         }
         if ($passed !== 1) {
-            return error('Failed matching exactly one of the provided schemas.', $validator);
+            return error('The data must match exactly one of the schemas.', $validator);
         }
 
         return null;

@@ -115,7 +115,7 @@ class Format implements Constraint
             return null;
         }
 
-        return error('Value {cause} does not match the format {parameter}', $validator);
+        return error('The value {data} must match the format {parameter}.', $validator);
     }
 
     /**
@@ -141,6 +141,6 @@ class Format implements Constraint
             }
         }
 
-        return error('Value {cause} does not match the format {parameter}', $validator);
+        return error('The value must match the format {parameter}.', $validator);
     }
 }

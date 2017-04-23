@@ -22,6 +22,6 @@ class MinProperties implements Constraint
             return null;
         }
 
-        return error('Object does not contain at least {parameter} properties', $validator);
+        return error('The object must contain at least {parameter} properties.', $validator);
     }
 }

@@ -22,6 +22,6 @@ class MinItems implements Constraint
             return null;
         }
 
-        return error('Array does not contain more than {parameter} items', $validator);
+        return error('The array must contain at least {parameter} items.', $validator);
     }
 }

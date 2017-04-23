@@ -41,6 +41,6 @@ class MultipleOf implements Constraint
             return null;
         }
 
-        return error('Number {cause} is not a multiple of {parameter}', $validator);
+        return error('The number must be a multiple of {parameter}.', $validator);
     }
 }

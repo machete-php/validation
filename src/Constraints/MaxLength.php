@@ -37,6 +37,6 @@ class MaxLength implements Constraint
             return null;
         }
 
-        return error('String is not at most {parameter} characters long', $validator);
+        return error('The string must be less than {parameter} characters long.', $validator);
     }
 }

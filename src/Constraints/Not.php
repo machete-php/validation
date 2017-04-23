@@ -19,7 +19,7 @@ class Not implements Constraint
 
         $subValidator = $validator->makeSubSchemaValidator($value, $parameter);
         if ($subValidator->passes()) {
-            return error('Data should not match the schema.', $validator);
+            return error('The data must not match the schema.', $validator);
         }
         return null;
     }
