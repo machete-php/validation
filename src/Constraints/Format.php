@@ -3,8 +3,9 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\FormatExtension;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
 class Format implements Constraint
 {
@@ -18,11 +19,43 @@ class Format implements Constraint
     const HOST_NAME_PATTERN = '/^[_a-z]+\.([_a-z]+\.?)+$/i';
 
     /**
+     * @var \League\JsonGuard\FormatExtension[]
+     */
+    private $extensions = [];
+
+    /**
+     * Any custom format extensions to use, indexed by the format name.
+     *
+     * @param array \League\JsonGuard\FormatExtension[]
+     */
+    public function __construct(array $extensions = [])
+    {
+        foreach ($extensions as $format => $extension) {
+            $this->addExtension($format, $extension);
+        }
+    }
+
+    /**
+     * Add a custom format extension.
+     *
+     * @param string                            $format
+     * @param \League\JsonGuard\FormatExtension $extension
+     */
+    public function addExtension($format, FormatExtension $extension)
+    {
+        $this->extensions[$format] = $extension;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate($value, $parameter, Validator $validator)
     {
         Assert::type($parameter, 'string', self::KEYWORD, $validator->getSchemaPath());
+
+        if (isset($this->extensions[$parameter])) {
+            return $this->extensions[$parameter]->validate($value, $validator);
+        }
 
         switch ($parameter) {
             case 'date-time':

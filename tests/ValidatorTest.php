@@ -247,13 +247,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $data = 'hello world';
         $v = new Validator($data, $schema);
-        $v->registerFormatExtension('hello', new HelloFormatStub());
+        $v->getRuleSet()->get('format')->addExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->passes());
 
         $data = 'good morning world';
         $v = new Validator($data, $schema);
-        $v->registerFormatExtension('hello', new HelloFormatStub());
+        $v->getRuleSet()->get('format')->addExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
         $this->assertSame(JsonGuard\Constraints\Format::KEYWORD, $v->errors()[0]->getKeyword());
@@ -265,13 +265,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $data = json_decode('{ "foo": "hello world" }');
         $v = new Validator($data, $schema);
-        $v->registerFormatExtension('hello', new HelloFormatStub());
+        $v->getRuleSet()->get('format')->addExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->passes());
 
         $data = json_decode('{ "foo": "good morning" }');
         $v = new Validator($data, $schema);
-        $v->registerFormatExtension('hello', new HelloFormatStub());
+        $v->getRuleSet()->get('format')->addExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
         $this->assertSame('format', $v->errors()[0]->getKeyword());

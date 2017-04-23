@@ -33,27 +33,21 @@ The following example shows a simple extension to validate twitter handles.  The
 ```php
 <?php
 
-use League\JsonGuard\Constraints\Format;
 use League\JsonGuard\FormatExtension;
-use League\JsonGuard\ValidationError;
+use League\JsonGuard\Validator;
 
 class TwitterHandleFormatExtension implements FormatExtension
 {
-    /**
-     * @param string      $value   The value to validate
-     * @param string|null $pointer A pointer to the value
-     * @return ValidationError|null
-     */
-    public function validate($value, $pointer = null)
+    public function validate($value, Validator $validator)
     {
         if (stripos($value, '@') !== 0) {
-            return new ValidationError('A twitter handle must start with "@"', Format::KEYWORD, $value, $pointer);
+            return \League\JsonGuard\error('A twitter handle must start with "@"', $validator);
         }
     }
 }
 ```
 
-Once the extension is written, you can register it with the validator.
+Once the extension is written, you can register it with the format constraint.
 
 ```php
 <?php
@@ -62,5 +56,5 @@ $schema = json_decode('{"format": "twitter-handle"}');
 $data = '@PHP_CEO';
 
 $validator = new Validator($data, $schema);
-$validator->registerFormatExtension('twitter-handle', new TwitterHandleFormatExtension());
+$validator->getRuleset()->get('format')->addExtension('twitter-handle', new TwitterHandleFormatExtension());
 ```
