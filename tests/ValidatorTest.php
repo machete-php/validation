@@ -10,9 +10,9 @@ use League\JsonGuard\Exception\MaximumDepthExceededException;
 use League\JsonGuard\RuleSet\DraftFour;
 use League\JsonGuard\Validator;
 use League\JsonReference\Dereferencer;
-use League\JsonReference\Loaders\ArrayLoader;
-use League\JsonReference\Loaders\ChainableLoader;
-use League\JsonReference\Loaders\CurlWebLoader;
+use League\JsonReference\Loader\ArrayLoader;
+use League\JsonReference\Loader\ChainedLoader;
+use League\JsonReference\Loader\CurlWebLoader;
 use function League\JsonGuard\error;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
@@ -103,11 +103,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $arrayLoader = new ArrayLoader(
             ['json-schema.org/draft-04/schema' => file_get_contents(__DIR__ . '/fixtures/draft4-schema.json')]
         );
-        $httpsLoader = new ChainableLoader(
+        $httpsLoader = new ChainedLoader(
             $arrayLoader,
             new CurlWebLoader('https://')
         );
-        $httpLoader = new ChainableLoader(
+        $httpLoader = new ChainedLoader(
             $arrayLoader,
             new CurlWebLoader('http://')
         );
