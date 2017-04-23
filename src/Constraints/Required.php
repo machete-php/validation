@@ -25,7 +25,8 @@ class Required implements Constraint
         $actualProperties = array_keys(get_object_vars($value));
         $missing          = array_diff($parameter, $actualProperties);
         if (count($missing)) {
-            return error('The object must contain the properties {cause}.', $validator)->withCause(array_values($missing));
+            return error('The object must contain the properties {cause}.', $validator)
+                ->withCause(array_values($missing));
         }
 
         return null;

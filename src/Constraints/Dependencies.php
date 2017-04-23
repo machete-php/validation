@@ -29,7 +29,8 @@ class Dependencies implements Constraint
                     $errors,
                     array_filter(array_map(function ($dependency) use ($value, $validator) {
                         if (!in_array($dependency, array_keys(get_object_vars($value)), true)) {
-                            return error('The object must contain the dependent property {cause}.', $validator)->withCause($dependency);
+                            return error('The object must contain the dependent property {cause}.', $validator)
+                                ->withCause($dependency);
                         }
                     }, $dependencies))
                 );
