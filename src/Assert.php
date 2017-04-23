@@ -12,11 +12,11 @@ class Assert
     /**
      * Validate an array has at least one element.
      *
-     * @param array       $value
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param array  $value
+     * @param string $keyword
+     * @param string $pointer
      */
-    public static function notEmpty(array $value, $keyword, $pointer = null)
+    public static function notEmpty(array $value, $keyword, $pointer)
     {
         if (!empty($value)) {
             return;
@@ -28,11 +28,11 @@ class Assert
     /**
      * Validate an integer is non-negative.
      *
-     * @param integer     $value
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param integer $value
+     * @param string  $keyword
+     * @param string  $pointer
      */
-    public static function nonNegative($value, $keyword, $pointer = null)
+    public static function nonNegative($value, $keyword, $pointer)
     {
         if ($value >= 0) {
             return;
@@ -51,11 +51,11 @@ class Assert
      * @param mixed        $value
      * @param array|string $choices
      * @param string       $keyword
-     * @param string|null  $pointer
+     * @param string       $pointer
      *
      * @throws InvalidSchemaException
      */
-    public static function type($value, $choices, $keyword, $pointer = null)
+    public static function type($value, $choices, $keyword, $pointer)
     {
         $actualType = gettype($value);
         $choices    = is_array($choices)  ? $choices : [$choices];
@@ -74,12 +74,12 @@ class Assert
     }
 
     /**
-     * @param object      $schema
-     * @param string      $property
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param object $schema
+     * @param string $property
+     * @param string $keyword
+     * @param string $pointer
      */
-    public static function hasProperty($schema, $property, $keyword, $pointer = null)
+    public static function hasProperty($schema, $property, $keyword, $pointer)
     {
         if (isset($schema->$property)) {
             return;

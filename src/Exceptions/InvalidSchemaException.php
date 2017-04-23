@@ -10,14 +10,14 @@ class InvalidSchemaException extends \RuntimeException
     private $keyword;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $pointer;
 
     /**
-     * @param string      $message
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param string $message
+     * @param string $keyword
+     * @param string $pointer
      */
     public function __construct($message, $keyword, $pointer)
     {
@@ -28,10 +28,10 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
-     * @param string      $actualType
-     * @param array       $allowedTypes
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param string $actualType
+     * @param array  $allowedTypes
+     * @param string $keyword
+     * @param string $pointer
      *
      * @return \League\JsonGuard\Exceptions\InvalidSchemaException
      */
@@ -47,9 +47,9 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
-     * @param integer     $value
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param integer $value
+     * @param string  $keyword
+     * @param string  $pointer
      *
      * @return \League\JsonGuard\Exceptions\InvalidSchemaException
      */
@@ -64,8 +64,8 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param string $keyword
+     * @param string $pointer
      *
      * @return \League\JsonGuard\Exceptions\InvalidSchemaException
      */
@@ -79,9 +79,9 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
-     * @param string      $property
-     * @param string      $keyword
-     * @param string|null $pointer
+     * @param string $property
+     * @param string $keyword
+     * @param string $pointer
      *
      * @return \League\JsonGuard\Exceptions\InvalidSchemaException
      */
@@ -104,7 +104,7 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getPointer()
     {
