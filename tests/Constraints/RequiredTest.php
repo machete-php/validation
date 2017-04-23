@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Test\Constraints;
 
-use League\JsonGuard\Constraints\Required;
+use League\JsonGuard\Constraints\DraftFour\Required;
 use League\JsonGuard\Validator;
 
 class RequiredTest extends \PHPUnit_Framework_TestCase

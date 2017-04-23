@@ -1,8 +1,9 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
@@ -49,7 +50,7 @@ class Items implements Constraint
      *
      * @return mixed
      */
-    protected static function getSchema($parameter, $key)
+    private static function getSchema($parameter, $key)
     {
         if (is_object($parameter)) {
             // list validation

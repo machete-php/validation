@@ -1,11 +1,12 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
 class Type implements Constraint
 {
@@ -81,8 +82,8 @@ class Type implements Constraint
     }
 
     /**
-     * @param mixed     $value
-     * @param array     $choices
+     * @param mixed $value
+     * @param array $choices
      *
      * @param Validator $validator
      *

@@ -1,8 +1,6 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
-
-use League\JsonGuard\Validator;
+namespace League\JsonGuard;
 
 interface Constraint
 {

@@ -33,7 +33,7 @@ The following example shows a simple extension to validate twitter handles.  The
 ```php
 <?php
 
-use League\JsonGuard\FormatExtension;
+use League\JsonGuard\Constraints\DraftFour\Format\FormatExtension;
 use League\JsonGuard\Validator;
 
 class TwitterHandleFormatExtension implements FormatExtension

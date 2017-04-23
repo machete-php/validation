@@ -1,14 +1,15 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
-class MultipleOf implements Constraint
+class Minimum implements Constraint
 {
-    const KEYWORD = 'multipleOf';
+    const KEYWORD = 'minimum';
 
     /**
      * @var int|null
@@ -29,18 +30,16 @@ class MultipleOf implements Constraint
     public function validate($value, $parameter, Validator $validator)
     {
         Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
-        Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
-        if (!is_numeric($value)) {
+        if (isset($validator->getSchema()->exclusiveMinimum) && $validator->getSchema()->exclusiveMinimum === true) {
             return null;
         }
 
-        $quotient = bcdiv($value, $parameter, $this->precision);
-        $mod      = bcsub($quotient, floor($quotient), $this->precision);
-        if (bccomp($mod, 0, $this->precision) === 0) {
+        if (!is_numeric($value) ||
+            bccomp($value, $parameter, $this->precision) === 1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 
-        return error('The number must be a multiple of {parameter}.', $validator);
+        return error('The number must be at least {parameter}.', $validator);
     }
 }

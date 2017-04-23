@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Test\Constraints;
 
-use League\JsonGuard\Constraints\Format;
+use League\JsonGuard\Constraints\DraftFour\Format;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 

@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Test\Constraints;
 
-use League\JsonGuard\Constraints\MinLength;
+use League\JsonGuard\Constraints\DraftFour\MinLength;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace League\JsonGuard;
+namespace League\JsonGuard\Constraints\DraftFour\Format;
+
+use League\JsonGuard\Validator;
 
 interface FormatExtension
 {

@@ -1,14 +1,15 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
-class MinProperties implements Constraint
+class MaxItems implements Constraint
 {
-    const KEYWORD = 'minProperties';
+    const KEYWORD = 'maxItems';
 
     /**
      * {@inheritdoc}
@@ -18,10 +19,10 @@ class MinProperties implements Constraint
         Assert::type($parameter, 'integer', self::KEYWORD, $validator->getSchemaPath());
         Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
-        if (!is_object($value) || count(get_object_vars($value)) >= $parameter) {
+        if (!is_array($value) || count($value) <= $parameter) {
             return null;
         }
 
-        return error('The object must contain at least {parameter} properties.', $validator);
+        return error('The array must contain less than {parameter} items.', $validator);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\FormatExtension;
+use League\JsonGuard\Constraint;
+use League\JsonGuard\Constraints\DraftFour\Format\FormatExtension;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
@@ -19,14 +20,14 @@ class Format implements Constraint
     const HOST_NAME_PATTERN = '/^[_a-z]+\.([_a-z]+\.?)+$/i';
 
     /**
-     * @var \League\JsonGuard\FormatExtension[]
+     * @var \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension[]
      */
     private $extensions = [];
 
     /**
      * Any custom format extensions to use, indexed by the format name.
      *
-     * @param array \League\JsonGuard\FormatExtension[]
+     * @param array \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension[]
      */
     public function __construct(array $extensions = [])
     {
@@ -38,8 +39,8 @@ class Format implements Constraint
     /**
      * Add a custom format extension.
      *
-     * @param string                            $format
-     * @param \League\JsonGuard\FormatExtension $extension
+     * @param string                                                         $format
+     * @param \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension $extension
      */
     public function addExtension($format, FormatExtension $extension)
     {

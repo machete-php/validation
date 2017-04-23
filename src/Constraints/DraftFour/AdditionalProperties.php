@@ -1,9 +1,10 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
@@ -57,7 +58,7 @@ class AdditionalProperties implements Constraint
      *
      * @return array
      */
-    protected static function getDiff($value, $schema)
+    private static function getDiff($value, $schema)
     {
         if (property_exists($schema, Properties::KEYWORD)) {
             $definedProperties = array_keys(get_object_vars($schema->properties));

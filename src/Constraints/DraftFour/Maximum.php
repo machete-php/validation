@@ -1,14 +1,15 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class ExclusiveMaximum implements Constraint
+class Maximum implements Constraint
 {
-    const KEYWORD = 'exclusiveMaximum';
+    const KEYWORD = 'maximum';
 
     /**
      * @var int|null
@@ -28,14 +29,14 @@ class ExclusiveMaximum implements Constraint
      */
     public function validate($value, $parameter, Validator $validator)
     {
-        Assert::type($parameter, 'boolean', self::KEYWORD, $validator->getSchemaPath());
-        Assert::hasProperty($validator->getSchema(), 'maximum', self::KEYWORD, $validator->getSchemaPath());
+        Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
 
-        if ($parameter !== true) {
-            return null;
+        if (isset($validator->getSchema()->exclusiveMaximum) && $validator->getSchema()->exclusiveMaximum === true) {
+            return;
         }
 
-        if (!is_numeric($value) || bccomp($value, $validator->getSchema()->maximum, $this->precision) === -1) {
+        if (!is_numeric($value) ||
+            bccomp($value, $parameter, $this->precision) === -1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 

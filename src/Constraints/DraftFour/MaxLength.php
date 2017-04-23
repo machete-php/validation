@@ -1,15 +1,16 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 
-class MinLength implements Constraint
+class MaxLength implements Constraint
 {
-    const KEYWORD = 'minLength';
+    const KEYWORD = 'maxLength';
 
     /**
      * @var string
@@ -24,6 +25,7 @@ class MinLength implements Constraint
         $this->charset = $charset;
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -32,10 +34,10 @@ class MinLength implements Constraint
         Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
         Assert::nonNegative($parameter, self::KEYWORD, $validator->getSchemaPath());
 
-        if (!is_string($value) || JsonGuard\strlen($value, $this->charset) >= $parameter) {
+        if (!is_string($value) || JsonGuard\strlen($value, $this->charset) <= $parameter) {
             return null;
         }
 
-        return error('The string must be at least {parameter} characters long.', $validator);
+        return error('The string must be less than {parameter} characters long.', $validator);
     }
 }

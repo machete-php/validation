@@ -1,15 +1,16 @@
 <?php
 
-namespace League\JsonGuard\Constraints;
+namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use function League\JsonGuard\error;
+use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-class OneOf implements Constraint
+class AnyOf implements Constraint
 {
-    const KEYWORD = 'oneOf';
+    const KEYWORD = 'anyOf';
 
     /**
      * {@inheritdoc}
@@ -19,7 +20,6 @@ class OneOf implements Constraint
         Assert::type($parameter, 'array', self::KEYWORD, $validator->getSchemaPath());
         Assert::notEmpty($parameter, self::KEYWORD, $validator->getSchemaPath());
 
-        $passed = 0;
         foreach ($parameter as $key => $schema) {
             $subValidator = $validator->makeSubSchemaValidator(
                 $value,
@@ -28,13 +28,9 @@ class OneOf implements Constraint
                 pointer_push($validator->getSchemaPath(), $key)
             );
             if ($subValidator->passes()) {
-                $passed++;
+                return null;
             }
         }
-        if ($passed !== 1) {
-            return error('The data must match exactly one of the schemas.', $validator);
-        }
-
-        return null;
+        return error('The data must match one of the schemas.', $validator);
     }
 }

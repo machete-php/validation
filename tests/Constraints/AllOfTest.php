@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Test\Constraints;
 
-use League\JsonGuard\Constraints\AllOf;
+use League\JsonGuard\Constraints\DraftFour\AllOf;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\Validator;
 

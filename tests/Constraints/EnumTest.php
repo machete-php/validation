@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Test\Constraints;
 
-use League\JsonGuard\Constraints\Enum;
+use League\JsonGuard\Constraints\DraftFour\Enum;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\Validator;
 
