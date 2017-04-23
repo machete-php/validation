@@ -27,18 +27,15 @@ use League\JsonGuard\Constraints\Properties;
 use League\JsonGuard\Constraints\Required;
 use League\JsonGuard\Constraints\Type;
 use League\JsonGuard\Constraints\UniqueItems;
-use Psr\Container\ContainerInterface;
 
 /**
  * The default rule set for JSON Schema Draft 4.
  * @see http://tools.ietf.org/html/draft-zyp-json-schema-04
  * @see  https://tools.ietf.org/html/draft-fge-json-schema-validation-00
  */
-class DraftFour implements ContainerInterface
+class DraftFour extends RuleSetContainer
 {
-    use RuleSetTrait;
-
-    protected $rules = [
+    const DEFAULT_RULES = [
         'additionalItems'      => AdditionalItems::class,
         'additionalProperties' => AdditionalProperties::class,
         'allOf'                => AllOf::class,
@@ -66,19 +63,8 @@ class DraftFour implements ContainerInterface
         'uniqueItems'          => UniqueItems::class,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function rules()
+    public function __construct(array $rules = [])
     {
-        return $this->rules;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setRule($id, $constraint)
-    {
-        $this->rules[$id] = $constraint;
+        parent::__construct(array_merge(self::DEFAULT_RULES, $rules));
     }
 }

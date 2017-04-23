@@ -6,8 +6,8 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class ConstraintNotFoundException extends \Exception implements NotFoundExceptionInterface
 {
-    public static function forRule($rule)
+    public static function forRule($keyword)
     {
-        return new static(sprintf('The constraint for "%s" was not found.', $rule));
+        return new static(sprintf('The constraint for "%s" was not found.', $keyword));
     }
 }
