@@ -3,8 +3,8 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
 class Dependencies implements Constraint
@@ -29,13 +29,7 @@ class Dependencies implements Constraint
                     $errors,
                     array_filter(array_map(function ($dependency) use ($value, $validator) {
                         if (!in_array($dependency, array_keys(get_object_vars($value)), true)) {
-                            return new ValidationError(
-                                'Unmet dependency {dependency}',
-                                self::KEYWORD,
-                                $value,
-                                $validator->getDataPath(),
-                                ['dependency' => $dependency]
-                            );
+                            return error('Unmet dependency {cause}', $validator)->withCause($dependency);
                         }
                     }, $dependencies))
                 );

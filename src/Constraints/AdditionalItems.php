@@ -3,9 +3,8 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
-use League\JsonReference;
+use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
 class AdditionalItems implements Constraint
@@ -28,7 +27,7 @@ class AdditionalItems implements Constraint
         }
 
         if ($parameter === false) {
-            return self::validateAdditionalItemsWhenNotAllowed($value, $items, $validator->getDataPath());
+            return self::validateAdditionalItemsWhenNotAllowed($value, $items, $validator);
         } elseif (is_object($parameter)) {
             $additionalItems = array_slice($value, count($items));
 
@@ -60,8 +59,7 @@ class AdditionalItems implements Constraint
             $subValidator = $validator->makeSubSchemaValidator(
                 $item,
                 $schema,
-                pointer_push($validator->getDataPath(), $key),
-                pointer_push($validator->getSchemaPath(), $key)
+                pointer_push($validator->getDataPath(), $key)
             );
             $errors = array_merge($errors, $subValidator->errors());
         }
@@ -70,21 +68,16 @@ class AdditionalItems implements Constraint
     }
 
     /**
-     * @param array $value
-     * @param array $items
-     * @param $pointer
+     * @param array                       $value
+     * @param array                       $items
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError
      */
-    private static function validateAdditionalItemsWhenNotAllowed($value, $items, $pointer)
+    private static function validateAdditionalItemsWhenNotAllowed($value, $items, Validator $validator)
     {
         if (count($value) > count($items)) {
-            return new ValidationError(
-                'Additional items are not allowed.',
-                self::KEYWORD,
-                $value,
-                $pointer
-            );
+            return error('Additional items are not allowed.', $validator);
         }
     }
 }

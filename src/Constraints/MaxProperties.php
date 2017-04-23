@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MaxProperties implements Constraint
@@ -22,12 +22,6 @@ class MaxProperties implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Object does not contain less than {max_properties} properties',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['max_properties' => $parameter]
-        );
+        return error('Object does not contain less than {parameter} properties', $validator);
     }
 }

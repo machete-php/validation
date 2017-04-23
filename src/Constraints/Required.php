@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Required implements Constraint
@@ -25,13 +25,7 @@ class Required implements Constraint
         $actualProperties = array_keys(get_object_vars($value));
         $missing          = array_diff($parameter, $actualProperties);
         if (count($missing)) {
-            return new ValidationError(
-                'Required properties missing: {missing}',
-                self::KEYWORD,
-                $value,
-                $validator->getDataPath(),
-                ['missing' => array_values($missing)]
-            );
+            return error('Required properties missing: {cause}', $validator)->withCause(array_values($missing));
         }
 
         return null;

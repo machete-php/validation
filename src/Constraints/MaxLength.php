@@ -4,7 +4,7 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MaxLength implements Constraint
@@ -37,12 +37,6 @@ class MaxLength implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'String is not at most {max_length} characters long',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['max_length' => $parameter]
-        );
+        return error('String is not at most {parameter} characters long', $validator);
     }
 }

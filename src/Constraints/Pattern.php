@@ -4,7 +4,7 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Pattern implements Constraint
@@ -26,12 +26,6 @@ class Pattern implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Value {value} does not match the pattern {pattern}.',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['value' => $value, 'pattern' => $parameter]
-        );
+        return error('Value {cause} does not match the pattern {parameter}.', $validator);
     }
 }

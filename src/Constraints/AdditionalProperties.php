@@ -4,8 +4,9 @@ namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use function League\JsonGuard\error;
+use function League\JsonReference\pointer_push;
 
 class AdditionalProperties implements Constraint
 {
@@ -29,15 +30,22 @@ class AdditionalProperties implements Constraint
         }
 
         if ($parameter === false) {
-            $message = 'Additional properties found which are not allowed: {diff}';
-            $context = ['diff' => implode(', ', $diff)];
-            return new ValidationError($message, self::KEYWORD, $value, $validator->getDataPath(), $context);
+            $message = 'Additional properties found which are not allowed: {cause}';
+            return error($message, $validator)->withCause($diff);
         } elseif (is_object($parameter)) {
             // If additionalProperties is an object it's a schema,
             // so validate all additional properties against it.
-            $additionalSchema = array_fill_keys($diff, $parameter);
+            $errors = [];
+            foreach ($diff as $property) {
+                $subValidator = $validator->makeSubSchemaValidator(
+                    $value->$property,
+                    $parameter,
+                    pointer_push($validator->getDataPath(), $property)
+                );
+                $errors = array_merge($errors, $subValidator->errors());
+            }
 
-            return (new Properties())->validate($value, $additionalSchema, $validator);
+            return $errors;
         }
     }
 

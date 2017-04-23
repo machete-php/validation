@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class UniqueItems implements Constraint
@@ -25,12 +25,6 @@ class UniqueItems implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Array {value} is not unique.',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['value' => $value]
-        );
+        return error('Array {cause} is not unique', $validator);
     }
 }

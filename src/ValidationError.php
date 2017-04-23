@@ -2,12 +2,36 @@
 
 namespace League\JsonGuard;
 
-class ValidationError implements \ArrayAccess, \JsonSerializable
+final class ValidationError implements \JsonSerializable
 {
+    const KEYWORD     = 'keyword';
+    const PARAMETER   = 'parameter';
+    const DATA        = 'data';
+    const DATA_PATH   = 'data_path';
+    const SCHEMA      = 'schema';
+    const SCHEMA_PATH = 'schema_path';
+    const CAUSE       = 'cause';
+    const MESSAGE     = 'message';
+
     /**
      * @var string
      */
     private $message;
+
+    /**
+     * @var string|null
+     */
+    private $interpolatedMessage;
+
+    /**
+     * @var mixed
+     */
+    private $cause;
+
+    /**
+     * @var string[]|null
+     */
+    private $context;
 
     /**
      * @var string
@@ -15,34 +39,46 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
     private $keyword;
 
     /**
-     * @var string|null
+     * @var mixed
      */
-    private $pointer;
+    private $parameter;
 
     /**
      * @var mixed
      */
-    private $value;
+    private $data;
 
     /**
-     * @var array
+     * @var string
      */
-    private $context;
+    private $dataPath;
 
     /**
-     * @param string      $message
-     * @param string      $keyword
-     * @param mixed       $value
-     * @param string|null $pointer
-     * @param array       $context
+     * @var object
      */
-    public function __construct($message, $keyword, $value, $pointer = null, array $context = [])
-    {
-        $this->message = $message;
-        $this->keyword = $keyword;
-        $this->pointer = $pointer;
-        $this->value   = $value;
-        $this->context = array_map('League\JsonGuard\as_string', $context);
+    private $schema;
+
+    /**
+     * @var string
+     */
+    private $schemaPath;
+
+    public function __construct(
+        $message,
+        $keyword,
+        $parameter,
+        $data,
+        $dataPath,
+        $schema,
+        $schemaPath
+    ) {
+        $this->message    = $message;
+        $this->keyword    = $keyword;
+        $this->parameter  = $parameter;
+        $this->data       = $data;
+        $this->dataPath   = $dataPath;
+        $this->schema     = $schema;
+        $this->schemaPath = $schemaPath;
     }
 
     /**
@@ -52,7 +88,136 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
      */
     public function getMessage()
     {
-        return $this->interpolate($this->message, $this->context);
+        if ($this->interpolatedMessage === null) {
+            $this->interpolatedMessage = $this->interpolate($this->message, $this->getContext());
+        }
+
+        return $this->interpolatedMessage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyword()
+    {
+        return $this->keyword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameter()
+    {
+        return $this->parameter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataPath()
+    {
+        return $this->dataPath;
+    }
+
+    /**
+     * @return object
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchemaPath()
+    {
+        return $this->schemaPath;
+    }
+
+    /**
+     * Get the cause of the error.  The cause is either the the value itself
+     * or the subset of the value that failed validation.  For example, the
+     * cause of a failed minimum constraint would be the number itself, while
+     * the cause of a failed additionalProperties constraint would be the
+     * additional properties in the value that are not allowed.
+     *
+     * @return mixed
+     */
+    public function getCause()
+    {
+        return $this->cause !== null ? $this->cause : $this->data;
+    }
+
+    /**
+     * @param $cause
+     *
+     * @return \League\JsonGuard\ValidationError
+     */
+    public function withCause($cause)
+    {
+        $error        = clone $this;
+        $error->cause = $cause;
+
+        return $error;
+    }
+
+    /**
+     * Get the context that applied to the failed assertion.
+     *
+     * @return string[]
+     */
+    public function getContext()
+    {
+        if ($this->context === null) {
+            $this->context = array_map(
+                'League\JsonGuard\as_string',
+                [
+                    self::KEYWORD     => $this->keyword,
+                    self::PARAMETER   => $this->parameter,
+                    self::DATA        => $this->data,
+                    self::DATA_PATH   => $this->dataPath,
+                    self::SCHEMA      => $this->schema,
+                    self::SCHEMA_PATH => $this->schemaPath,
+                    self::CAUSE       => $this->getCause(),
+                ]
+            );
+        }
+
+        return $this->context;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            self::MESSAGE     => $this->getMessage(),
+            self::KEYWORD     => $this->keyword,
+            self::PARAMETER   => $this->parameter,
+            self::DATA        => $this->data,
+            self::DATA_PATH   => $this->dataPath,
+            self::SCHEMA      => $this->schema,
+            self::SCHEMA_PATH => $this->schemaPath,
+            self::CAUSE       => $this->getCause(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**
@@ -71,144 +236,5 @@ class ValidationError implements \ArrayAccess, \JsonSerializable
         }
 
         return strtr($message, $replace);
-    }
-
-    /**
-     * Get the schema keyword for this error.
-     *
-     * @return string
-     */
-    public function getKeyword()
-    {
-        return $this->keyword;
-    }
-
-    /**
-     * Get the path to the property that failed validation.
-     *
-     * @return string|null
-     */
-    public function getPointer()
-    {
-        return $this->pointer;
-    }
-
-    /**
-     * Get the value that caused the assertion to fail.
-     *
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Get the context that applied to the failed assertion.
-     *
-     * @return array
-     */
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'keyword' => $this->getKeyword(),
-            'message' => $this->getMessage(),
-            'pointer' => $this->getPointer(),
-            'value'   => $this->getValue(),
-            'context' => $this->getContext(),
-        ];
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * Whether a offset exists
-     * @link  http://php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @param mixed $offset <p>
-     *                      An offset to check for.
-     *                      </p>
-     *
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
-     */
-    public function offsetExists($offset)
-    {
-        return array_key_exists($offset, $this->toArray());
-    }
-
-    /**
-     * Offset to retrieve
-     * @link  http://php.net/manual/en/arrayaccess.offsetget.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to retrieve.
-     *                      </p>
-     *
-     * @return mixed Can return all value types.
-     * @since 5.0.0
-     */
-    public function offsetGet($offset)
-    {
-        $errorArray = $this->toArray();
-        return array_key_exists($offset, $errorArray) ? $errorArray[$offset] : null;
-    }
-
-    /**
-     * Offset to set
-     * @link  http://php.net/manual/en/arrayaccess.offsetset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to assign the value to.
-     *                      </p>
-     * @param mixed $value  <p>
-     *                      The value to set.
-     *                      </p>
-     *
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetSet($offset, $value)
-    {
-        // A ValidationError is immutable.
-        return null;
-    }
-
-    /**
-     * Offset to unset
-     * @link  http://php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to unset.
-     *                      </p>
-     *
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetUnset($offset)
-    {
-        // A ValidationError is immutable.
-        return null;
     }
 }

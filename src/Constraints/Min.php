@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class Min implements Constraint
@@ -32,54 +32,44 @@ class Min implements Constraint
         Assert::type($parameter, 'number', self::KEYWORD, $validator->getSchemaPath());
 
         if (isset($validator->getSchema()->exclusiveMinimum) && $validator->getSchema()->exclusiveMinimum === true) {
-            return self::validateExclusiveMin($value, $parameter, $validator->getDataPath());
+            return self::validateExclusiveMin($value, $parameter, $validator);
         }
 
-        return self::validateMin($value, $parameter, $validator->getDataPath());
+        return self::validateMin($value, $parameter, $validator);
     }
 
     /**
-     * @param mixed       $value
-     * @param mixed       $parameter
-     * @param string|null $pointer
+     * @param mixed                       $value
+     * @param mixed                       $parameter
+     *
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
      */
-    private function validateMin($value, $parameter, $pointer = null)
+    private function validateMin($value, $parameter, Validator $validator)
     {
         if (!is_numeric($value) ||
             bccomp($value, $parameter, $this->precision) === 1 || bccomp($value, $parameter, $this->precision) === 0) {
             return null;
         }
 
-        return new ValidationError(
-            'Number {value} is not at least {min}',
-            self::KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'min' => $parameter]
-        );
+        return error('Number {cause} is not at least {parameter}', $validator);
     }
 
     /**
-     * @param mixed       $value
-     * @param mixed       $parameter
-     * @param string|null $pointer
+     * @param mixed                       $value
+     * @param mixed                       $parameter
+     * @param \League\JsonGuard\Validator $validator
      *
      * @return \League\JsonGuard\ValidationError|null
+     *
      */
-    private function validateExclusiveMin($value, $parameter, $pointer = null)
+    private function validateExclusiveMin($value, $parameter, Validator $validator)
     {
         if (!is_numeric($value) || bccomp($value, $parameter, $this->precision) === 1) {
             return null;
         }
 
-        return new ValidationError(
-            'Number {value} is not at least greater than {exclusive_min}',
-            self::EXCLUSIVE_KEYWORD,
-            $value,
-            $pointer,
-            ['value' => $value, 'exclusive_min' => $parameter]
-        );
+        return error('Number {cause} is not at least greater than {parameter}', $validator);
     }
 }

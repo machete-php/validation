@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Constraints;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\ValidationError;
+use function League\JsonGuard\error;
 use League\JsonGuard\Validator;
 
 class MinItems implements Constraint
@@ -22,12 +22,6 @@ class MinItems implements Constraint
             return null;
         }
 
-        return new ValidationError(
-            'Array does not contain more than {min_items} items',
-            self::KEYWORD,
-            $value,
-            $validator->getDataPath(),
-            ['min_items' => $parameter]
-        );
+        return error('Array does not contain more than {parameter} items', $validator);
     }
 }
