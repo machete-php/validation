@@ -3,11 +3,11 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class MultipleOf implements Constraint
+final class MultipleOf implements ConstraintInterface
 {
     const KEYWORD = 'multipleOf';
 

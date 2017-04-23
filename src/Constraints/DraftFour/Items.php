@@ -3,11 +3,11 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
-final class Items implements Constraint
+final class Items implements ConstraintInterface
 {
     const KEYWORD = 'items';
 

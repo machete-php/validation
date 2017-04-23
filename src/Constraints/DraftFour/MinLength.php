@@ -4,11 +4,11 @@ namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class MinLength implements Constraint
+final class MinLength implements ConstraintInterface
 {
     const KEYWORD = 'minLength';
 

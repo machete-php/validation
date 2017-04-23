@@ -3,12 +3,12 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
-use League\JsonGuard\Constraints\DraftFour\Format\FormatExtension;
+use League\JsonGuard\ConstraintInterface;
+use League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class Format implements Constraint
+final class Format implements ConstraintInterface
 {
     const KEYWORD = 'format';
 
@@ -20,14 +20,14 @@ final class Format implements Constraint
     const HOST_NAME_PATTERN = '/^[_a-z]+\.([_a-z]+\.?)+$/i';
 
     /**
-     * @var \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension[]
+     * @var \League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface[]
      */
     private $extensions = [];
 
     /**
      * Any custom format extensions to use, indexed by the format name.
      *
-     * @param array \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension[]
+     * @param array \League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface[]
      */
     public function __construct(array $extensions = [])
     {
@@ -39,10 +39,10 @@ final class Format implements Constraint
     /**
      * Add a custom format extension.
      *
-     * @param string                                                         $format
-     * @param \League\JsonGuard\Constraints\DraftFour\Format\FormatExtension $extension
+     * @param string                                                                  $format
+     * @param \League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface $extension
      */
-    public function addExtension($format, FormatExtension $extension)
+    public function addExtension($format, FormatExtensionInterface $extension)
     {
         $this->extensions[$format] = $extension;
     }

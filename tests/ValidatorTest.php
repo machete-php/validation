@@ -3,8 +3,8 @@
 namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
-use League\JsonGuard\Constraint;
-use League\JsonGuard\Constraints\DraftFour\Format\FormatExtension;
+use League\JsonGuard\ConstraintInterface;
+use League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface;
 use League\JsonGuard\Exceptions\InvalidSchemaException;
 use League\JsonGuard\Exceptions\MaximumDepthExceededException;
 use League\JsonGuard\RuleSets\DraftFour;
@@ -315,7 +315,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class EmojiConstraint implements Constraint
+class EmojiConstraint implements ConstraintInterface
 {
     protected static $emojis = [
         ':)',
@@ -334,7 +334,7 @@ class EmojiConstraint implements Constraint
     }
 }
 
-class HelloFormatStub implements FormatExtension
+class HelloFormatStub implements FormatExtensionInterface
 {
     public function validate($value, Validator $validator)
     {

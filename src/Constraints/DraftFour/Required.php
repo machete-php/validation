@@ -3,11 +3,11 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class Required implements Constraint
+final class Required implements ConstraintInterface
 {
     const KEYWORD = 'required';
 

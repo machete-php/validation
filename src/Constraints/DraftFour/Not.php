@@ -3,11 +3,11 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class Not implements Constraint
+final class Not implements ConstraintInterface
 {
     const KEYWORD = 'not';
 

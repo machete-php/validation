@@ -4,11 +4,11 @@ namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
-final class PatternProperties implements Constraint
+final class PatternProperties implements ConstraintInterface
 {
     const KEYWORD = 'patternProperties';
 

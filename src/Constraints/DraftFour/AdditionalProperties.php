@@ -4,12 +4,12 @@ namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard;
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-final class AdditionalProperties implements Constraint
+final class AdditionalProperties implements ConstraintInterface
 {
     const KEYWORD = 'additionalProperties';
 

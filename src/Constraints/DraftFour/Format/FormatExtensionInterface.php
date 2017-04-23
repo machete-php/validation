@@ -4,7 +4,7 @@ namespace League\JsonGuard\Constraints\DraftFour\Format;
 
 use League\JsonGuard\Validator;
 
-interface FormatExtension
+interface FormatExtensionInterface
 {
     /**
      * @param string                      $value The value to validate

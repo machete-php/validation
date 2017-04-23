@@ -3,12 +3,12 @@
 namespace League\JsonGuard\Constraints\DraftFour;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Constraint;
+use League\JsonGuard\ConstraintInterface;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-final class Type implements Constraint
+final class Type implements ConstraintInterface
 {
     const KEYWORD = 'type';
 

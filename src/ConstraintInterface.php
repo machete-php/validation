@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard;
 
-interface Constraint
+interface ConstraintInterface
 {
     /**
      * @param mixed $value
