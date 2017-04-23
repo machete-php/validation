@@ -36,3 +36,6 @@ Because a $ref may be circular, attempting to inline the $ref would be impossibl
 
 When serialized as JSON, all references are transformed into the original `{ "$ref": "#/some/reference" }` format instead of attempting to inline them.
 
+You can override this behavior by setting the reference serializer used by the dereferencer.
+
+The `InlineReferenceSerializer` will attempt to inline references and throw an exception if a direct circular reference is found.  An indirect circular reference may still exist, in which case `json_encode` will fail and `json_last_error` will return `JSON_ERROR_RECURSION`.
