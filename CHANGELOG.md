@@ -13,28 +13,56 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changed
 
-* Allow redirects by default with the CurlWebLoader.
+### General
+
+* Classes not meant to be extended have been marked final.
+
+### Dependencies
+
+* Support was dropped for PHP 5.5.
+* HHVM is not actively supported anymore.
+* bcmatch is now a required extension.
+
+### Separate Packages
+
+Starting with the 1.0 release json-guard is maintained as two separate packages - a JSON Schema validator implementation and a JSON Reference implementation.
+
+You will need to require both `league/json-guard` and `league/json-reference` if you are using JSON references.
+
+### Dereferencing
+
+* The Dereferencer does not use JSON Schema draft 4 scope resolution rules (`id`) by default anymore.  See [the scope resolution documentation](json-reference/scope-resolution) for more info.
+* Loaders are now registered with a loader manager.  See [the loader documentation](json-reference/loaders) for more info.
+
+### Constraints
+
 * All constraints now implement a single interface.  See `League\JsonGuard\Constraint` for more info.  If you are using custom constraints you should update them to match the new signature.
-* All reference resolving is now handled by a separate package, `league/json-reference`.  Please review the documentation as `league/json-reference` is almost a complete rewrite.
-* Dropped support for PHP 5.5 and HHVM.
-* bcmatch is now a required dependency.
-* All constraints were moved to the `League\JsonGuard\Constraints\DraftFour` namespace in preparation for Draft-6 support.
-* The constraint interface was moved to `League\JsonGuard\Constraint`.
-* Rule sets now use the PSR-11 container interface.
-* All constraints now use dependency injection for configuration.
+* All draft 4 constraints were moved to the `League\JsonGuard\Constraint\DraftFour` namespace.
+* All constraints use dependency injection for configuration.  This includes the precision used for minimum, maximum, and their exclusive variants and the charset used for minimumLength and maximumLength.
 * Custom format extensions are now registered with the format constraint directly.
+
+### Rule Sets
+
+* The rule set interface was dropped in favor of the PSR-11 container interface.  Custom rule sets can extend the `League\JsonGuard\RuleSets\RuleSetContainer` to make implementation easier.
+* The default rule set now uses the same instance each time instead of creating a new instance.
+
+### Errors
+
 * Error messages no longer implement array access.
 * The error message 'value' has been renamed to 'data' and 'pointer' has been renamed to 'data_path'.
 * The data path for data at the root path will now return '/', not ''.
 * All error messages now return the same context.  See `League\JsonGuard\ValidationError` for more info.
-* `grapheme_strlen` is no longer used to validate string length.
-* You can specify the charset used for string length validation as a constructor parameter.
 * The error message constructor now requires (message, keyword, parameter, data, data path, schema, schema path).  You can optionally set a cause.  The `League\JsonGuard\error` function can be used to make building errors easier.
-* The default rule set uses the same instance of each constraint instead of creating a new instance each time.
+* The data pointer will correctly return '/' instead of '' for errors in the root document.
+* The error messages have been rewritten to use consistent wording and do not include the value in the message.
+* The error context will truncate any strings over 100 characters.
 
 ## Removed
 
-* Removed the SubSchemaValidatorFactory interface since it isn't used by constraints anymore.
+* Removed the SubSchemaValidatorFactory interface.
+* Removed the the RuleSet interface.
+* Removed the Comparator.
+* Removed Pointer Parser. 
 
 ## 0.5.1 - 2016-11-28
 
