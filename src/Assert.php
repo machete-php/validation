@@ -72,4 +72,23 @@ class Assert
             $pointer
         );
     }
+
+    /**
+     * @param object      $schema
+     * @param string      $property
+     * @param string      $keyword
+     * @param string|null $pointer
+     */
+    public static function hasProperty($schema, $property, $keyword, $pointer = null)
+    {
+        if (isset($schema->$property)) {
+            return;
+        }
+
+        throw InvalidSchemaException::missingProperty(
+            $property,
+            $keyword,
+            $pointer
+        );
+    }
 }

@@ -8,13 +8,15 @@ use League\JsonGuard\Constraints\AllOf;
 use League\JsonGuard\Constraints\AnyOf;
 use League\JsonGuard\Constraints\Dependencies;
 use League\JsonGuard\Constraints\Enum;
+use League\JsonGuard\Constraints\ExclusiveMaximum;
+use League\JsonGuard\Constraints\ExclusiveMinimum;
 use League\JsonGuard\Constraints\Format;
 use League\JsonGuard\Constraints\Items;
-use League\JsonGuard\Constraints\Max;
+use League\JsonGuard\Constraints\Maximum;
 use League\JsonGuard\Constraints\MaxItems;
 use League\JsonGuard\Constraints\MaxLength;
 use League\JsonGuard\Constraints\MaxProperties;
-use League\JsonGuard\Constraints\Min;
+use League\JsonGuard\Constraints\Minimum;
 use League\JsonGuard\Constraints\MinItems;
 use League\JsonGuard\Constraints\MinLength;
 use League\JsonGuard\Constraints\MinProperties;
@@ -42,13 +44,15 @@ class DraftFour extends RuleSetContainer
         'anyOf'                => AnyOf::class,
         'dependencies'         => Dependencies::class,
         'enum'                 => Enum::class,
+        'exclusiveMaximum'     => ExclusiveMaximum::class,
+        'exclusiveMinimum'     => ExclusiveMinimum::class,
         'format'               => Format::class,
         'items'                => Items::class,
-        'maximum'              => Max::class,
+        'maximum'              => Maximum::class,
         'maxItems'             => MaxItems::class,
         'maxLength'            => MaxLength::class,
         'maxProperties'        => MaxProperties::class,
-        'minimum'              => Min::class,
+        'minimum'              => Minimum::class,
         'minItems'             => MinItems::class,
         'minLength'            => MinLength::class,
         'minProperties'        => MinProperties::class,

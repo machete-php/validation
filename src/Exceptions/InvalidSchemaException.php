@@ -79,6 +79,23 @@ class InvalidSchemaException extends \RuntimeException
     }
 
     /**
+     * @param string      $property
+     * @param string      $keyword
+     * @param string|null $pointer
+     *
+     * @return \League\JsonGuard\Exceptions\InvalidSchemaException
+     */
+    public static function missingProperty($property, $keyword, $pointer)
+    {
+        $message = sprintf(
+            'The schema must contain the property %s',
+            $property
+        );
+
+        return new self($message, $keyword, $pointer);
+    }
+
+    /**
      * @return string
      */
     public function getKeyword()
