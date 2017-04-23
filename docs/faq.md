@@ -50,9 +50,9 @@ If you need to compare floats with more than 10 places after the decimal place, 
 ```php
 <?php
 
-$ruleSet = new \League\JsonGuard\RuleSets\DraftFour();
+$ruleSet = new \League\JsonGuard\RuleSet\DraftFour();
 $ruleSet->set('minimum', function () {
-    return new \League\JsonGuard\Constraints\DraftFour\Minimum(20);
+    return new \League\JsonGuard\Constraint\DraftFour\Minimum(20);
 });
 $validator = new \League\JsonGuard\Validator($data, $schema, $ruleSet);
 ```

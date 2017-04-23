@@ -3,7 +3,7 @@
 namespace League\JsonGuard\Test;
 
 use League\JsonGuard\Assert;
-use League\JsonGuard\Exceptions\InvalidSchemaException;
+use League\JsonGuard\Exception\InvalidSchemaException;
 
 class AssertTest extends \PHPUnit_Framework_TestCase
 {

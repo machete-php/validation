@@ -3,11 +3,11 @@
 namespace League\JsonGuard\Test;
 
 use League\JsonGuard;
+use League\JsonGuard\Constraint\DraftFour\Format\FormatExtensionInterface;
 use League\JsonGuard\ConstraintInterface;
-use League\JsonGuard\Constraints\DraftFour\Format\FormatExtensionInterface;
-use League\JsonGuard\Exceptions\InvalidSchemaException;
-use League\JsonGuard\Exceptions\MaximumDepthExceededException;
-use League\JsonGuard\RuleSets\DraftFour;
+use League\JsonGuard\Exception\InvalidSchemaException;
+use League\JsonGuard\Exception\MaximumDepthExceededException;
+use League\JsonGuard\RuleSet\DraftFour;
 use League\JsonGuard\Validator;
 use League\JsonReference\Dereferencer;
 use League\JsonReference\Loaders\ArrayLoader;
@@ -132,7 +132,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $errors);
 
         $this->assertSame(
-            JsonGuard\Constraints\DraftFour\Type::KEYWORD,
+            JsonGuard\Constraint\DraftFour\Type::KEYWORD,
             $errors[0]->getKeyword(),
             'The error should include the keyword'
         );
@@ -209,7 +209,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($v->fails());
         $error = $v->errors()[0];
         $this->assertSame('/foo/foo/foo/foo/foo/foo/foo/foo/foo', $error->getDataPath());
-        $this->assertSame(JsonGuard\Constraints\DraftFour\AdditionalProperties::KEYWORD, $error->getKeyword());
+        $this->assertSame(JsonGuard\Constraint\DraftFour\AdditionalProperties::KEYWORD, $error->getKeyword());
     }
 
     function test_it__throws_max_depth_exception_when_max_depth_is_exceeded()
@@ -256,7 +256,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $v->getRuleSet()->get('format')->addExtension('hello', new HelloFormatStub());
 
         $this->assertTrue($v->fails());
-        $this->assertSame(JsonGuard\Constraints\DraftFour\Format::KEYWORD, $v->errors()[0]->getKeyword());
+        $this->assertSame(JsonGuard\Constraint\DraftFour\Format::KEYWORD, $v->errors()[0]->getKeyword());
     }
 
     function test_custom_format_works_when_nested()

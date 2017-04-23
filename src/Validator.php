@@ -2,8 +2,8 @@
 
 namespace League\JsonGuard;
 
-use League\JsonGuard\Exceptions\MaximumDepthExceededException;
-use League\JsonGuard\RuleSets\DraftFour;
+use League\JsonGuard\Exception\MaximumDepthExceededException;
+use League\JsonGuard\RuleSet\DraftFour;
 use League\JsonReference\Reference;
 use Psr\Container\ContainerInterface;
 use function League\JsonReference\pointer_push;
@@ -240,7 +240,7 @@ final class Validator
      * structure from causing the validator to continue
      * validating for an incredibly long time.
      *
-     * @throws \League\JsonGuard\Exceptions\MaximumDepthExceededException
+     * @throws \League\JsonGuard\Exception\MaximumDepthExceededException
      */
     private function checkDepth()
     {

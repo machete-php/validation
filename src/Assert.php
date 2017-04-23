@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard;
 
-use League\JsonGuard\Exceptions\InvalidSchemaException;
+use League\JsonGuard\Exception\InvalidSchemaException;
 
 /**
  * Assertions to verify a schema is valid.

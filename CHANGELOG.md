@@ -43,7 +43,7 @@ You will need to require both `league/json-guard` and `league/json-reference` if
 
 ### Rule Sets
 
-* The rule set interface was dropped in favor of the PSR-11 container interface.  Custom rule sets can extend the `League\JsonGuard\RuleSets\RuleSetContainer` to make implementation easier.
+* The rule set interface was dropped in favor of the PSR-11 container interface.  Custom rule sets can extend the `League\JsonGuard\RuleSet\RuleSetContainer` to make implementation easier.
 * The default rule set now uses the same instance each time instead of creating a new instance.
 
 ### Errors
