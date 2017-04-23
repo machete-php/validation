@@ -184,7 +184,7 @@ class Validator
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getCurrentParameter()
     {

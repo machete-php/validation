@@ -21,15 +21,12 @@ class Properties implements Constraint
             return null;
         }
 
-        // Iterate through the properties and create a new
-        // validator for that property's schema and data.
-        // merge the errors.
+        // Iterate through the properties and create a new validator for that property's schema and data.
         $errors = [];
         foreach ($parameter as $property => $schema) {
             if (is_object($value) && property_exists($value, $property)) {
-                $propertyData    = $value->$property;
-                $subValidator       = $validator->makeSubSchemaValidator(
-                    $propertyData,
+                $subValidator = $validator->makeSubSchemaValidator(
+                    $value->$property,
                     $schema,
                     pointer_push($validator->getDataPath(), $property),
                     pointer_push($validator->getSchemaPath(), $property)
