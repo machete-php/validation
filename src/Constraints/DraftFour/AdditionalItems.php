@@ -8,7 +8,7 @@ use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-class AdditionalItems implements Constraint
+final class AdditionalItems implements Constraint
 {
     const KEYWORD = 'additionalItems';
 

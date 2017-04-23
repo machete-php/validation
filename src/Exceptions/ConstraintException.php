@@ -4,7 +4,7 @@ namespace League\JsonGuard\Exceptions;
 
 use Psr\Container\ContainerExceptionInterface;
 
-class ConstraintException extends \Exception implements ContainerExceptionInterface
+final class ConstraintException extends \Exception implements ContainerExceptionInterface
 {
     /**
      * @param string     $rule

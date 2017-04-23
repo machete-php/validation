@@ -8,7 +8,7 @@ use League\JsonGuard\Constraints\DraftFour\Format\FormatExtension;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class Format implements Constraint
+final class Format implements Constraint
 {
     const KEYWORD = 'format';
 

@@ -7,7 +7,7 @@ use League\JsonGuard\Exceptions\InvalidSchemaException;
 /**
  * Assertions to verify a schema is valid.
  */
-class Assert
+final class Assert
 {
     /**
      * Validate an array has at least one element.

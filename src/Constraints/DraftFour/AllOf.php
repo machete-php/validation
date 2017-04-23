@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
-class AllOf implements Constraint
+final class AllOf implements Constraint
 {
     const KEYWORD = 'allOf';
 

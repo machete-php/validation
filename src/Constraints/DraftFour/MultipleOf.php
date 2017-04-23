@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class MultipleOf implements Constraint
+final class MultipleOf implements Constraint
 {
     const KEYWORD = 'multipleOf';
 

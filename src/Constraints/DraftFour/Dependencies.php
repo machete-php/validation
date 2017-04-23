@@ -8,7 +8,7 @@ use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-class Dependencies implements Constraint
+final class Dependencies implements Constraint
 {
     const KEYWORD = 'dependencies';
 

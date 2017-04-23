@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class Enum implements Constraint
+final class Enum implements Constraint
 {
     const KEYWORD = 'enum';
 

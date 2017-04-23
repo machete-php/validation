@@ -8,7 +8,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class Pattern implements Constraint
+final class Pattern implements Constraint
 {
     const KEYWORD = 'pattern';
 

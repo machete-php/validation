@@ -35,7 +35,7 @@ use League\JsonGuard\Constraints\DraftFour\UniqueItems;
  * @see http://tools.ietf.org/html/draft-zyp-json-schema-04
  * @see  https://tools.ietf.org/html/draft-fge-json-schema-validation-00
  */
-class DraftFour extends RuleSetContainer
+final class DraftFour extends RuleSetContainer
 {
     const DEFAULT_RULES = [
         AdditionalItems::KEYWORD      => AdditionalItems::class,

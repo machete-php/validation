@@ -9,7 +9,7 @@ use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-class AdditionalProperties implements Constraint
+final class AdditionalProperties implements Constraint
 {
     const KEYWORD = 'additionalProperties';
 

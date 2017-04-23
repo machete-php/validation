@@ -8,7 +8,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class MaxLength implements Constraint
+final class MaxLength implements Constraint
 {
     const KEYWORD = 'maxLength';
 

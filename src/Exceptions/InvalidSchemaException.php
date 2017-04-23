@@ -2,7 +2,7 @@
 
 namespace League\JsonGuard\Exceptions;
 
-class InvalidSchemaException extends \RuntimeException
+final class InvalidSchemaException extends \RuntimeException
 {
     /**
      * @var string

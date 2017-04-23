@@ -8,7 +8,7 @@ use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 use function League\JsonReference\pointer_push;
 
-class OneOf implements Constraint
+final class OneOf implements Constraint
 {
     const KEYWORD = 'oneOf';
 

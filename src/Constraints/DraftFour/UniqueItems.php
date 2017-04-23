@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class UniqueItems implements Constraint
+final class UniqueItems implements Constraint
 {
     const KEYWORD = 'uniqueItems';
 

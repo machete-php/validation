@@ -2,6 +2,6 @@
 
 namespace League\JsonGuard\Exceptions;
 
-class MaximumDepthExceededException extends \RuntimeException
+final class MaximumDepthExceededException extends \RuntimeException
 {
 }

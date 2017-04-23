@@ -8,7 +8,7 @@ use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class Type implements Constraint
+final class Type implements Constraint
 {
     const KEYWORD = 'type';
 

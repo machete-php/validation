@@ -8,7 +8,7 @@ use League\JsonReference\Reference;
 use Psr\Container\ContainerInterface;
 use function League\JsonReference\pointer_push;
 
-class Validator
+final class Validator
 {
     /**
      * @var array

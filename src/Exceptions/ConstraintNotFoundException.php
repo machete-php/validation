@@ -4,7 +4,7 @@ namespace League\JsonGuard\Exceptions;
 
 use Psr\Container\NotFoundExceptionInterface;
 
-class ConstraintNotFoundException extends \Exception implements NotFoundExceptionInterface
+final class ConstraintNotFoundException extends \Exception implements NotFoundExceptionInterface
 {
     public static function forRule($keyword)
     {

@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonReference\pointer_push;
 
-class Properties implements Constraint
+final class Properties implements Constraint
 {
     const KEYWORD = 'properties';
 

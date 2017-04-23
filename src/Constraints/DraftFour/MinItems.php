@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class MinItems implements Constraint
+final class MinItems implements Constraint
 {
     const KEYWORD = 'minItems';
 

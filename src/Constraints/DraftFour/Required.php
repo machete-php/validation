@@ -7,7 +7,7 @@ use League\JsonGuard\Constraint;
 use League\JsonGuard\Validator;
 use function League\JsonGuard\error;
 
-class Required implements Constraint
+final class Required implements Constraint
 {
     const KEYWORD = 'required';
 
