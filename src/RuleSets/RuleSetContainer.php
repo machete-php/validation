@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 /**
  * A lightweight container for building rule sets.
  */
-abstract class RuleSetContainer implements ContainerInterface
+class RuleSetContainer implements ContainerInterface
 {
     /**
      * @var \Closure[]
