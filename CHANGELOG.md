@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+1.0.0 is a complete rewrite.  Please review the library and update your code accordingly.
+
 ## Fixed
 
 * Fixed the date-time validation to not allow invalid date-times in some cases.
@@ -12,9 +14,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Changed
 
 * Allow redirects by default with the CurlWebLoader.
-* All constraints now implement a single interface.  See `League\JsonGuard\Constraints\Constraint` for more info.  If you are using custom constraints you should update them to match the new signature.
+* All constraints now implement a single interface.  See `League\JsonGuard\Constraint` for more info.  If you are using custom constraints you should update them to match the new signature.
 * All reference resolving is now handled by a separate package, `league/json-reference`.  Please review the documentation as `league/json-reference` is almost a complete rewrite.
 * Dropped support for PHP 5.5 and HHVM.
+* bcmatch is now a required dependency.
+* All constraints were moved to the `League\JsonGuard\Constraints\DraftFour` namespace in preparation for Draft-6 support.
+* The constraint interface was moved to `League\JsonGuard\Constraint`.
+* Rule sets now use the PSR-11 container interface.
+* All constraints now use dependency injection for configuration.
+* Custom format extensions are now registered with the format constraint directly.
+* Error messages no longer implement array access.
+* The error message 'value' has been renamed to 'data' and 'pointer' has been renamed to 'data_path'.
+* The data path for data at the root path will now return '/', not ''.
+* All error messages now return the same context.  See `League\JsonGuard\ValidationError` for more info.
+* `grapheme_strlen` is no longer used to validate string length.
+* You can specify the charset used for string length validation as a constructor parameter.
+* The error message constructor now requires (message, keyword, parameter, data, data path, schema, schema path).  You can optionally set a cause.  The `League\JsonGuard\error` function can be used to make building errors easier.
+* The default rule set uses the same instance of each constraint instead of creating a new instance each time.
 
 ## Removed
 
