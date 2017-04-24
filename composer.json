@@ -44,7 +44,7 @@
         "scrutinizer/ocular": "~1.1",
         "squizlabs/php_codesniffer": "~2.3",
         "json-schema/JSON-Schema-Test-Suite": "1.2.0",
-        "league/json-reference": "*@dev",
+        "league/json-reference": "1.0.0-alpha@dev",
         "ext-curl": "*"
     },
     "autoload": {
