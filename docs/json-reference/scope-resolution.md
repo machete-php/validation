@@ -28,9 +28,9 @@ To enable JSON Schema scope resolution, you can pass the `JsonSchemaScopeResolve
 <?php
 
 use League\JsonReference\Dereferencer;
-use League\JsonReference\ScopeResolvers\JsonSchemaScopeResolver;
+use League\JsonReference\ScopeResolver\JsonSchemaScopeResolver;
 
-$dereferencer = new Dereferencer(null, new JsonSchemaScopeResolver('id'));
+$dereferencer = new Dereferencer(new JsonSchemaScopeResolver('id'));
 ```
 
 There are some helper functions to make this easier.

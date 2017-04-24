@@ -39,20 +39,20 @@ $schemas = [
 $loader = new ArrayLoader($schemas);
 ```
 
-### Chainable Loader
+### Chained Loader
 
-The chainable loader takes two other loaders as constructor parameters, and will attempt to load from the first loader before deferring to the second loader.
+The chained loader takes two other loaders as constructor parameters, and will attempt to load from the first loader before deferring to the second loader.
 
 This is useful if you would like to register multiple loaders from the same prefix.  For instance, you may want to load a specific url from the local filesystem while loading all other schemas via http.
 
 ```php
 <?php
 
-use \League\JsonReference\Loaders\ArrayLoader;
-use \League\JsonReference\Loaders\ChainableLoader;
-use \League\JsonReference\Loaders\CurlWebLoader;
+use \League\JsonReference\Loader\ArrayLoader;
+use \League\JsonReference\Loader\ChainedLoader;
+use \League\JsonReference\Loader\CurlWebLoader;
 
-$loader = new ChainableLoader(
+$loader = new ChainedLoader(
     new ArrayLoader(['json-schema.org/draft-04/schema' => json_decode(__DIR__ . '/schema.json')]),
     new CurlWebLoader('http')
 );
@@ -60,11 +60,11 @@ $loader = new ChainableLoader(
 
 ### Cached Loader
 
-The cached loader takes a [PSR-16 Simple Cache](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-16-simple-cache.md) implementation and another loader as constructor dependencies.  When a schema is loaded it will be returned from cache if available.  Otherwise it will be loaded using the decorated loader and cached.
+The cached loader takes a [PSR-16 Simple Cache](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-16-simple-cache.md) implementation and another loader as constructor dependencies.  When a schema is loaded it will be returned from cache if available.  Otherwise it will be loaded using the decorated loader and cached.  The cached loader is used automatically when using the cached dereferencer.
 
 ## Custom Loaders
 
-You can make your own loaders by implementing the [Loader Interface](https://github.com/thephpleague/json-guard/blob/master/src/Loader.php).  Imagine you may want to load schemas from a CouchDb database, and your references look like this:
+You can make your own loaders by implementing the [Loader Interface](https://github.com/thephpleague/json-reference/blob/master/src/LoaderInterface.php).  Imagine you may want to load schemas from a CouchDb database, and your references look like this:
 
 ```json
 { "$ref":"couchdb://00a271787f89c0ef2e10e88a0c0001f4" }
@@ -78,7 +78,7 @@ Once you have written your custom loader, you can register it with the dereferen
 use My\App\CouchDbLoader;
 
 $couchLoader = new CouchDbLoader();
-$deref  = new League\JsonReference\CoreDereferencer();
+$deref  = new League\JsonReference\Dereferencer();
 
 $deref->getLoaderManager()->registerLoader($couchLoader, 'couchdb');
 ```

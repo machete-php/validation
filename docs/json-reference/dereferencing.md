@@ -39,7 +39,7 @@ To dereference your schema, create a new `Dereferencer` instance.
 ```php
 <?php
 
-$dereferencer  = new League\JsonReference\CoreDereferencer();
+$dereferencer  = new League\JsonReference\Dereferencer();
 ```
 
 Now call the `dereference` method with your schema.  The schema should be the result from a json_decode call.
