@@ -10,7 +10,7 @@ title: Overview
 
 Validators are created by instantiating a new instance of the `Validator` class.  The first argument is the data under validation.  The second argument is the schema that should be applied to the data.
 
-The JSON data we are validating needs to be the object resulting from a `json_decode` call.  The validator **will not work** with the array returned from `json_decode($data, true)`.  For example:
+The JSON data we are validating needs to be the **object** resulting from a `json_decode` call.  The validator **will not work** with the **array** returned from `json_decode($data, true)`.  For example:
 
 ```php
 <?php
