@@ -13,6 +13,26 @@ final class Type implements ConstraintInterface
     const KEYWORD = 'type';
 
     /**
+     * Whether examples like 98249283749234923498293171823948729348710298301928331
+     * and "98249283749234923498293171823948729348710298301928331" are valid strings.
+     */
+    const BIGINT_MODE_STRING_VALID = 1;
+    const BIGINT_MODE_STRING_INVALID = 2;
+
+    /**
+     * @var int
+     */
+    private $bigintMode = 0;
+
+    /**
+     * @param int $bigintMode
+     */
+    public function __construct($bigintMode = self::BIGINT_MODE_STRING_INVALID)
+    {
+        $this->setBigintMode($bigintMode);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate($value, $type, Validator $validator)
@@ -52,7 +72,8 @@ final class Type implements ConstraintInterface
                             // Make sure the string isn't actually a number that was too large
                             // to be cast to an int on this platform.  This will only happen if
                             // you decode JSON with the JSON_BIGINT_AS_STRING option.
-                            if (!(ctype_digit($value) && bccomp($value, PHP_INT_MAX) === 1)) {
+                            if (self::BIGINT_MODE_STRING_VALID === $this->bigintMode
+                                || !(ctype_digit($value) && bccomp($value, PHP_INT_MAX) === 1)) {
                                 return true;
                             }
                         }
@@ -62,6 +83,28 @@ final class Type implements ConstraintInterface
                     $validator
                 );
         }
+    }
+
+    /**
+     * @param int|null $bigintMode
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setBigintMode($bigintMode = self::BIGINT_MODE_STRING_INVALID)
+    {
+        if (!in_array($bigintMode, [self::BIGINT_MODE_STRING_VALID, self::BIGINT_MODE_STRING_INVALID])) {
+            throw new \InvalidArgumentException('Please use one of the bigint mode constants.');
+        }
+
+        $this->bigintMode = $bigintMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBigintMode()
+    {
+        return $this->bigintMode;
     }
 
     /**

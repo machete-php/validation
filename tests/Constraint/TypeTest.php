@@ -16,4 +16,22 @@ class TypeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ValidationError::class, $error);
     }
+
+    function test_bigint_mode_valid()
+    {
+        $type = new Type(Type::BIGINT_MODE_STRING_VALID);
+
+        $error = $type->validate('98249283749234923498293171823948729348710298301928331', 'string', new Validator([], new \stdClass()));
+
+        $this->assertNull($error);
+    }
+
+    function test_bigint_mode_invalid()
+    {
+        $type = new Type(Type::BIGINT_MODE_STRING_INVALID);
+
+        $error = $type->validate('98249283749234923498293171823948729348710298301928331', 'string', new Validator([], new \stdClass()));
+
+        $this->assertInstanceOf(ValidationError::class, $error);
+    }
 }
