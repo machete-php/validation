@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+## Fixed
+
+* Fixed many instances of the date-time validation rejecting valid values and allowing invalid values.
+
 ## 1.0.1 - 2017-05-03
 
 ## Fixed
