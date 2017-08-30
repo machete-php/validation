@@ -2,13 +2,6 @@ Getting Started:
     Introduction: '/'
     Installation: '/installation'
     Simple Example: '/simple-example'
-JSON References:
-    Overview: '/json-reference/overview'
-    Installation: '/json-reference/installation'
-    Dereferencing: '/json-reference/dereferencing'
-    Loaders: '/json-reference/loaders'
-    Scope Resolution: '/json-reference/scope-resolution'
-    Circular References: '/json-reference/circular-references'
 Validation:
     Overview: '/validation/overview'
     Errors: '/validation/errors'
