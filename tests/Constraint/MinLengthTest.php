@@ -5,8 +5,9 @@ namespace League\JsonGuard\Test\Constraint;
 use League\JsonGuard\Constraint\DraftFour\MinLength;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class MinLengthTest extends \PHPUnit_Framework_TestCase
+class MinLengthTest extends TestCase
 {
     function test_it_validates_multibyte_string_length_correctly()
     {

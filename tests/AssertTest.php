@@ -4,8 +4,9 @@ namespace League\JsonGuard\Test;
 
 use League\JsonGuard\Assert;
 use League\JsonGuard\Exception\InvalidSchemaException;
+use PHPUnit\Framework\TestCase;
 
-class AssertTest extends \PHPUnit_Framework_TestCase
+class AssertTest extends TestCase
 {
     function test_not_empty_when_invalid()
     {

@@ -4,8 +4,9 @@ namespace League\JsonGuard\Test\Constraint;
 
 use League\JsonGuard\Constraint\DraftFour\Required;
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class RequiredTest extends \PHPUnit_Framework_TestCase
+class RequiredTest extends TestCase
 {
     function test_it_returns_property_name_in_error_message()
     {

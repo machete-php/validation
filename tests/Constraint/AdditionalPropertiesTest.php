@@ -3,8 +3,9 @@
 namespace League\JsonGuard\Test\Constraint;
 
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class AdditionalPropertiesTest extends \PHPUnit_Framework_TestCase
+class AdditionalPropertiesTest extends TestCase
 {
     function test_it_returns_property_name_in_message()
     {

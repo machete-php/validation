@@ -13,9 +13,10 @@ use League\JsonReference\Dereferencer;
 use League\JsonReference\Loader\ArrayLoader;
 use League\JsonReference\Loader\ChainedLoader;
 use League\JsonReference\Loader\CurlWebLoader;
+use PHPUnit\Framework\TestCase;
 use function League\JsonGuard\error;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     const TEST_SUITE_PATH = __DIR__ . '/../vendor/json-schema/JSON-Schema-Test-Suite/tests';
 

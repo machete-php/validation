@@ -5,8 +5,9 @@ namespace League\JsonGuard\Test\Constraint;
 use League\JsonGuard\Constraint\DraftFour\Format;
 use League\JsonGuard\ValidationError;
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class FormatTest extends \PHPUnit_Framework_TestCase
+class FormatTest extends TestCase
 {
     public function invalidFormatValues()
     {

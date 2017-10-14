@@ -5,8 +5,9 @@ namespace League\JsonGuard\Test\Constraint;
 use League\JsonGuard\Constraint\DraftFour\AllOf;
 use League\JsonGuard\Exception\InvalidSchemaException;
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class AllOfTest extends \PHPUnit_Framework_TestCase
+class AllOfTest extends TestCase
 {
     function test_it_throws_when_parameter_is_not_an_array()
     {

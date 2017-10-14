@@ -4,8 +4,9 @@ namespace League\JsonGuard\Test\Constraint;
 
 use League\JsonGuard\Constraint\DraftFour\MultipleOf;
 use League\JsonGuard\Validator;
+use PHPUnit\Framework\TestCase;
 
-class MultipleOfTest extends \PHPUnit_Framework_TestCase
+class MultipleOfTest extends TestCase
 {
     function test_it_works_with_floats()
     {

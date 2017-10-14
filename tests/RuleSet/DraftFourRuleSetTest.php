@@ -4,8 +4,9 @@ namespace League\JsonGuard\Test\RuleSet;
 
 use League\JsonGuard\Exception\ConstraintNotFoundException;
 use League\JsonGuard\RuleSet\DraftFour;
+use PHPUnit\Framework\TestCase;
 
-class DraftFourRuleSetTest extends \PHPUnit_Framework_TestCase
+class DraftFourRuleSetTest extends TestCase
 {
     function test_has()
     {

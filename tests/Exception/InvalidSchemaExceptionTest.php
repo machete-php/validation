@@ -3,8 +3,9 @@
 namespace League\JsonGuard\Test\Exception;
 
 use League\JsonGuard\Exception\InvalidSchemaException;
+use PHPUnit\Framework\TestCase;
 
-class InvalidSchemaExceptionTest extends \PHPUnit_Framework_TestCase
+class InvalidSchemaExceptionTest extends TestCase
 {
     function test_can_get_keyword_and_pointer()
     {
