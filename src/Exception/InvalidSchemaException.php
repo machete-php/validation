@@ -47,6 +47,25 @@ final class InvalidSchemaException extends \RuntimeException
     }
 
     /**
+     * @param string $actualParameter
+     * @param array  $allowedParameter
+     * @param string $keyword
+     * @param string $pointer
+     *
+     * @return \League\JsonGuard\Exception\InvalidSchemaException
+     */
+    public static function invalidParameter($actualParameter, array $allowedParameter, $keyword, $pointer)
+    {
+        $message = sprintf(
+            'Value is "%s" but must be one of: "%s"',
+            $actualParameter,
+            implode(', ', $allowedParameter)
+        );
+
+        return new self($message, $keyword, $pointer);
+    }
+
+    /**
      * @param integer $value
      * @param string  $keyword
      * @param string  $pointer
