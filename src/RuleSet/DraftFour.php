@@ -29,6 +29,7 @@ use League\JsonGuard\Constraint\DraftFour\Properties;
 use League\JsonGuard\Constraint\DraftFour\Required;
 use League\JsonGuard\Constraint\DraftFour\Type;
 use League\JsonGuard\Constraint\DraftFour\UniqueItems;
+use League\JsonGuard\Constraint\DraftFour\NullValidator;
 
 /**
  * The default rule set for JSON Schema Draft 4.
@@ -65,6 +66,14 @@ final class DraftFour extends RuleSetContainer
         Required::KEYWORD             => Required::class,
         Type::KEYWORD                 => Type::class,
         UniqueItems::KEYWORD          => UniqueItems::class,
+        '$schema'                     => NullValidator::class,
+
+        // Metadata
+        'definitions'                 => NullValidator::class,
+        'title'                       => NullValidator::class,
+        'description'                 => NullValidator::class,
+        'default'                     => NullValidator::class,
+        'examples'                    => NullValidator::class
     ];
 
     public function __construct(array $rules = [])

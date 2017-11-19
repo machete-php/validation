@@ -6,6 +6,7 @@ use League\JsonGuard\Exception\MaximumDepthExceededException;
 use League\JsonGuard\RuleSet\DraftFour;
 use League\JsonReference\Reference;
 use Psr\Container\ContainerInterface;
+use \League\JsonGuard\Exception\InvalidSchemaException;
 
 final class Validator
 {
@@ -70,11 +71,17 @@ final class Validator
     private $currentParameter;
 
     /**
+     * @var bool
+     */
+    private $ignoreUnknownConstraints = true;
+
+    /**
      * @param mixed                   $data
      * @param object                  $schema
      * @param ContainerInterface|null $ruleSet
+     * @param bool                    $ignoreUnknownConstraints
      */
-    public function __construct($data, $schema, ContainerInterface $ruleSet = null)
+    public function __construct($data, $schema, ContainerInterface $ruleSet = null, $ignoreUnknownConstraints = true)
     {
         if (!is_object($schema)) {
             throw new \InvalidArgumentException(
@@ -89,6 +96,17 @@ final class Validator
         $this->data    = $data;
         $this->schema  = $schema;
         $this->ruleSet = $ruleSet ?: new DraftFour();
+        $this->ignoreUnknownConstraints = $ignoreUnknownConstraints;
+    }
+
+    /**
+     * Define if unknown constraints shall be ignored
+     *
+     * @param boolean
+     */
+    public function setIgnoreUnknownConstraints($ignoreUnknownConstraints)
+    {
+        $this->ignoreUnknownConstraints = $ignoreUnknownConstraints;
     }
 
     /**
@@ -267,7 +285,7 @@ final class Validator
      */
     private function validateRule($keyword, $parameter)
     {
-        if (!$this->ruleSet->has($keyword)) {
+        if ($this->ignoreUnknownConstraints && !$this->ruleSet->has($keyword)) {
             return null;
         }
 

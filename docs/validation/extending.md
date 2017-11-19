@@ -22,6 +22,23 @@ $ruleset = new CustomRuleset();
 $validator = new Validator($data, $schema, $ruleset);
 ```
 
+## Unknown Constraints
+
+The default behavior is to ignore unknown constraints. You may want to handle such constraints differently.
+
+```php
+<?php
+
+$data    = json_decode('{ "id": "json-guard.dev/schema#" }');
+$schema  = json_decode('{ "properties": { "id": { "type": "string", "format": "uri" } } }');
+$ruleset = new CustomRuleset();
+$ignoreUnknownConstraints = false;
+
+$validator = new Validator($data, $schema, $ruleset, $ignoreUnknownConstraints);
+```
+
+This will cause a `ConstraintNotFoundException` to be thrown in case that the constraint could not be found.
+
 ## Format Extensions
 
 JSON Schema allows defining formats like `ipv4` that strings will be validated against.  You can extend the validator with your own formats.

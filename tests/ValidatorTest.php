@@ -15,6 +15,7 @@ use League\JsonReference\Loader\ChainedLoader;
 use League\JsonReference\Loader\CurlWebLoader;
 use PHPUnit\Framework\TestCase;
 use function League\JsonGuard\error;
+use League\JsonGuard\Constraint\DraftFour\NullValidator;
 
 class ValidatorTest extends TestCase
 {
@@ -31,6 +32,13 @@ class ValidatorTest extends TestCase
         }, $files);
     }
 
+    public function loadTest($uri)
+    {
+        // We need to use the option that treats big numbers as a
+        // string value so that the 'bignum.json' test will pass.
+        return json_decode(file_get_contents($uri), false, 512, JSON_BIGINT_AS_STRING);
+    }
+
     /**
      * @dataProvider allDraft4Tests
      *
@@ -38,11 +46,7 @@ class ValidatorTest extends TestCase
      */
     function test_it_passes_the_draft4_test_suite($testFile)
     {
-        // We need to use the option that treats big numbers as a
-        // string value so that the 'bignum.json' test will pass.
-        $test = json_decode(file_get_contents($testFile), false, 512, JSON_BIGINT_AS_STRING);
-
-        $this->runTestCase($test);
+        $this->runTestCase($this->loadTest($testFile));
     }
 
     public function invalidSchemas()
@@ -96,6 +100,57 @@ class ValidatorTest extends TestCase
                 }
             }
         }
+    }
+
+    public function custom_keyword_test()
+    {
+        $data        = (object) ["id" => 1, "name" => "test", "price" => 5];
+        $schema      = $this->loadTest(__DIR__ . '/fixtures/custom_constraint.json');
+        $refResolver = self::createDereferencer();
+        $schema      = $refResolver->dereference($schema);
+
+        return [[$data, $schema]];
+    }
+
+    /**
+     * @dataProvider custom_keyword_test
+     */
+    public function test_it_passes_with_unknown_constraints_per_default($data, $schema)
+    {
+        $validator = new Validator($data, $schema);   
+        $this->assertTrue($validator->passes());
+    }
+
+    /**
+     * @dataProvider custom_keyword_test
+     * @expectedException League\JsonGuard\Exception\ConstraintNotFoundException
+     */
+    public function test_it_fails_if_unknown_constraints_are_not_ignored_setter($data, $schema)
+    {
+        $validator = new Validator($data, $schema);
+        $validator->setIgnoreUnknownConstraints(false);        
+        $this->assertTrue($validator->passes());
+    }
+
+    /**
+     * @dataProvider custom_keyword_test
+     * @expectedException League\JsonGuard\Exception\ConstraintNotFoundException
+     */
+    public function test_it_fails_if_unknown_constraints_are_not_ignored_constructor($data, $schema)
+    {
+        $validator = new Validator($data, $schema, null, false);
+        $this->assertTrue($validator->passes());
+    }
+
+    /**
+     * @dataProvider custom_keyword_test
+     */
+    public function test_it_passes_with_unknown_constraints_if_not_ignored_but_registered($data, $schema)
+    {
+        $ruleSet = new DraftFour();
+        $ruleSet->set('x-custom', NullValidator::class);       
+        $validator = new Validator($data, $schema, $ruleSet, false);
+        $this->assertTrue($validator->passes());
     }
 
     /**
