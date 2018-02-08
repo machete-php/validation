@@ -28,10 +28,15 @@ final class Format implements ConstraintInterface
 
     /**
      * @internal
+     */
+    const CVV_PATTERN = '/^[0-9]{3,4}$/i';
+
+    /**
+     * @internal
      *
      * @var string[]
      */
-    const KNOWN_FORMATS = ['date-time', 'uri', 'email', 'ipv4', 'ipv6','hostname'];
+    const KNOWN_FORMATS = ['date-time', 'uri', 'email', 'ipv4', 'ipv6','hostname', 'cvv'];
 
     /**
      * @var \League\JsonGuard\Constraint\DraftFour\Format\FormatExtensionInterface[]
@@ -129,6 +134,12 @@ final class Format implements ConstraintInterface
                 return self::validateRegex(
                     $value,
                     self::HOST_NAME_PATTERN,
+                    $validator
+                );
+            case 'cvv':
+                return self::validateRegex(
+                    $value,
+                    self::CVV_PATTERN,
                     $validator
                 );
             default:

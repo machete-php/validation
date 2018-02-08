@@ -18,6 +18,7 @@ class FormatTest extends TestCase
             [[], 'date-time'],
             [new \stdClass(), 'uri'],
             [1234, 'email'],
+            [123, 'cvv'],
         ];
     }
 
@@ -136,6 +137,42 @@ class FormatTest extends TestCase
         $format = new Format(['uuid' => new FormatUuid()], false);
         $result = $format->validate($value, 'uuid', new Validator([], new \stdClass()));
         $this->assertNull($result);
+    }
+
+    public function validCvvValues()
+    {
+        return [
+            ['123'],
+            ['009'],
+            ['0123'],
+        ];
+    }
+
+    /**
+     * @dataProvider validCvvValues
+     */
+    function test_cvv_passes_for_valid_cvv_options($value)
+    {
+        $result = (new Format())->validate($value, 'cvv', new Validator([], new \stdClass()));
+        $this->assertNull($result);
+    }
+
+    public function invalidCvvValues()
+    {
+        return [
+            ['23'],
+            ['09230'],
+            ['1234567'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidCvvValues
+     */
+    function test_cvv_does_not_pass_for_invalid_cvv_options($value)
+    {
+        $result = (new Format())->validate($value, 'cvv', new Validator([], new \stdClass()));
+        $this->assertInstanceOf(ValidationError::class, $result);
     }
 }
 
