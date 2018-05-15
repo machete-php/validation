@@ -21,6 +21,13 @@ class ValidatorTest extends TestCase
 {
     const TEST_SUITE_PATH = __DIR__ . '/../vendor/json-schema/JSON-Schema-Test-Suite/tests';
 
+    const SKIPPED_TESTS = [
+        // // PHP cannot differentiate between large integers and strings.
+        'a bignum is not a string',
+        // see https://github.com/json-schema-org/JSON-Schema-Test-Suite/issues/119
+        'ECMA 262 has no support for \\Z anchor from .NET',
+    ];
+
     public function allDraft4Tests()
     {
         $required = glob(self::TEST_SUITE_PATH . '/draft4/*.json');
@@ -85,8 +92,7 @@ class ValidatorTest extends TestCase
                 $validator = new Validator($test->data, $schema);
                 $msg       = $description . ' : ' . $test->description;
 
-                if ($test->description === 'a bignum is not a string') {
-                    // PHP cannot differentiate between large integers and strings.
+                if (in_array($test->description, self::SKIPPED_TESTS)) {
                     continue;
                 }
 
